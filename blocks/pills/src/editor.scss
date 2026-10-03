@@ -1,0 +1,59 @@
+.wp-block-nelyqo-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: center;
+	padding: 4px 0;
+	min-height: 44px;
+}
+
+.wp-block-nelyqo-pills.has-text-align-center,
+.wp-block-nelyqo-pills[style*="text-align:center"] {
+	justify-content: center;
+}
+
+.wp-block-nelyqo-pills.has-text-align-right,
+.wp-block-nelyqo-pills[style*="text-align:right"] {
+	justify-content: flex-end;
+}
+
+.wp-block-nelyqo-pills > .block-editor-inner-blocks {
+	width: 100%;
+}
+
+.wp-block-nelyqo-pills
+.block-editor-block-list__layout,
+.wp-block-nelyqo-pills
+.block-editor-block-list__layout.is-root-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: center;
+}
+
+.wp-block-nelyqo-pills.has-text-align-center
+.block-editor-block-list__layout,
+.wp-block-nelyqo-pills[style*="text-align:center"]
+.block-editor-block-list__layout {
+	justify-content: center;
+}
+
+.wp-block-nelyqo-pills.has-text-align-right
+.block-editor-block-list__layout,
+.wp-block-nelyqo-pills[style*="text-align:right"]
+.block-editor-block-list__layout {
+	justify-content: flex-end;
+}
+
+.wp-block-nelyqo-pills .block-list-appender {
+	display: inline-flex;
+	align-items: center;
+}
+
+.wp-block-nelyqo-pills .block-list-appender__toggle {
+	width: 32px;
+	height: 32px;
+	min-width: 32px;
+	padding: 0;
+	border-radius: 999px;
+}

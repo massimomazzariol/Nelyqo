@@ -1,0 +1,245 @@
+/*
+ * Nelyqo - structural exceptions.
+ *
+ * Page composition, spacing, colors and typography belong to Gutenberg block
+ * attributes and theme.json. Keep this file limited to relationships that
+ * WordPress Core blocks cannot currently express.
+ */
+
+body {
+	font-family: var(--wp--preset--font-family--system-sans);
+	font-size: clamp(1rem, .25vw + .94rem, 1.075rem);
+	line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--wp--preset--font-family--heading);
+}
+
+:where(a, button, summary, input, textarea, select):focus-visible {
+	outline: 3px solid var(--wp--custom--color--focus, var(--wp--preset--color--primary-strong));
+	outline-offset: 3px;
+}
+
+/* Header ------------------------------------------------------------------ */
+
+/* Overlay header (front page): floats over the first section and stays on top while scrolling. */
+.nelyqo-overlay-header {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	height: 0;
+}
+
+.nelyqo-overlay-header .nelyqo-site-header {
+	position: absolute;
+	inset: 0 0 auto;
+	width: 100%;
+}
+
+.nelyqo-site-header {
+	color: var(--wp--preset--color--on-primary);
+}
+
+.nelyqo-site-header a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.nelyqo-site-header__main .wp-block-site-title a,
+.nelyqo-site-header__main .wp-block-navigation-item__content,
+.nelyqo-site-footer .wp-block-navigation-item__content {
+	display: inline-flex;
+	min-height: 24px;
+	align-items: center;
+	padding-block: 4px;
+}
+
+.nelyqo-site-header__main p {
+	margin-block: 0;
+}
+
+.nelyqo-site-header__nav {
+	font-size: .86rem !important;
+	font-weight: 650;
+}
+
+.nelyqo-site-header__nav .wp-block-navigation__container {
+	column-gap: clamp(1.25rem, 2.4vw, 2.75rem);
+}
+
+.nelyqo-site-header .wp-block-button.is-style-outline .wp-block-button__link {
+	border-color: currentcolor;
+	color: inherit;
+}
+
+/*
+ * Header fill. It lives on a pseudo-element on purpose: a backdrop-filter on the bar itself
+ * becomes the containing block of the fixed mobile menu overlay and clips it to the bar.
+ * Child themes can change the fill with --nelyqo-header-fill.
+ */
+.nelyqo-site-header__main {
+	position: relative;
+	isolation: isolate;
+	border-bottom: 1px solid transparent;
+}
+
+.nelyqo-site-header__main::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background-color: var(--nelyqo-header-fill, color-mix(in srgb, var(--wp--preset--color--foreground) 90%, transparent));
+	backdrop-filter: blur(10px);
+	pointer-events: none;
+}
+
+/* Over the first section the header starts transparent and fills in during the first scroll. */
+@supports (animation-timeline: scroll()) {
+
+	.nelyqo-overlay-header .nelyqo-site-header__main,
+	.nelyqo-overlay-header .nelyqo-site-header__main::before {
+		animation: nelyqo-header-line linear both;
+		animation-timeline: scroll(root);
+		animation-range: 0 140px;
+	}
+
+	.nelyqo-overlay-header .nelyqo-site-header__main::before {
+		animation-name: nelyqo-header-fill;
+	}
+}
+
+@keyframes nelyqo-header-fill {
+
+	from {
+		background-color: transparent;
+		backdrop-filter: none;
+	}
+}
+
+@keyframes nelyqo-header-line {
+
+	to {
+		border-bottom-color: color-mix(in srgb, currentcolor 15%, transparent);
+	}
+}
+
+/* Mobile menu: the hamburger takes over below 900px, where a full menu rarely fits. */
+@media (max-width: 899px) {
+
+	.nelyqo-site-header__main {
+		padding-block: 1rem !important;
+	}
+
+	.nelyqo-site-header__main > .wp-block-buttons {
+		display: none;
+	}
+
+	.nelyqo-site-header__main > .wp-block-navigation {
+		margin-inline-start: auto;
+	}
+
+	.nelyqo-site-header .wp-block-navigation__responsive-container:not(.is-menu-open) {
+		display: none;
+	}
+
+	.nelyqo-site-header .wp-block-navigation__responsive-container-open,
+	.nelyqo-site-header .wp-block-navigation__responsive-container-close {
+		display: inline-flex;
+		width: 44px;
+		height: 44px;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+/* Mobile menu overlay: large heading-font items over a thin rule, nothing else. */
+.nelyqo-site-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+	padding-top: 5rem;
+}
+
+/* Centered whatever the desktop alignment: right-justified items would run off the edge. */
+.nelyqo-site-header .wp-block-navigation__responsive-container.is-menu-open,
+.nelyqo-site-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container {
+	--navigation-layout-justification-setting: center;
+	--navigation-layout-justify: center;
+	--navigation-layout-align: center;
+}
+
+.nelyqo-site-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container {
+	gap: 1.1rem;
+	padding-top: 2rem;
+	border-top: 1px solid color-mix(in srgb, currentcolor 30%, transparent);
+}
+
+.nelyqo-site-header .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content {
+	font-family: var(--wp--preset--font-family--heading);
+	font-size: 1.9rem;
+	font-weight: 400;
+	letter-spacing: 0;
+}
+
+.nelyqo-site-header .wp-block-navigation__responsive-container-close {
+	top: 1.5rem;
+	right: 1.5rem;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+
+	.nelyqo-site-header__main::before {
+		background-color: var(--wp--preset--color--foreground);
+		backdrop-filter: none;
+	}
+}
+
+/* Footer ------------------------------------------------------------------ */
+
+.nelyqo-site-footer a {
+	color: inherit;
+}
+
+.nelyqo-site-footer .wp-block-site-title a,
+.nelyqo-site-footer .wp-block-navigation a {
+	text-decoration: none;
+}
+
+.nelyqo-site-footer .wp-block-navigation a:hover,
+.nelyqo-site-footer .wp-block-navigation a:focus-visible {
+	color: var(--wp--preset--color--primary);
+}
+
+/* Core blocks ------------------------------------------------------------- */
+
+.wp-block-details {
+	padding-block: 1rem;
+	border-bottom: 1px solid var(--wp--preset--color--line);
+}
+
+/* Details as an accordion: heading-font question, a plus sign that turns into a cross. */
+.wp-block-details summary {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 1.5rem;
+	font-family: var(--wp--preset--font-family--heading);
+	font-size: 1.2rem;
+	list-style: none;
+	cursor: pointer;
+}
+
+.wp-block-details summary::-webkit-details-marker {
+	display: none;
+}
+
+.wp-block-details summary::after {
+	content: "+";
+	color: var(--wp--preset--color--primary);
+	font-family: var(--wp--preset--font-family--system-sans);
+	font-size: 1.25rem;
+	font-weight: 300;
+	transition: transform var(--wp--custom--motion--duration-standard, 200ms) ease;
+}
+
+.wp-block-details[open] summary::after {
+	transform: rotate(45deg);
+}

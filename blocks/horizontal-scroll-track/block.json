@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nelyqo/horizontal-scroll-track",
+	"version": "0.1.0",
+	"title": "Horizontal Scroll Track",
+	"category": "design",
+	"icon": "slides",
+	"description": "Cards track inside Nelyqo Horizontal Scroll. Cards translate horizontally during vertical scroll.",
+	"parent": [ "nelyqo/horizontal-scroll" ],
+	"allowedBlocks": [ "nelyqo/scroll-card" ],
+	"supports": {
+		"html": false,
+		"reusable": false,
+		"lock": false
+	},
+	"textdomain": "nelyqo-horizontal-scroll-track",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css"
+}

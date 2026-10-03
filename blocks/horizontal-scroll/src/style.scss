@@ -1,0 +1,397 @@
+.wp-block-nelyqo-horizontal-scroll {
+	--nelyqo-horizontal-scroll-gap: clamp(20px, 2.6vw, 30px);
+	--nelyqo-horizontal-scroll-surface: var(--wp--preset--color--surface);
+	--nelyqo-horizontal-scroll-surface-highlight: var(--wp--custom--color--surface-highlight);
+	--nelyqo-horizontal-scroll-text: var(--wp--preset--color--foreground);
+	--nelyqo-horizontal-scroll-muted: var(--wp--preset--color--foreground-muted);
+	--nelyqo-horizontal-scroll-accent: var(--wp--preset--color--primary);
+	--nelyqo-horizontal-scroll-intro-width: clamp(276px, 24vw, 336px);
+	--nelyqo-horizontal-scroll-card-width: clamp(320px, 32vw, 420px);
+	--nelyqo-horizontal-scroll-shell-end-space: clamp(20px, 4vw, 52px);
+	--nelyqo-horizontal-scroll-padding-block: clamp(40px, 6vw, 80px);
+	--nelyqo-horizontal-scroll-layout-padding-inline: clamp(20px, 4vw, 44px);
+	--nelyqo-horizontal-scroll-content-width: var(--wp--style--global--content-size, 645px);
+	--nelyqo-horizontal-scroll-wide-width: var(--wp--style--global--wide-size, 1340px);
+	--nelyqo-horizontal-sticky-offset: var(--nelyqo-horizontal-measured-header-offset, var(--wp-admin--admin-bar--height, 0));
+	--nelyqo-horizontal-viewport-height: max(0px, calc(100svh - var(--nelyqo-horizontal-sticky-offset)));
+	--nelyqo-horizontal-track-offset: 0;
+	--nelyqo-horizontal-scroll-distance: 0;
+	background:
+		linear-gradient(180deg, var(--nelyqo-horizontal-scroll-surface-highlight), transparent 38%),
+		var(--nelyqo-horizontal-scroll-surface);
+	border: 0;
+	border-radius: 0;
+	box-sizing: border-box;
+	color: var(--nelyqo-horizontal-scroll-text);
+	display: block;
+	isolation: isolate;
+	margin-block: 0;
+	min-width: 0;
+	overflow: clip;
+	padding-block: 0;
+	position: relative;
+}
+
+.wp-block-nelyqo-horizontal-scroll.is-tone-warm {
+	--nelyqo-horizontal-scroll-surface: var(--wp--preset--color--surface-alt);
+	--nelyqo-horizontal-scroll-surface-highlight: var(--wp--custom--color--surface-highlight-strong);
+}
+
+.wp-block-nelyqo-horizontal-scroll.is-tone-dark {
+	--nelyqo-horizontal-scroll-surface: var(--wp--preset--color--foreground);
+	--nelyqo-horizontal-scroll-surface-highlight: var(--wp--custom--color--surface-highlight-subtle);
+	--nelyqo-horizontal-scroll-text: var(--wp--preset--color--background);
+	--nelyqo-horizontal-scroll-muted: var(--wp--custom--color--inverse-muted);
+	--nelyqo-horizontal-scroll-accent: var(--wp--preset--color--accent);
+}
+
+.wp-block-nelyqo-horizontal-scroll.is-track-width-compact {
+	--nelyqo-horizontal-scroll-card-width: clamp(280px, 28vw, 360px);
+}
+
+.wp-block-nelyqo-horizontal-scroll.is-track-width-wide {
+	--nelyqo-horizontal-scroll-card-width: clamp(360px, 38vw, 520px);
+}
+
+.wp-site-blocks > .wp-block-nelyqo-horizontal-scroll,
+.wp-block-post-content > .wp-block-nelyqo-horizontal-scroll,
+.entry-content > .wp-block-nelyqo-horizontal-scroll {
+	margin-block: 0;
+}
+
+.wp-block-nelyqo-horizontal-scroll + .wp-block-nelyqo-horizontal-scroll {
+	margin-block-start: 0;
+}
+
+.nelyqo-horizontal-scroll__space-holder {
+	position: relative;
+	width: 100%;
+}
+
+.nelyqo-horizontal-scroll__sticky {
+	box-sizing: border-box;
+	min-width: 0;
+	position: relative;
+	width: 100%;
+}
+
+.nelyqo-horizontal-scroll__horizontal {
+	box-sizing: border-box;
+	min-inline-size: 100%;
+	position: relative;
+}
+
+// Content area (new architecture): editorial blocks that stay static in the sticky stage.
+.nelyqo-horizontal-scroll__content {
+	box-sizing: border-box;
+	padding-block-start: var(--nelyqo-horizontal-scroll-padding-block);
+	padding-inline: var(--nelyqo-horizontal-scroll-layout-padding-inline);
+}
+
+.wp-block-nelyqo-horizontal-scroll > .nelyqo-horizontal-scroll__layout,
+.wp-block-nelyqo-horizontal-scroll .nelyqo-horizontal-scroll__cards {
+	align-items: flex-start;
+	box-sizing: border-box;
+	display: flex;
+	gap: var(--nelyqo-horizontal-scroll-gap);
+	margin-inline: auto;
+	max-inline-size: min(100%, var(--nelyqo-horizontal-scroll-content-width));
+	min-width: 0;
+	overscroll-behavior-inline: contain;
+	overflow-x: auto;
+	padding-block: var(--nelyqo-horizontal-scroll-padding-block);
+	padding-inline-start: var(--nelyqo-horizontal-scroll-layout-padding-inline);
+	padding-inline-end:
+		calc(var(--nelyqo-horizontal-scroll-layout-padding-inline) +
+		var(--nelyqo-horizontal-scroll-shell-end-space));
+	position: relative;
+	scroll-padding-inline: var(--nelyqo-horizontal-scroll-layout-padding-inline);
+	scroll-snap-type: x proximity;
+	scrollbar-width: none;
+	-webkit-overflow-scrolling: touch;
+}
+
+.wp-block-nelyqo-horizontal-scroll.alignwide > .nelyqo-horizontal-scroll__layout,
+.wp-block-nelyqo-horizontal-scroll.alignfull > .nelyqo-horizontal-scroll__layout,
+.wp-block-nelyqo-horizontal-scroll.alignwide .nelyqo-horizontal-scroll__cards,
+.wp-block-nelyqo-horizontal-scroll.alignfull .nelyqo-horizontal-scroll__cards {
+	max-inline-size: min(100%, var(--nelyqo-horizontal-scroll-wide-width));
+}
+
+.wp-block-nelyqo-horizontal-scroll > .nelyqo-horizontal-scroll__layout::-webkit-scrollbar,
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__cards::-webkit-scrollbar {
+	display: none;
+	height: 0;
+	width: 0;
+}
+
+// Intro shell: targets intro group in new structure (__content child) and legacy (__layout direct child).
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__content > .nelyqo-horizontal-scroll__intro,
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__cards > .nelyqo-horizontal-scroll__intro,
+.wp-block-nelyqo-horizontal-scroll > .nelyqo-horizontal-scroll__layout > .nelyqo-horizontal-scroll__intro {
+	align-self: flex-start;
+	background:
+		linear-gradient(180deg, var(--nelyqo-horizontal-scroll-surface-highlight), transparent 58%),
+		var(--nelyqo-horizontal-scroll-surface);
+	border: 1px solid var(--wp--custom--color--border-soft);
+	border-radius: 28px;
+	box-shadow: 0 24px 56px var(--wp--custom--color--shadow-soft);
+	flex: 0 0 var(--nelyqo-horizontal-scroll-intro-width);
+	max-inline-size: var(--nelyqo-horizontal-scroll-intro-width);
+	padding: clamp(24px, 3vw, 36px);
+	position: relative;
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+	z-index: 2;
+}
+
+.wp-block-nelyqo-horizontal-scroll.is-tone-dark
+.nelyqo-horizontal-scroll__content > .nelyqo-horizontal-scroll__intro,
+.wp-block-nelyqo-horizontal-scroll.is-tone-dark
+.nelyqo-horizontal-scroll__cards > .nelyqo-horizontal-scroll__intro,
+.wp-block-nelyqo-horizontal-scroll.is-tone-dark > .nelyqo-horizontal-scroll__layout > .nelyqo-horizontal-scroll__intro {
+	border-color: color-mix(in srgb, var(--wp--preset--color--background) 10%, transparent);
+	box-shadow: 0 32px 64px var(--wp--custom--color--shadow-strong);
+}
+
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__intro
+:where(.wp-block-group__inner-container) {
+	display: flex;
+	flex-direction: column;
+	gap: clamp(16px, 2vw, 24px);
+	max-inline-size: 36rem;
+}
+
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__intro
+:where(.nelyqo-horizontal-scroll__eyebrow) {
+	color: var(--nelyqo-horizontal-scroll-accent);
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.32em;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__intro
+:where(.wp-block-group__inner-container > *) {
+	margin: 0;
+}
+
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__intro
+:where(.wp-block-heading) {
+	line-height: 0.98;
+	max-inline-size: 12ch;
+	text-wrap: balance;
+}
+
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__intro
+:where(p) {
+	color: var(--nelyqo-horizontal-scroll-muted);
+	max-inline-size: 34ch;
+}
+
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__intro
+:where(.wp-block-buttons:last-child) {
+	padding-top: 8px;
+}
+
+// Eyebrow utility class usable in content area (non-intro context).
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__content
+:where(.nelyqo-horizontal-scroll__eyebrow) {
+	color: var(--nelyqo-horizontal-scroll-accent);
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.32em;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__cards > .wp-block-nelyqo-scroll-card,
+.wp-block-nelyqo-horizontal-scroll > .nelyqo-horizontal-scroll__layout > .wp-block-nelyqo-scroll-card {
+	align-self: flex-start;
+	flex: 0 0 var(--nelyqo-horizontal-scroll-card-width);
+	max-inline-size: var(--nelyqo-horizontal-scroll-card-width);
+	min-block-size: 0;
+	min-height: 0;
+	min-inline-size: var(--nelyqo-horizontal-scroll-card-width);
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+}
+
+.wp-block-nelyqo-horizontal-scroll
+.wp-block-nelyqo-scroll-card
+.nelyqo-scroll-card__content {
+	height: auto;
+}
+
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__cards > .wp-block-nelyqo-scroll-card.is-height-auto,
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__cards > .wp-block-nelyqo-scroll-card.is-height-medium,
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__cards > .wp-block-nelyqo-scroll-card.is-height-large,
+.wp-block-nelyqo-horizontal-scroll
+.nelyqo-horizontal-scroll__cards > .wp-block-nelyqo-scroll-card.is-height-medium:not(
+	:has(.wp-block-image, figure.wp-block-image)
+),
+.wp-block-nelyqo-horizontal-scroll > .nelyqo-horizontal-scroll__layout > .wp-block-nelyqo-scroll-card.is-height-auto,
+.wp-block-nelyqo-horizontal-scroll > .nelyqo-horizontal-scroll__layout > .wp-block-nelyqo-scroll-card.is-height-medium,
+.wp-block-nelyqo-horizontal-scroll > .nelyqo-horizontal-scroll__layout > .wp-block-nelyqo-scroll-card.is-height-large,
+.wp-block-nelyqo-horizontal-scroll > .nelyqo-horizontal-scroll__layout > .wp-block-nelyqo-scroll-card.is-height-medium:not(
+	:has(.wp-block-image, figure.wp-block-image)
+) {
+	min-block-size: 0;
+	min-height: 0;
+}
+
+@media (min-width: 782px) {
+	// Root is the scroll budget container (tall but transparent).
+	// Background moves to sticky so the visual area stays at natural content height.
+	.wp-block-nelyqo-horizontal-scroll.is-nelyqo-horizontal-ready {
+		background: none;
+	}
+
+	.wp-block-nelyqo-horizontal-scroll.is-nelyqo-horizontal-ready > .nelyqo-horizontal-scroll__space-holder {
+		min-block-size: 0;
+	}
+
+	// Sticky stage: fills the useful viewport during the pinned phase, hiding the scroll tunnel.
+	// Symmetric gradient frames the stage at top and bottom; clean surface in the center (cards).
+	// Content is centered vertically inside the stage; cards keep natural height.
+	.wp-block-nelyqo-horizontal-scroll.is-nelyqo-horizontal-ready
+	.nelyqo-horizontal-scroll__sticky {
+		background:
+			linear-gradient(180deg, var(--nelyqo-horizontal-scroll-surface-highlight) 0%, transparent 32%, transparent 68%, var(--nelyqo-horizontal-scroll-surface-highlight) 100%),
+			var(--nelyqo-horizontal-scroll-surface);
+		display: flex;
+		flex-direction: column;
+		gap: clamp(24px, 3vw, 40px);
+		justify-content: center;
+		min-height: var(--nelyqo-horizontal-viewport-height);
+		overflow: visible;
+		position: sticky;
+		top: var(--nelyqo-horizontal-pin-top, var(--nelyqo-horizontal-sticky-offset));
+	}
+
+	// Content area in desktop ready state: constrained width, centered, no block padding on top
+	// (the flex gap on sticky handles spacing between content and track).
+	.wp-block-nelyqo-horizontal-scroll.is-nelyqo-horizontal-ready
+	.nelyqo-horizontal-scroll__content {
+		box-sizing: border-box;
+		flex-shrink: 0;
+		margin-inline: auto;
+		max-inline-size: min(100%, var(--nelyqo-horizontal-scroll-content-width));
+		padding-block: 0;
+		padding-inline: var(--nelyqo-horizontal-scroll-layout-padding-inline);
+		width: 100%;
+	}
+
+	.wp-block-nelyqo-horizontal-scroll.alignwide.is-nelyqo-horizontal-ready
+	.nelyqo-horizontal-scroll__content,
+	.wp-block-nelyqo-horizontal-scroll.alignfull.is-nelyqo-horizontal-ready
+	.nelyqo-horizontal-scroll__content {
+		max-inline-size: min(100%, var(--nelyqo-horizontal-scroll-wide-width));
+	}
+
+	// Horizontal container: constrained to content/wide width, clips the translateX track.
+	// flex-shrink: 0 prevents the window from shrinking inside the sticky flex stage.
+	// overflow-x:clip clips the translateX card motion without creating a BFC.
+	// overflow-y:visible lets vertical box-shadows escape into the sticky stage (overflow:visible).
+	// overflow:hidden was over-specified — it blocked vertical shadows unnecessarily.
+	.wp-block-nelyqo-horizontal-scroll.is-nelyqo-horizontal-ready
+	.nelyqo-horizontal-scroll__horizontal {
+		flex-shrink: 0;
+		margin-inline: auto;
+		max-inline-size: min(100%, var(--nelyqo-horizontal-scroll-content-width));
+		min-inline-size: 0;
+		overflow-x: clip;
+		overflow-y: visible;
+		position: relative;
+		width: 100%;
+	}
+
+	.wp-block-nelyqo-horizontal-scroll.alignwide.is-nelyqo-horizontal-ready
+	.nelyqo-horizontal-scroll__horizontal,
+	.wp-block-nelyqo-horizontal-scroll.alignfull.is-nelyqo-horizontal-ready
+	.nelyqo-horizontal-scroll__horizontal {
+		max-inline-size: min(100%, var(--nelyqo-horizontal-scroll-wide-width));
+	}
+
+	.wp-block-nelyqo-horizontal-scroll.is-nelyqo-horizontal-ready
+	.nelyqo-horizontal-scroll__cards {
+		margin-inline: 0;
+		max-inline-size: none;
+		min-inline-size: 100%;
+		overflow: visible;
+		scroll-snap-type: none;
+		transform: translate3d(var(--nelyqo-horizontal-track-offset), 0, 0);
+		width: max-content;
+		will-change: transform;
+	}
+
+	// Intro shell in new architecture: inside content block, not as a flex item in the track.
+	// Reset flex sizing to let it flow naturally with padding.
+	.wp-block-nelyqo-horizontal-scroll.is-nelyqo-horizontal-ready
+	.nelyqo-horizontal-scroll__content > .nelyqo-horizontal-scroll__intro {
+		flex: none;
+		scroll-snap-align: none;
+		scroll-snap-stop: normal;
+	}
+}
+
+@media (max-width: 781px) {
+	// Safari < 15.4 treats overflow:clip as visible; hidden is the fallback that actually clips.
+	.wp-block-nelyqo-horizontal-scroll {
+		overflow: hidden;
+		overflow: clip;
+	}
+
+	.nelyqo-horizontal-scroll__space-holder {
+		block-size: auto !important;
+	}
+
+	.nelyqo-horizontal-scroll__sticky {
+		block-size: auto;
+		overflow: visible;
+		position: relative;
+		top: auto;
+	}
+
+	.nelyqo-horizontal-scroll__horizontal {
+		min-inline-size: 100%;
+		overflow: visible;
+		position: relative;
+	}
+
+	.nelyqo-horizontal-scroll__content {
+		padding-block-start: var(--nelyqo-horizontal-scroll-padding-block);
+		padding-inline: var(--nelyqo-horizontal-scroll-layout-padding-inline);
+	}
+
+	.wp-block-nelyqo-horizontal-scroll
+	.nelyqo-horizontal-scroll__cards > .nelyqo-horizontal-scroll__intro,
+	.wp-block-nelyqo-horizontal-scroll > .nelyqo-horizontal-scroll__layout > .nelyqo-horizontal-scroll__intro {
+		flex-basis: min(84vw, 320px);
+		max-inline-size: min(84vw, 320px);
+		padding: 24px;
+	}
+
+	.wp-block-nelyqo-horizontal-scroll
+	.nelyqo-horizontal-scroll__cards > .wp-block-nelyqo-scroll-card,
+	.wp-block-nelyqo-horizontal-scroll > .nelyqo-horizontal-scroll__layout > .wp-block-nelyqo-scroll-card {
+		flex-basis: min(84vw, var(--nelyqo-horizontal-scroll-card-width));
+		max-inline-size: min(84vw, var(--nelyqo-horizontal-scroll-card-width));
+		min-inline-size: min(84vw, var(--nelyqo-horizontal-scroll-card-width));
+	}
+}

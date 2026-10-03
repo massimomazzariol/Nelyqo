@@ -1,0 +1,12 @@
+node_modules/
+*.log
+.env
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.wp-env.override.json
+test-results/
+*.zip
+
+# Build assets under blocks/**/build are intentionally tracked.

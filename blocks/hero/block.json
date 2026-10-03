@@ -1,0 +1,70 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nelyqo/hero",
+	"version": "0.1.0",
+	"title": "Nelyqo Hero",
+	"category": "design",
+	"icon": "cover-image",
+	"description": "Custom Hero with background image, overlay, intro line, pills and optional sticky scroll behavior.",
+	"allowedBlocks": [
+		"core/heading",
+		"core/paragraph",
+		"core/buttons",
+		"nelyqo/pills"
+	],
+	"supports": {
+		"html": false,
+		"align": [ "full", "wide" ],
+		"anchor": true
+	},
+	"attributes": {
+		"backgroundUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"backgroundId": {
+			"type": "number"
+		},
+		"backgroundMode": {
+			"type": "string",
+			"default": "color"
+		},
+		"backgroundColor": {
+			"type": "string",
+			"default": ""
+		},
+		"backgroundGradient": {
+			"type": "string",
+			"default": ""
+		},
+		"heightMode": {
+			"type": "string",
+			"default": "auto"
+		},
+		"scrollMode": {
+			"type": "string",
+			"default": "normal"
+		},
+		"hasOverlay": {
+			"type": "boolean",
+			"default": true
+		},
+		"overlayOpacity": {
+			"type": "number",
+			"default": 45
+		},
+		"contentAlign": {
+			"type": "string",
+			"default": "center"
+		},
+		"textColor": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"textdomain": "nelyqo-hero",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css"
+}

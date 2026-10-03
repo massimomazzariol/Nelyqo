@@ -1,0 +1,17 @@
+{
+	"name": "nelyqo-horizontal-scroll",
+	"version": "0.1.0",
+	"packageManager": "pnpm@10.34.5",
+	"description": "Nelyqo Horizontal Scroll block",
+	"author": "Massimo Mazzariol",
+	"main": "src/index.js",
+	"scripts": {
+		"build": "wp-scripts build src/index.js src/view.js",
+		"start": "wp-scripts start src/index.js src/view.js",
+		"format": "wp-scripts format",
+		"lint:js": "wp-scripts lint-js"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

@@ -1,0 +1,43 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nelyqo/pill",
+	"version": "0.1.0",
+	"title": "Nelyqo Pill",
+	"category": "design",
+	"icon": "tag",
+	"description": "Single editable pill",
+	"parent": [ "nelyqo/pills" ],
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"text": {
+			"type": "string",
+			"source": "html",
+			"selector": "span",
+			"default": ""
+		},
+		"pillColor": {
+			"type": "string",
+			"default": ""
+		},
+		"pillBorderColor": {
+			"type": "string",
+			"default": ""
+		},
+		"pillHoverBg": {
+			"type": "string",
+			"default": ""
+		},
+		"pillHoverColor": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"textdomain": "nelyqo-pill",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css"
+}

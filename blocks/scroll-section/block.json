@@ -1,0 +1,54 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nelyqo/scroll-section",
+	"version": "0.1.0",
+	"title": "Nelyqo Scroll Section",
+	"category": "design",
+	"icon": "columns",
+	"description": "Scroll-driven section with sticky intro content and stacked cards.",
+	"allowedBlocks": [ "core/group", "nelyqo/scroll-card" ],
+	"supports": {
+		"html": false,
+		"align": [ "full", "wide" ]
+	},
+	"attributes": {
+		"mode": {
+			"type": "string",
+			"default": "vertical-sticky"
+		},
+		"stickyEnabled": {
+			"type": "boolean",
+			"default": true
+		},
+		"stickyOffset": {
+			"type": "number",
+			"default": 32
+		},
+		"motionEnabled": {
+			"type": "boolean",
+			"default": true
+		},
+		"motionIntensity": {
+			"type": "string",
+			"default": "medium"
+		},
+		"cardEmphasis": {
+			"type": "boolean",
+			"default": true
+		},
+		"trackCardWidth": {
+			"type": "string",
+			"default": "medium"
+		},
+		"sectionTone": {
+			"type": "string",
+			"default": "light"
+		}
+	},
+	"textdomain": "nelyqo-scroll-section",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css",
+	"viewScript": "file:./build/view.js"
+}

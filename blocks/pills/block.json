@@ -1,0 +1,40 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nelyqo/pills",
+	"version": "0.1.0",
+	"title": "Nelyqo Pills",
+	"category": "design",
+	"icon": "tag",
+	"description": "Horizontal hashtags pills",
+	"allowedBlocks": [ "nelyqo/pill" ],
+	"supports": {
+		"html": false,
+		"align": [ "full", "wide" ],
+		"typography": {
+			"textAlign": true
+		}
+	},
+	"attributes": {
+		"pillColor": {
+			"type": "string",
+			"default": ""
+		},
+		"pillBorderColor": {
+			"type": "string",
+			"default": ""
+		},
+		"pillHoverBg": {
+			"type": "string",
+			"default": ""
+		},
+		"pillHoverColor": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"textdomain": "nelyqo-pills",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css"
+}

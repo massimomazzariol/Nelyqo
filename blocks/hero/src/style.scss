@@ -1,0 +1,220 @@
+.wp-block-nelyqo-hero {
+	position: relative;
+
+	/* width: 100%; */
+	--nelyqo-hero-background: var(--wp--preset--color--foreground);
+	--nelyqo-hero-text: var(--wp--preset--color--background);
+	--nelyqo-hero-overlay-color: var(--wp--preset--color--foreground);
+	background-color: var(--nelyqo-hero-background);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: var(--nelyqo-hero-text-color, var(--nelyqo-hero-text));
+	overflow: clip;
+}
+
+.wp-block-nelyqo-hero,
+.wp-block-nelyqo-hero .nelyqo-hero__stage,
+.wp-block-nelyqo-hero .nelyqo-hero__inner {
+	box-sizing: border-box;
+}
+
+.wp-block-nelyqo-hero.is-height-auto {
+	min-height: 560px;
+}
+
+.wp-block-nelyqo-hero.is-height-full {
+	min-height: 100vh;
+	min-height: 100svh;
+}
+
+.wp-block-nelyqo-hero.is-scroll-normal {
+	padding: 0;
+}
+
+.wp-block-nelyqo-hero.is-scroll-sticky {
+	min-height: 180vh;
+	min-height: 180svh;
+	padding: 0;
+}
+
+.wp-block-nelyqo-hero .nelyqo-hero__stage {
+	position: relative;
+	width: 100%;
+	padding: 64px 24px;
+	min-height: inherit;
+	display: flex;
+}
+
+.wp-block-nelyqo-hero.is-scroll-sticky .nelyqo-hero__stage {
+	position: sticky;
+	top: 0;
+	min-height: 100vh;
+	min-height: 100svh;
+}
+
+.wp-block-nelyqo-hero .nelyqo-hero__overlay {
+	position: absolute;
+	inset: 0;
+	background: var(--nelyqo-hero-overlay-color);
+	opacity: var(--nelyqo-hero-overlay-opacity, 0.45);
+	pointer-events: none;
+}
+
+.wp-block-nelyqo-hero.has-no-overlay .nelyqo-hero__overlay {
+	display: none;
+}
+
+.wp-block-nelyqo-hero.has-bg-mode-none {
+	background: none;
+	background-color: transparent;
+	color: inherit;
+}
+
+.wp-block-nelyqo-hero.has-bg-mode-none .nelyqo-hero__overlay {
+	display: none;
+}
+
+.wp-block-nelyqo-hero .nelyqo-hero__inner {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	max-width: min(100%, var(--wp--style--global--wide-size, 1280px));
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	min-height: clamp(320px, 60vh, 720px);
+	gap: 20px;
+}
+
+.wp-block-nelyqo-hero.is-height-full .nelyqo-hero__inner,
+.wp-block-nelyqo-hero.is-scroll-sticky .nelyqo-hero__inner {
+	min-height: calc(100vh - 128px);
+	min-height: calc(100svh - 128px);
+}
+
+.wp-block-nelyqo-hero.is-content-top .nelyqo-hero__inner {
+	justify-content: flex-start;
+}
+
+.wp-block-nelyqo-hero.is-content-center .nelyqo-hero__inner {
+	justify-content: center;
+}
+
+.wp-block-nelyqo-hero.is-content-bottom .nelyqo-hero__inner {
+	justify-content: flex-end;
+}
+
+.wp-block-nelyqo-hero .wp-block-heading,
+.wp-block-nelyqo-hero .wp-block-paragraph {
+	margin: 0;
+
+	/* color intentionally omitted — children inherit from hero root via CSS;
+	   Gutenberg's has-text-color / .has-*-color classes and inline styles win naturally */
+}
+
+.wp-block-nelyqo-hero .wp-block-paragraph.nelyqo-hero__intro {
+	font-size: 0.875rem;
+	line-height: 1.2;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	opacity: 0.9;
+	max-width: 40rem;
+}
+
+/* .wp-block-nelyqo-hero .wp-block-heading {
+	max-width: 14ch;
+} */
+
+.wp-block-nelyqo-hero .wp-block-paragraph:not(.nelyqo-hero__intro) {
+	max-width: 42rem;
+}
+
+.wp-block-nelyqo-hero .wp-block-buttons {
+	margin-top: 8px;
+}
+
+/* Gutenberg text alignment support */
+.wp-block-nelyqo-hero .has-text-align-center {
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.wp-block-nelyqo-hero .has-text-align-right {
+	text-align: right;
+	margin-left: auto;
+}
+
+.wp-block-nelyqo-hero .has-text-align-left {
+	text-align: left;
+	margin-right: auto;
+}
+
+/* Keep centered content visually centered */
+.wp-block-nelyqo-hero .wp-block-buttons.has-content-justification-center {
+	justify-content: center;
+}
+
+.wp-block-nelyqo-hero .wp-block-buttons.has-content-justification-right {
+	justify-content: flex-end;
+}
+
+/* If Nelyqo Pills is centered by editor classes */
+.wp-block-nelyqo-hero .wp-block-nelyqo-pills.has-text-align-center,
+.wp-block-nelyqo-hero .wp-block-nelyqo-pills[style*="text-align:center"] {
+	justify-content: center;
+}
+
+.wp-block-nelyqo-hero .wp-block-nelyqo-pills.has-text-align-right,
+.wp-block-nelyqo-hero .wp-block-nelyqo-pills[style*="text-align:right"] {
+	justify-content: flex-end;
+}
+
+/* Full/Wide alignment fixes */
+
+/* .wp-block-nelyqo-hero.alignfull {
+	width: 100vw;
+	max-width: 100vw;
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+}
+
+.wp-block-nelyqo-hero.alignwide {
+	width: 100%;
+	max-width: 1400px;
+} */
+
+@media (max-width: 782px) {
+
+	.wp-block-nelyqo-hero.is-height-auto {
+		min-height: 460px;
+	}
+
+	.wp-block-nelyqo-hero.is-scroll-sticky {
+		min-height: 160vh;
+		min-height: 160svh;
+	}
+
+	.wp-block-nelyqo-hero .nelyqo-hero__stage {
+		padding: 40px 20px;
+	}
+
+	.wp-block-nelyqo-hero .nelyqo-hero__inner {
+		min-height: 320px;
+	}
+
+	.wp-block-nelyqo-hero.is-height-full .nelyqo-hero__inner,
+	.wp-block-nelyqo-hero.is-scroll-sticky .nelyqo-hero__inner {
+		min-height: calc(100vh - 80px);
+		min-height: calc(100svh - 80px);
+	}
+
+	// Safari < 15.4 treats overflow:clip as visible. Scoped to is-scroll-normal because
+	// overflow:hidden would break position:sticky inside is-scroll-sticky.
+	.wp-block-nelyqo-hero.is-scroll-normal {
+		overflow: hidden;
+		overflow: clip;
+	}
+}

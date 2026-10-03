@@ -1,0 +1,44 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nelyqo/fullpage-section",
+	"version": "0.1.0",
+	"title": "Nelyqo Fullpage Section",
+	"category": "design",
+	"icon": "cover-image",
+	"description": "Custom viewport-driven section where consecutive block instances become vertical slides on the frontend while inner blocks stay normal content.",
+	"supports": {
+		"html": false,
+		"align": [ "full", "wide" ]
+	},
+	"attributes": {
+		"sectionTone": {
+			"type": "string",
+			"default": "light"
+		},
+		"heightMode": {
+			"type": "string",
+			"default": "viewport"
+		},
+		"verticalAlign": {
+			"type": "string",
+			"default": "center"
+		}
+	},
+	"variations": [
+		{
+			"name": "full-width",
+			"title": "Nelyqo Fullpage Section",
+			"isDefault": true,
+			"attributes": {
+				"align": "full"
+			},
+			"scope": [ "inserter" ]
+		}
+	],
+	"textdomain": "nelyqo-fullpage-section",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css",
+	"viewScript": "file:./build/view.js"
+}

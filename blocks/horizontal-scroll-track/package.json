@@ -1,0 +1,17 @@
+{
+	"name": "nelyqo-horizontal-scroll-track",
+	"version": "0.1.0",
+	"packageManager": "pnpm@10.34.5",
+	"description": "Nelyqo Horizontal Scroll Track child block",
+	"author": "Massimo Mazzariol",
+	"main": "src/index.js",
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format": "wp-scripts format",
+		"lint:js": "wp-scripts lint-js"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^30.0.0"
+	}
+}

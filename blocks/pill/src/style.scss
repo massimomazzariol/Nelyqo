@@ -1,0 +1,41 @@
+.wp-block-nelyqo-pill {
+
+	/* cursor: pointer; */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin: 5px 5px;
+	padding: 8px 16px;
+	border:
+		1px solid
+		var(--nelyqo-pill-border-color, var(--wp--preset--color--accent));
+	border-radius: 999px;
+	background: transparent;
+	color: var(--nelyqo-pill-color, var(--wp--preset--color--accent));
+	font-size: 14px;
+	line-height: 1;
+	white-space: nowrap;
+	box-sizing: border-box;
+	transition:
+		background-color 0.25s ease-in-out,
+		color 0.25s ease-in-out,
+		border-color 0.25s ease-in-out,
+		transform 0.25s ease-in-out,
+		box-shadow 0.25s ease-in-out;
+}
+
+.wp-block-nelyqo-pill:hover {
+	background: var(--nelyqo-pill-hover-bg, var(--wp--preset--color--primary));
+	color: var(--nelyqo-pill-hover-color, var(--wp--preset--color--on-primary));
+	border-color: var(--nelyqo-pill-hover-bg, var(--wp--preset--color--primary));
+	transform: scale(1.1);
+	box-shadow: 0 4px 12px var(--wp--custom--color--shadow-medium);
+}
+
+.wp-block-nelyqo-pill:hover span {
+	color: inherit;
+}
+
+.wp-block-nelyqo-pill span {
+	display: inline-block;
+}

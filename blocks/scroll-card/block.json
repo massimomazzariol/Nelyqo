@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nelyqo/scroll-card",
+	"version": "0.1.0",
+	"title": "Nelyqo Scroll Card",
+	"category": "design",
+	"icon": "index-card",
+	"description": "Card used inside Nelyqo scroll sections and horizontal scrolls.",
+	"parent": [
+		"nelyqo/scroll-section",
+		"nelyqo/horizontal-scroll",
+		"nelyqo/horizontal-scroll-track"
+	],
+	"supports": {
+		"html": false,
+		"reusable": false
+	},
+	"attributes": {
+		"tone": {
+			"type": "string",
+			"default": "light"
+		},
+		"height": {
+			"type": "string",
+			"default": "medium"
+		},
+		"featured": {
+			"type": "boolean",
+			"default": false
+		},
+		"ctaShell": {
+			"type": "boolean",
+			"default": true
+		},
+		"showIndex": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"textdomain": "nelyqo-scroll-card",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css"
+}

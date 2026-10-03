@@ -1,0 +1,31 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nelyqo/horizontal-scroll-content",
+	"version": "0.1.0",
+	"title": "Horizontal Scroll Content",
+	"category": "design",
+	"icon": "editor-alignleft",
+	"description": "Editorial content area inside Nelyqo Horizontal Scroll. Stays static while cards translate.",
+	"parent": [ "nelyqo/horizontal-scroll" ],
+	"allowedBlocks": [
+		"core/heading",
+		"core/paragraph",
+		"core/buttons",
+		"core/button",
+		"core/image",
+		"core/group",
+		"core/list",
+		"core/spacer",
+		"nelyqo/horizontal-scroll-intro-card"
+	],
+	"supports": {
+		"html": false,
+		"reusable": false,
+		"lock": false
+	},
+	"textdomain": "nelyqo-horizontal-scroll-content",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css"
+}

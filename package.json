@@ -1,0 +1,13 @@
+{
+	"name": "nelyqo-theme",
+	"private": true,
+	"description": "Nelyqo WordPress theme tooling",
+	"scripts": {
+		"build": "pnpm -r --if-present run build",
+		"format": "pnpm -r --if-present run format",
+		"lint:js": "pnpm -r --if-present run lint:js",
+		"lint:css": "pnpm --filter nelyqo-hero exec wp-scripts lint-style --config ../../.stylelintrc.json \"../../blocks/**/src/**/*.scss\" \"../../assets/css/*.css\" \"../../style.css\"",
+		"check": "pnpm lint:js && pnpm lint:css && pnpm build"
+	},
+	"packageManager": "pnpm@10.34.5"
+}

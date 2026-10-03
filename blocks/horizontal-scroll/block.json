@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nelyqo/horizontal-scroll",
+	"version": "0.1.0",
+	"title": "Nelyqo Horizontal Scroll",
+	"category": "design",
+	"icon": "leftright",
+	"description": "Pinned horizontal showcase: editorial content stays static, cards translate on vertical scroll.",
+	"allowedBlocks": [
+		"nelyqo/horizontal-scroll-content",
+		"nelyqo/horizontal-scroll-track"
+	],
+	"supports": {
+		"html": false,
+		"align": [ "full", "wide" ]
+	},
+	"attributes": {
+		"trackCardWidth": {
+			"type": "string",
+			"default": "medium"
+		},
+		"sectionTone": {
+			"type": "string",
+			"default": "light"
+		}
+	},
+	"textdomain": "nelyqo-horizontal-scroll",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css",
+	"viewScript": "file:./build/view.js"
+}

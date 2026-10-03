@@ -1,0 +1,111 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Night",
+	"settings": {
+		"color": {
+			"palette": [
+				{
+					"color": "#0F1420",
+					"name": "Background",
+					"slug": "background"
+				},
+				{
+					"color": "#171E2E",
+					"name": "Surface",
+					"slug": "surface"
+				},
+				{
+					"color": "#1F2738",
+					"name": "Alternate Surface",
+					"slug": "surface-alt"
+				},
+				{
+					"color": "#F1EEE7",
+					"name": "Foreground",
+					"slug": "foreground"
+				},
+				{
+					"color": "#A3A9B6",
+					"name": "Muted Foreground",
+					"slug": "foreground-muted"
+				},
+				{
+					"color": "#D4A657",
+					"name": "Primary",
+					"slug": "primary"
+				},
+				{
+					"color": "#B88A3D",
+					"name": "Strong Primary",
+					"slug": "primary-strong"
+				},
+				{
+					"color": "#0F1420",
+					"name": "On Primary",
+					"slug": "on-primary"
+				},
+				{
+					"color": "#5F87AD",
+					"name": "Accent",
+					"slug": "accent"
+				},
+				{
+					"color": "#0F1420",
+					"name": "On Accent",
+					"slug": "on-accent"
+				},
+				{
+					"color": "#262F42",
+					"name": "Line",
+					"slug": "line"
+				}
+			]
+		},
+		"typography": {
+			"fontFamilies": [
+				{
+					"name": "DM Sans",
+					"slug": "system-sans",
+					"fontFamily": "\"DM Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "DM Sans",
+							"fontStyle": "normal",
+							"fontWeight": "400 700",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/dm-sans.woff2"
+							]
+						}
+					]
+				},
+				{
+					"name": "DM Serif Display",
+					"slug": "heading",
+					"fontFamily": "\"DM Serif Display\", Georgia, serif",
+					"fontFace": [
+						{
+							"fontFamily": "DM Serif Display",
+							"fontStyle": "normal",
+							"fontWeight": "400",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/dm-serif-display.woff2"
+							]
+						},
+						{
+							"fontFamily": "DM Serif Display",
+							"fontStyle": "italic",
+							"fontWeight": "400",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/dm-serif-display-italic.woff2"
+							]
+						}
+					]
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,111 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Modern clean",
+	"settings": {
+		"color": {
+			"palette": [
+				{
+					"color": "#FFFFFF",
+					"name": "Background",
+					"slug": "background"
+				},
+				{
+					"color": "#F4F5F2",
+					"name": "Surface",
+					"slug": "surface"
+				},
+				{
+					"color": "#E9ECE7",
+					"name": "Alternate Surface",
+					"slug": "surface-alt"
+				},
+				{
+					"color": "#15201C",
+					"name": "Foreground",
+					"slug": "foreground"
+				},
+				{
+					"color": "#5E6A64",
+					"name": "Muted Foreground",
+					"slug": "foreground-muted"
+				},
+				{
+					"color": "#1F5C4A",
+					"name": "Primary",
+					"slug": "primary"
+				},
+				{
+					"color": "#164536",
+					"name": "Strong Primary",
+					"slug": "primary-strong"
+				},
+				{
+					"color": "#FFFFFF",
+					"name": "On Primary",
+					"slug": "on-primary"
+				},
+				{
+					"color": "#B08D57",
+					"name": "Accent",
+					"slug": "accent"
+				},
+				{
+					"color": "#15201C",
+					"name": "On Accent",
+					"slug": "on-accent"
+				},
+				{
+					"color": "#E2E6E1",
+					"name": "Line",
+					"slug": "line"
+				}
+			]
+		},
+		"typography": {
+			"fontFamilies": [
+				{
+					"name": "Inter",
+					"slug": "system-sans",
+					"fontFamily": "Inter, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Inter",
+							"fontStyle": "normal",
+							"fontWeight": "400 700",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/inter.woff2"
+							]
+						}
+					]
+				},
+				{
+					"name": "Instrument Serif",
+					"slug": "heading",
+					"fontFamily": "\"Instrument Serif\", Georgia, serif",
+					"fontFace": [
+						{
+							"fontFamily": "Instrument Serif",
+							"fontStyle": "normal",
+							"fontWeight": "400",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/instrument-serif.woff2"
+							]
+						},
+						{
+							"fontFamily": "Instrument Serif",
+							"fontStyle": "italic",
+							"fontWeight": "400",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/instrument-serif-italic.woff2"
+							]
+						}
+					]
+				}
+			]
+		}
+	}
+}

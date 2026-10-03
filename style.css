@@ -1,0 +1,61 @@
+/*
+Theme Name: Nelyqo
+Author: Massimo Mazzariol
+Description: A standalone block theme with reusable interactive sections, scroll-driven layouts, semantic design tokens, and style variations.
+Requires at least: 6.9
+Tested up to: 7.0
+Requires PHP: 8.2
+Version: 0.2.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: nelyqo
+Tags: block-patterns, block-styles, custom-colors, editor-style, full-site-editing, wide-blocks
+*/
+
+/* Sticky section (core/group block style): the Group's content holds still for a stretch
+   of scrolling before moving on, the same mechanism as the Hero block's sticky mode. */
+.wp-block-group.is-style-sticky-section {
+  min-height: 180vh;
+  min-height: 180svh;
+}
+
+.wp-block-group.is-style-sticky-section > * {
+  position: sticky;
+  top: 0;
+}
+
+@media (max-width: 781px) {
+
+  .wp-block-group.is-style-sticky-section {
+    min-height: 160vh;
+    min-height: 160svh;
+  }
+}
+
+/* Keep the editor canvas compact. */
+.editor-styles-wrapper .wp-block-group.is-style-sticky-section {
+  min-height: 0;
+}
+
+/* Reveal on scroll (core/group block style): text, buttons and accordions inside the Group
+   rise gently into place as they enter the viewport. Images stay still on purpose.
+   CSS only; skipped without scroll-driven animation support or with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+
+  @supports (animation-timeline: view()) {
+
+    .wp-block-group.is-style-reveal :is(h1, h2, h3, h4, h5, h6, p, .wp-block-buttons, .wp-block-list, .wp-block-quote, .wp-block-details) {
+      animation: nelyqo-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 85%;
+    }
+  }
+}
+
+@keyframes nelyqo-reveal {
+
+  from {
+    opacity: 0;
+    transform: translateY(1.1rem);
+  }
+}
