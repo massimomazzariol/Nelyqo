@@ -1,0 +1,11 @@
+{
+	"type": "theme",
+	"slug": "nelyqo",
+	"blueprint": "lean/blueprint.json",
+	"pages": [ "/" ],
+	"budget": {
+		"js": 0,
+		"requests": 3,
+		"a11y": 0
+	}
+}

@@ -22,3 +22,5 @@ docs export-ignore
 package.json export-ignore
 pnpm-lock.yaml export-ignore
 pnpm-workspace.yaml export-ignore
+lean.json export-ignore
+lean export-ignore
