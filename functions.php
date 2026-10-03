@@ -60,6 +60,10 @@ function nelyqo_enqueue_styles() {
 		array( 'nelyqo-style' ),
 		(string) filemtime( get_template_directory() . '/assets/css/structure.css' )
 	);
+
+	// With a path, WordPress inlines these small stylesheets (within styles_inline_size_limit): two requests fewer.
+	wp_style_add_data( 'nelyqo-style', 'path', get_template_directory() . '/style.css' );
+	wp_style_add_data( 'nelyqo-structure', 'path', get_template_directory() . '/assets/css/structure.css' );
 }
 
 /**
