@@ -136,7 +136,7 @@ const createRuntimeStructure = ( root ) => {
 
 	if ( contentEl ) {
 		// New: content and layout are siblings; insert spaceHolder before content,
-		// move both into sticky — content first (static), then horizontal (translated).
+		// move both into sticky - content first (static), then horizontal (translated).
 		root.insertBefore( spaceHolder, contentEl );
 		spaceHolder.appendChild( sticky );
 		sticky.appendChild( contentEl );

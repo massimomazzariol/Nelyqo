@@ -308,7 +308,7 @@
 	// flex-shrink: 0 prevents the window from shrinking inside the sticky flex stage.
 	// overflow-x:clip clips the translateX card motion without creating a BFC.
 	// overflow-y:visible lets vertical box-shadows escape into the sticky stage (overflow:visible).
-	// overflow:hidden was over-specified — it blocked vertical shadows unnecessarily.
+	// overflow:hidden was over-specified - it blocked vertical shadows unnecessarily.
 	.wp-block-nelyqo-horizontal-scroll.is-nelyqo-horizontal-ready
 	.nelyqo-horizontal-scroll__horizontal {
 		flex-shrink: 0;
