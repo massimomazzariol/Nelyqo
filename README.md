@@ -78,4 +78,4 @@ Read [AGENTS.md](AGENTS.md) and the [project principles](docs/PROJECT-PRINCIPLES
 
 ## License
 
-GPL-2.0-or-later. Copyright 2026 Massimo Mazzariol, [https://github.com/massimomazzariol/Nelyqo](https://github.com/massimomazzariol/Nelyqo). If you reuse the code, keep the copyright notice.
+GPL-2.0-or-later. Copyright 2026 Massimo Mazzariol, [https://github.com/massimomazzariol/Nelyqo](https://github.com/massimomazzariol/Nelyqo). If you reuse the code, keep the copyright notices and the [NOTICE](NOTICE) file.
