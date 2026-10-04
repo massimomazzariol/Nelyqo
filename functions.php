@@ -3,6 +3,7 @@
  * Nelyqo theme functions.
  *
  * @package Nelyqo
+ * @copyright 2026 Massimo Mazzariol - https://github.com/massimomazzariol/Nelyqo
  */
 
 add_action( 'after_setup_theme', 'nelyqo_theme_setup' );

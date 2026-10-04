@@ -44,7 +44,7 @@ Nelyqo is a standalone WordPress block theme. It provides reusable interactive s
 
 == Copyright ==
 
-Nelyqo WordPress Theme, (C) 2026 Massimo Mazzariol
+Nelyqo WordPress Theme, (C) 2026 Massimo Mazzariol - https://github.com/massimomazzariol/Nelyqo
 Nelyqo is distributed under the terms of the GNU GPL.
 
 This program is free software: you can redistribute it and/or modify
