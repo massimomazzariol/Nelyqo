@@ -130,7 +130,21 @@ function nelyqo_save_style_variation() {
 	}
 	check_admin_referer( 'nelyqo_style_variation' );
 
-	$slug = sanitize_title( wp_unslash( $_POST['nelyqo_style'] ?? '' ) );
+	if ( ! nelyqo_apply_style_variation( sanitize_title( wp_unslash( $_POST['nelyqo_style'] ?? '' ) ) ) ) {
+		wp_die( esc_html__( 'Unknown style.', 'nelyqo' ), 400 );
+	}
+	wp_safe_redirect( add_query_arg( 'updated', '1', admin_url( 'themes.php?page=nelyqo' ) ) );
+	exit;
+}
+
+/**
+ * Makes a style variation (by slug; '' for the theme's own style) the site style, as the user
+ * global styles. Also used from WP-CLI: `wp eval 'nelyqo_apply_style_variation( "slug" );'`.
+ *
+ * @param string $slug Variation slug (sanitized title), or '' for the theme's own style.
+ * @return bool False when no variation has that slug.
+ */
+function nelyqo_apply_style_variation( $slug ) {
 	$data = array(
 		'version'                     => WP_Theme_JSON::LATEST_SCHEMA,
 		'isGlobalStylesUserThemeJSON' => true,
@@ -144,7 +158,7 @@ function nelyqo_save_style_variation() {
 			}
 		}
 		if ( ! $found ) {
-			wp_die( esc_html__( 'Unknown style.', 'nelyqo' ), 400 );
+			return false;
 		}
 		$data['title'] = $found['title'];
 		foreach ( array( 'settings', 'styles' ) as $key ) {
@@ -161,7 +175,5 @@ function nelyqo_save_style_variation() {
 		)
 	);
 	WP_Theme_JSON_Resolver::clean_cached_data();
-
-	wp_safe_redirect( add_query_arg( 'updated', '1', admin_url( 'themes.php?page=nelyqo' ) ) );
-	exit;
+	return true;
 }

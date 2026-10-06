@@ -4,13 +4,16 @@ Contributors: Massimo Mazzariol
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Nelyqo is a standalone WordPress block theme. It provides reusable interactive sections, scroll-driven layouts, patterns, semantic design tokens, custom blocks, and selectable style variations.
 
 == Changelog ==
+
+= 0.3.1 =
+* nelyqo_apply_style_variation( $slug ) applies a style from code or WP-CLI (the options page uses it too).
 
 = 0.3.0 =
 * Appearance > Nelyqo: pick the site style (theme.json style variations from the theme and its child) with palette previews; applied the way the Site Editor does.
