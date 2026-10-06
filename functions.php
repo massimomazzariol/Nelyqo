@@ -6,6 +6,8 @@
  * @copyright 2026 Massimo Mazzariol - https://github.com/massimomazzariol/Nelyqo
  */
 
+require get_template_directory() . '/inc/style-variations.php';
+
 add_action( 'after_setup_theme', 'nelyqo_theme_setup' );
 add_action( 'wp_enqueue_scripts', 'nelyqo_enqueue_styles' );
 add_action( 'init', 'nelyqo_register_custom_blocks' );

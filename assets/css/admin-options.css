@@ -1,0 +1,38 @@
+/*
+ * Appearance > Nelyqo. Colors and borders come from WordPress admin (the .card component and the
+ * admin color scheme variable); swatches show each style's own palette.
+ */
+.nelyqo-styles {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin: 1rem 0;
+	padding: 0;
+	border: 0;
+}
+
+.nelyqo-styles .card {
+	display: grid;
+	gap: 0.5rem;
+	width: 12rem;
+	min-width: 0;
+	margin: 0;
+	cursor: pointer;
+}
+
+.nelyqo-styles .card:has(input:checked) {
+	border-color: var(--wp-admin-theme-color);
+	box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
+}
+
+.nelyqo-style__swatches {
+	display: flex;
+	height: 2.5rem;
+	overflow: hidden;
+	border-radius: 3px;
+}
+
+.nelyqo-style__swatches span {
+	flex: 1;
+	background: var(--swatch);
+}
