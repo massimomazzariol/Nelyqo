@@ -2,15 +2,18 @@
 
 Contributors: Massimo Mazzariol
 Requires at least: 6.9
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Nelyqo is a standalone WordPress block theme. It provides reusable interactive sections, scroll-driven layouts, patterns, semantic design tokens, custom blocks, and selectable style variations.
 
 == Changelog ==
+
+= 0.2.1 =
+* Image lightbox shows the whole photo in its own proportions, not the gallery or thumbnail crop, and zooms out of the crop (backport of Gutenberg PR #79058 for WordPress 7.1.2; switches itself off when core changes).
 
 = 0.2.0 =
 * New default design: ivory, ink and terracotta palette with Fraunces and Instrument Sans (self-hosted); style guide in docs/STYLE-GUIDE.md.

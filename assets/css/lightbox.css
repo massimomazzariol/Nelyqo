@@ -1,0 +1,54 @@
+/*
+ * Image lightbox: original proportions instead of the thumbnail crop (Gutenberg PR #79058).
+ * Paired with assets/js/lightbox-view.js; both load only while WordPress core lacks the fix.
+ */
+
+/* The overlay's first container holds the thumbnail; it keeps the thumbnail's own size. */
+.wp-lightbox-overlay .lightbox-image-container:has(+ .lightbox-image-container) {
+	--wp--lightbox-image-width: var(--wp--lightbox-thumbnail-width);
+	--wp--lightbox-image-height: var(--wp--lightbox-thumbnail-height);
+}
+
+@media not (prefers-reduced-motion) {
+
+	body .wp-lightbox-overlay.zoom.active .lightbox-image-container {
+		animation-name: nelyqo-lightbox-zoom-in;
+	}
+
+	body .wp-lightbox-overlay.zoom.show-closing-animation:not(.active) .lightbox-image-container {
+		animation-name: nelyqo-lightbox-zoom-out;
+	}
+}
+
+/* Core's zoom keyframes plus a clip-path that starts at the thumbnail crop and opens to the full image. */
+@keyframes nelyqo-lightbox-zoom-in {
+
+	0% {
+		clip-path: var(--wp--lightbox-initial-clip);
+		transform: translate(calc((-100vw + var(--wp--lightbox-scrollbar-width)) / 2 + var(--wp--lightbox-initial-left-position)), calc(-50vh + var(--wp--lightbox-initial-top-position))) scale(var(--wp--lightbox-scale));
+	}
+
+	100% {
+		clip-path: inset(0);
+		transform: translate(-50%, -50%) scale(1, 1);
+	}
+}
+
+@keyframes nelyqo-lightbox-zoom-out {
+
+	0% {
+		visibility: visible;
+		clip-path: inset(0);
+		transform: translate(-50%, -50%) scale(1, 1);
+	}
+
+	99% {
+		visibility: visible;
+	}
+
+	100% {
+		visibility: hidden;
+		clip-path: var(--wp--lightbox-initial-clip);
+		transform: translate(calc((-100vw + var(--wp--lightbox-scrollbar-width)) / 2 + var(--wp--lightbox-initial-left-position)), calc(-50vh + var(--wp--lightbox-initial-top-position))) scale(var(--wp--lightbox-scale));
+	}
+}
