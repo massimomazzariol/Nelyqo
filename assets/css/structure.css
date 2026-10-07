@@ -243,3 +243,21 @@ h1, h2, h3, h4, h5, h6 {
 .wp-block-details[open] summary::after {
 	transform: rotate(45deg);
 }
+
+/*
+ * Image plugins that serve WebP/AVIF wrap the <img> in <picture>. Core image and gallery
+ * styles size the <img> against its figure, so the wrapper takes the same box: a block as tall
+ * as a sized figure (auto otherwise), and in cropped galleries the flex sizing core gives the <img>.
+ */
+.wp-block-image > picture,
+.wp-block-image > a > picture {
+	display: block;
+	height: 100%;
+}
+
+.wp-block-gallery.has-nested-images.is-cropped figure.wp-block-image:not(#individual-image) picture {
+	display: flex;
+	flex: 1 0 0%;
+	width: 100%;
+	height: 100%;
+}

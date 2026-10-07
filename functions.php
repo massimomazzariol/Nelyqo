@@ -7,6 +7,7 @@
  */
 
 require get_template_directory() . '/inc/style-variations.php';
+require get_template_directory() . '/inc/performance.php';
 
 add_action( 'after_setup_theme', 'nelyqo_theme_setup' );
 add_action( 'wp_enqueue_scripts', 'nelyqo_enqueue_styles' );

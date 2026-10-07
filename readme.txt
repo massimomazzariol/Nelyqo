@@ -4,13 +4,17 @@ Contributors: Massimo Mazzariol
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.3.1
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Nelyqo is a standalone WordPress block theme. It provides reusable interactive sections, scroll-driven layouts, patterns, semantic design tokens, custom blocks, and selectable style variations.
 
 == Changelog ==
+
+= 0.4.0 =
+* Performance defaults: the woff2 files of every theme.json fontFace (child included) are preloaded, the emoji polyfill is removed, and autoplay videos load and play only near the viewport (paused on their first frame with reduced motion). Filters: nelyqo_preload_fonts, nelyqo_disable_emoji, nelyqo_lazy_video.
+* Image and gallery blocks keep their size and crop when an image plugin wraps the image in <picture> (WebP/AVIF).
 
 = 0.3.1 =
 * nelyqo_apply_style_variation( $slug ) applies a style from code or WP-CLI (the options page uses it too).
