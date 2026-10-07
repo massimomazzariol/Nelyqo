@@ -64,7 +64,8 @@ function nelyqo_disable_emoji() {
 
 /**
  * Autoplaying videos no longer download on page load: the server drops autoplay and sets
- * preload="none", and assets/js/lazy-video.js plays each one when it nears the viewport.
+ * preload="none", and assets/js/lazy-video.js plays each one when it nears the viewport (within the
+ * 'nelyqo_lazy_video_margin' filter value, an IntersectionObserver rootMargin).
  * With reduced motion requested they stay paused on their first frame. Without JavaScript
  * they simply do not autoplay.
  *
@@ -87,7 +88,10 @@ function nelyqo_lazy_video( $content ) {
 	}
 	if ( $lazy ) {
 		$path = get_template_directory() . '/assets/js/lazy-video.js';
-		wp_enqueue_script( 'nelyqo-lazy-video', get_template_directory_uri() . '/assets/js/lazy-video.js', array(), (string) filemtime( $path ), array( 'strategy' => 'defer' ) );
+		if ( ! wp_script_is( 'nelyqo-lazy-video' ) ) {
+			wp_enqueue_script( 'nelyqo-lazy-video', get_template_directory_uri() . '/assets/js/lazy-video.js', array(), (string) filemtime( $path ), array( 'strategy' => 'defer' ) );
+			wp_add_inline_script( 'nelyqo-lazy-video', 'window.nelyqoLazyVideo = ' . wp_json_encode( array( 'rootMargin' => apply_filters( 'nelyqo_lazy_video_margin', '200px 0px' ) ) ) . ';', 'before' );
+		}
 	}
 	return $tags->get_updated_html();
 }

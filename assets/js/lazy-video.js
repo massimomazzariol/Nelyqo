@@ -21,7 +21,7 @@ const nelyqoObserver = new window.IntersectionObserver(
 			}
 		} );
 	},
-	{ rootMargin: '200px 0px' }
+	{ rootMargin: window.nelyqoLazyVideo?.rootMargin }
 );
 
 document
