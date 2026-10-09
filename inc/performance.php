@@ -9,6 +9,8 @@ add_action( 'wp_head', 'nelyqo_preload_fonts', 1 );
 add_action( 'init', 'nelyqo_disable_emoji' );
 add_filter( 'render_block_core/video', 'nelyqo_lazy_video' );
 add_filter( 'render_block_core/cover', 'nelyqo_lazy_video' );
+add_action( 'nelyqo_options_sections', 'nelyqo_performance_options', 5 );
+add_action( 'admin_post_nelyqo_performance', 'nelyqo_save_performance_options' );
 
 /**
  * Font files to preload: the first woff2 source of every fontFace that the active theme
@@ -44,10 +46,11 @@ function nelyqo_preload_fonts() {
 
 /**
  * Removes the emoji polyfill (a script and inline styles on every page): current browsers draw
- * emoji natively. Filter 'nelyqo_disable_emoji' to false to keep it.
+ * emoji natively. On by default; Appearance > Nelyqo > Performance turns it off, and the
+ * 'nelyqo_disable_emoji' filter has the last word.
  */
 function nelyqo_disable_emoji() {
-	if ( ! apply_filters( 'nelyqo_disable_emoji', true ) ) {
+	if ( ! apply_filters( 'nelyqo_disable_emoji', (bool) get_theme_mod( 'nelyqo_remove_emoji', true ) ) ) {
 		return;
 	}
 	remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
@@ -94,4 +97,38 @@ function nelyqo_lazy_video( $content ) {
 		}
 	}
 	return $tags->get_updated_html();
+}
+
+/**
+ * Appearance > Nelyqo > Performance: whether the emoji polyfill is removed.
+ */
+function nelyqo_performance_options() {
+	?>
+	<h2><?php esc_html_e( 'Performance', 'nelyqo' ); ?></h2>
+	<?php if ( isset( $_GET['performance'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only. ?>
+		<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Performance options saved.', 'nelyqo' ); ?></p></div>
+	<?php endif; ?>
+	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+		<input type="hidden" name="action" value="nelyqo_performance">
+		<?php wp_nonce_field( 'nelyqo_performance' ); ?>
+		<p>
+			<label><input type="checkbox" name="nelyqo_remove_emoji" value="1" aria-describedby="nelyqo-emoji-help" <?php checked( (bool) get_theme_mod( 'nelyqo_remove_emoji', true ) ); ?>> <?php esc_html_e( 'Remove the WordPress emoji script', 'nelyqo' ); ?></label>
+		</p>
+		<p class="description" id="nelyqo-emoji-help"><?php esc_html_e( 'Recommended: current browsers draw emoji themselves, and the script adds a request and inline code to every page. Turn it off only if visitors on very old devices see empty boxes instead of emoji.', 'nelyqo' ); ?></p>
+		<?php submit_button( __( 'Save performance options', 'nelyqo' ) ); ?>
+	</form>
+	<?php
+}
+
+/**
+ * Saves the performance options.
+ */
+function nelyqo_save_performance_options() {
+	if ( ! current_user_can( 'edit_theme_options' ) ) {
+		wp_die( esc_html__( 'You are not allowed to change these options.', 'nelyqo' ), 403 );
+	}
+	check_admin_referer( 'nelyqo_performance' );
+	set_theme_mod( 'nelyqo_remove_emoji', ! empty( $_POST['nelyqo_remove_emoji'] ) );
+	wp_safe_redirect( add_query_arg( 'performance', '1', admin_url( 'themes.php?page=nelyqo' ) ) );
+	exit;
 }
