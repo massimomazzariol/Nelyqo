@@ -1,0 +1,15 @@
+{
+	"_note": "Discretion (Appearance > Nelyqo): what WordPress announces about itself in every page and header. remove_actions: [hook, callback, priority] removed when 'Remove discovery links' is on; the features keep working, only the announcements go.",
+	"remove_actions": [
+		[ "wp_head", "rsd_link", 10 ],
+		[ "wp_head", "wlwmanifest_link", 10 ],
+		[ "wp_head", "wp_shortlink_wp_head", 10 ],
+		[ "wp_head", "rest_output_link_wp_head", 10 ],
+		[ "wp_head", "wp_oembed_add_discovery_links", 10 ],
+		[ "template_redirect", "wp_shortlink_header", 11 ],
+		[ "template_redirect", "rest_output_link_header", 11 ]
+	],
+	"headers": [ "X-Powered-By", "X-Pingback" ],
+	"rest_user_routes": [ "/wp/v2/users", "/wp/v2/users/(?P<id>[\\d]+)" ],
+	"oembed_author_fields": [ "author_name", "author_url" ]
+}

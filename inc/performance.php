@@ -97,8 +97,8 @@ function nelyqo_clean_html_data() {
 }
 
 /**
- * Turns off the signature comments plugins print in the page (for example The SEO Framework's
- * name and generation time), through their own filters listed in data/clean-html.json.
+ * Turns off the signature comments some plugins print in the page (their name, how long they took),
+ * through each plugin's own switch: the filters listed in data/clean-html.json.
  */
 function nelyqo_remove_signatures() {
 	if ( ! nelyqo_performance_settings()['remove_signatures'] ) {
@@ -196,7 +196,7 @@ function nelyqo_performance_options() {
 		<p>
 			<label><input type="checkbox" name="nelyqo_remove_signatures" value="1" aria-describedby="nelyqo-signatures-help" <?php checked( $settings['remove_signatures'] ); ?>> <?php esc_html_e( 'Remove plugin signatures', 'nelyqo' ); ?></label>
 		</p>
-		<p class="description" id="nelyqo-signatures-help"><?php esc_html_e( 'Plugins such as The SEO Framework write their name and how long they took into every page. Visitors and search engines do not need it, and it changes on every visit.', 'nelyqo' ); ?></p>
+		<p class="description" id="nelyqo-signatures-help"><?php esc_html_e( 'Some plugins write their name and how long they took into every page. Where the plugin offers a switch for it, it is turned off: visitors and search engines do not need it.', 'nelyqo' ); ?></p>
 		<p>
 			<label><input type="checkbox" name="nelyqo_remove_comments" value="1" aria-describedby="nelyqo-comments-help" <?php checked( $settings['remove_comments'] ); ?>> <?php esc_html_e( 'Remove HTML comments from pages', 'nelyqo' ); ?></label>
 		</p>

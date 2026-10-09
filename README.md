@@ -34,8 +34,15 @@ Pre-1.0 and in active use on client sites. Block names (`nelyqo/*`) are stable; 
 
 - Theme fonts preloaded, autoplay videos loaded only near the viewport.
 - No WordPress emoji script.
-- No plugin signature comments (like The SEO Framework's name and timing).
+- No plugin signature comments (name and timing), turned off through each plugin's own switch.
 - No HTML comments in the page sent to visitors: removed on the way out only when there are some, never inside scripts, styles or preformatted text. Files and saved content are untouched.
+
+**Discretion** (Appearance > Nelyqo, each switch on by default): pages say less about how the site is built and expose fewer doors.
+
+- No WordPress or PHP version in the page, asset addresses or headers.
+- No links announcing the API, editing apps, short links and embeds (the features keep working).
+- XML-RPC off: the old remote-publishing door often used to guess passwords.
+- User names hidden from visitors: no user list in the API, no author pages, no author in embeds or the sitemap.
 
 **Header**:
 
