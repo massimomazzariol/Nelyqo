@@ -14,6 +14,7 @@ Nelyqo is a standalone WordPress block theme. It provides reusable interactive s
 
 = 0.4.0 =
 * Performance defaults: the woff2 files of every theme.json fontFace (child included) are preloaded, the emoji polyfill is removed, and autoplay videos load and play only near the viewport (paused on their first frame with reduced motion). Filters: nelyqo_preload_fonts, nelyqo_disable_emoji, nelyqo_lazy_video.
+* Appearance > Nelyqo > Performance: three switches, all on by default: remove the emoji script, remove plugin signature comments (The SEO Framework name and timing, list in data/clean-html.json), and remove HTML comments from pages as they are sent (never inside scripts, styles or preformatted text; the files and the saved content are not changed).
 * Image and gallery blocks keep their size and crop when an image plugin wraps the image in <picture> (WebP/AVIF).
 
 = 0.3.1 =

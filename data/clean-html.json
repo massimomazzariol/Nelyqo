@@ -1,0 +1,9 @@
+{
+	"_note": "Clean HTML (Appearance > Nelyqo > Performance). signature_filters: plugin filters that turn their HTML signature comments off when they return false (checked in each plugin's code). keep_inside: elements whose content is never touched when comments are removed.",
+	"signature_filters": [
+		"the_seo_framework_indicator",
+		"the_seo_framework_indicator_timing",
+		"the_seo_framework_indicator_sitemap"
+	],
+	"keep_inside": [ "script", "style", "textarea", "pre", "template", "noscript" ]
+}

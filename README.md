@@ -30,6 +30,13 @@ Pre-1.0 and in active use on client sites. Block names (`nelyqo/*`) are stable; 
 - **Intro with coded list**: section intro next to a ruled list of rows with a short code, a name and a link (airports, branches, services).
 - **Steps and FAQ**: a numbered three-step process next to a FAQ accordion on the Details block.
 
+**Performance** (Appearance > Nelyqo, each switch on by default):
+
+- Theme fonts preloaded, autoplay videos loaded only near the viewport.
+- No WordPress emoji script.
+- No plugin signature comments (like The SEO Framework's name and timing).
+- No HTML comments in the page sent to visitors: removed on the way out only when there are some, never inside scripts, styles or preformatted text. Files and saved content are untouched.
+
 **Header**:
 
 - On the front page the header floats over the first section, starts transparent and fills in during the first 140px of scrolling.
