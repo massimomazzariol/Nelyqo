@@ -6,8 +6,12 @@
 [![PHP 8.2+](https://img.shields.io/badge/PHP-8.2%2B-777bb4?logo=php&logoColor=white)](https://www.php.net)
 [![License: GPL v2+](https://img.shields.io/badge/license-GPL--2.0--or--later-blue)](LICENSE)
 [![Try in Playground](https://img.shields.io/badge/demo-WordPress%20Playground-a94d29)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/massimomazzariol/Nelyqo/master/blueprint.json)
+[![Cookies: none](https://img.shields.io/badge/cookies-none-2e7d32)](#cookie-less-by-design)
+[![Third-party requests: 0](https://img.shields.io/badge/third--party%20requests-0-2e7d32)](#cookie-less-by-design)
 
 A WordPress block theme for scroll-driven storytelling: sections that hold still while you scroll, horizontal tracks, full-page sections and gentle reveals, built on Core blocks and `theme.json` with no page builder and almost no JavaScript.
+
+**Cookie-less, fast, and yours to leave.** No cookies, no browser storage, no tracking, no calls to Google Fonts or CDNs, motion done in CSS, and content saved as plain Core blocks that survive a theme switch.
 
 Made for small local businesses that sell on trust and booking requests (private drivers, guides, studios, B&Bs): one strong hero with a request card, clear lists, a short process and a FAQ.
 
@@ -16,6 +20,39 @@ Made for small local businesses that sell on trust and booking requests (private
 ![The three Nelyqo patterns on the front page](docs/screenshots/patterns.png)
 
 Pre-1.0 and in active use on client sites. Block names (`nelyqo/*`) are stable; CSS class names may still change before 1.0.
+
+## Why Nelyqo
+
+Most themes that do scroll effects bring a page builder, an animation library, a slider script and a font CDN with them. Nelyqo does the same job with the browser and WordPress itself.
+
+### Cookie-less by design
+
+Nelyqo itself does not set cookies, use persistent browser storage, perform tracking, or make third-party requests on the public site. This is a [project rule](docs/PROJECT-PRINCIPLES.md#privacy-and-cookie-less-architecture), not a setting:
+
+- No `document.cookie`, `localStorage`, `sessionStorage`, IndexedDB or service workers anywhere in the theme.
+- No analytics, pixels or telemetry, and no "phone home" from the admin either.
+- Fonts are self-hosted `woff2` files: visitors' IP addresses never go to Google Fonts or any other CDN.
+- No embeds load on their own.
+
+So the theme adds nothing to your cookie banner or your privacy policy. What plugins and WordPress login cookies do stays outside the theme, and Nelyqo does not tamper with them.
+
+### Fast because there is little to load
+
+- **Motion in CSS.** Sticky sections, the header that fills in on scroll and the reveal-on-scroll style use `position: sticky` and scroll-driven animations. No animation library, no scroll listeners for these effects.
+- **JavaScript only where a block needs it.** The interactive blocks (Scroll section, Horizontal scroll, Full-page section) each load their own small script, 1.5-2.8 KB gzipped, and only on pages that use them. The patterns and block styles need none.
+- **Small CSS.** The theme's global CSS is about 3 KB gzipped; each block's CSS loads only with the block.
+- **Good defaults, switchable.** Theme fonts preloaded, no WordPress emoji script, autoplay videos loaded only near the viewport, leftover HTML comments removed.
+
+### No lock-in
+
+- Content is plain Core blocks (Group, Cover, Details, Image) with block styles on top. Switch theme and your pages are still there and readable.
+- No page builder, no shortcodes, no hidden settings store, no required plugin.
+- Plugin friendly: no broad CSS or JavaScript overrides, no assumptions about which SEO, cache or form plugin you use.
+
+### Quiet and accessible
+
+- **Discretion** switches hide versions, user names and old doors like XML-RPC, so the site tells less about how it is built.
+- Keyboard operation, visible focus, semantic landmarks and `prefers-reduced-motion` are treated as correctness, not extras. Effects degrade to normal scrolling in browsers that lack them.
 
 ## What you get
 
@@ -65,7 +102,7 @@ Pre-1.0 and in active use on client sites. Block names (`nelyqo/*`) are stable; 
 
 ## Requirements
 
-- WordPress 6.9 or later (tested up to 7.0)
+- WordPress 6.9 or later (tested up to 7.1)
 - PHP 8.2 or later
 
 ## Install

@@ -10,6 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Nelyqo is a standalone WordPress block theme. It provides reusable interactive sections, scroll-driven layouts, patterns, semantic design tokens, custom blocks, and selectable style variations.
 
+Nelyqo itself sets no cookies, uses no browser storage, does no tracking and makes no third-party requests on the public site: fonts are self-hosted and scroll effects are done in CSS.
+
 == Changelog ==
 
 = 0.4.0 =
