@@ -1,4 +1,8 @@
-# Nelyqo
+<p align="center">
+  <img src="docs/banner.png" alt="Nelyqo: scroll-driven storytelling for WordPress, built on Core blocks and plain CSS. Cookie-less, zero third-party requests, CSS-first motion, no page builder." width="100%">
+</p>
+
+<div align="center">
 
 [![CI](https://github.com/massimomazzariol/Nelyqo/actions/workflows/ci.yml/badge.svg)](https://github.com/massimomazzariol/Nelyqo/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/massimomazzariol/Nelyqo)](https://github.com/massimomazzariol/Nelyqo/releases/latest)
@@ -8,6 +12,8 @@
 [![Try in Playground](https://img.shields.io/badge/demo-WordPress%20Playground-a94d29)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/massimomazzariol/Nelyqo/master/blueprint.json)
 [![Cookies: none](https://img.shields.io/badge/cookies-none-2e7d32)](#cookie-less-by-design)
 [![Third-party requests: 0](https://img.shields.io/badge/third--party%20requests-0-2e7d32)](#cookie-less-by-design)
+
+</div>
 
 A WordPress block theme for scroll-driven storytelling: sections that hold still while you scroll, horizontal tracks, full-page sections and gentle reveals, built on Core blocks and `theme.json` with no page builder and almost no JavaScript.
 
