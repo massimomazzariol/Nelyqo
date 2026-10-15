@@ -8,7 +8,7 @@
 		"lint:js": "pnpm -r --if-present run lint:js",
 		"lint:css": "pnpm --filter nelyqo-hero exec wp-scripts lint-style --config ../../.stylelintrc.json \"../../blocks/**/src/**/*.scss\" \"../../assets/css/*.css\" \"../../style.css\"",
 		"check": "pnpm lint:js && pnpm lint:css && pnpm build",
-		"wp-env": "wp-env"
+		"wp-env": "node --require ./lean/dns-fallback.cjs node_modules/@wordpress/env/bin/wp-env"
 	},
 	"packageManager": "pnpm@10.34.5",
 	"devDependencies": {
