@@ -24,10 +24,11 @@ add_filter( 'render_block_nelyqo/scroll-section', 'nelyqo_scroll_section_script'
  * backport off by itself, so it can never pin an outdated copy.
  */
 function nelyqo_backport_lightbox() {
-	// MD5 of wp-includes/js/dist/script-modules/block-library/image/view.js in WordPress 7.1.2.
+	// MD5 of wp-includes/js/dist/script-modules/block-library/image/view.js in WordPress 7.1.2 (unchanged in 7.1.3).
 	$patched_from = '62f41374a716f8279dbad485c21344a9';
 	$core_file    = ABSPATH . WPINC . '/js/dist/script-modules/block-library/image/view.js';
-	if ( ! is_readable( $core_file ) || md5_file( $core_file ) !== $patched_from ) {
+	// Line endings are normalized: git checkouts on Windows and FTP text mode turn LF into CRLF.
+	if ( ! is_readable( $core_file ) || md5( str_replace( "\r\n", "\n", (string) file_get_contents( $core_file ) ) ) !== $patched_from ) {
 		return;
 	}
 
