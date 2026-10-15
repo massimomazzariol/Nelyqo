@@ -12,8 +12,11 @@ const PROPERTY_ACTIVE_OFFSET = '--nelyqo-fullpage-active-offset';
 const PROPERTY_PANEL_COUNT = '--nelyqo-fullpage-panel-count';
 const EDGE_TOLERANCE_PX = 1;
 const TRANSITION_SETTLE_BUFFER_MS = 50;
-const WHEEL_DELTA_THRESHOLD_RATIO = 0.055;
-const WHEEL_GESTURE_RESET_MS = 180;
+const WHEEL_DELTA_THRESHOLD_RATIO = 0.1;
+// A wheel gesture ends after this pause; trackpad inertia sends events every ~16 ms.
+const WHEEL_GESTURE_GAP_MS = 220;
+// Within a gesture, a delta this much larger than the previous one is a fresh push, not inertia.
+const WHEEL_NEW_PUSH_RATIO = 1.3;
 const WHEEL_DELTA_MODE_LINE = 1;
 const WHEEL_DELTA_MODE_PAGE = 2;
 const SWIPE_DISTANCE_RATIO = 0.14;
@@ -178,21 +181,6 @@ const waitForTransformTransition = ( element, callback ) => {
 	);
 };
 
-const resetWheelGesture = ( state ) => {
-	window.clearTimeout( state.wheelResetId );
-	state.wheelResetId = null;
-	state.wheelDirection = 0;
-	state.wheelDistance = 0;
-};
-
-const scheduleWheelGestureReset = ( state ) => {
-	window.clearTimeout( state.wheelResetId );
-	state.wheelResetId = window.setTimeout(
-		() => resetWheelGesture( state ),
-		WHEEL_GESTURE_RESET_MS
-	);
-};
-
 const updatePanelStates = ( state ) => {
 	state.panels.forEach( ( panel, index ) => {
 		const isActive = index === state.activeIndex;
@@ -228,7 +216,6 @@ const setActiveIndex = ( state, nextIndex, options = {} ) => {
 
 	state.isAnimating = true;
 	waitForTransformTransition( state.track, () => {
-		state.wheelLockedUntil = getNow() + TRANSITION_SETTLE_BUFFER_MS;
 		state.isAnimating = false;
 	} );
 
@@ -398,15 +385,32 @@ const handleWheel = ( state, event ) => {
 		return;
 	}
 
-	if ( state.isAnimating || getNow() < state.wheelLockedUntil ) {
+	// One gesture moves one slide at most. Trackpads keep sending decaying events (inertia) for
+	// 2-3 s after the fingers stop; they belong to the same gesture. A pause, a change of direction
+	// or a clearly stronger push starts a new one.
+	const now = getNow();
+	const strength = Math.abs( deltaY );
+	const isNewGesture =
+		now - state.wheelLastTime > WHEEL_GESTURE_GAP_MS ||
+		direction !== state.wheelDirection ||
+		strength > state.wheelLastStrength * WHEEL_NEW_PUSH_RATIO;
+
+	state.wheelLastTime = now;
+	state.wheelLastStrength = strength;
+
+	if ( isNewGesture ) {
+		state.wheelDirection = direction;
+		state.wheelDistance = 0;
+		state.wheelGestureUsed = false;
+	}
+
+	if ( state.isAnimating || state.wheelGestureUsed ) {
 		event.preventDefault();
 		event.stopPropagation();
-		resetWheelGesture( state );
 		return;
 	}
 
 	if ( ! canNavigate( state, direction ) ) {
-		resetWheelGesture( state );
 		if ( ! canScrollPage( direction ) ) {
 			event.preventDefault();
 			event.stopPropagation();
@@ -417,19 +421,13 @@ const handleWheel = ( state, event ) => {
 	event.preventDefault();
 	event.stopPropagation();
 
-	if ( state.wheelDirection !== direction ) {
-		resetWheelGesture( state );
-		state.wheelDirection = direction;
-	}
-
-	state.wheelDistance += Math.abs( deltaY );
-	scheduleWheelGestureReset( state );
+	state.wheelDistance += strength;
 
 	if ( state.wheelDistance < getWheelThreshold( state ) ) {
 		return;
 	}
 
-	resetWheelGesture( state );
+	state.wheelGestureUsed = true;
 	setActiveIndex( state, state.activeIndex + direction );
 };
 
@@ -649,8 +647,9 @@ const initSequence = ( panels ) => {
 		viewportHeight: 0,
 		wheelDirection: 0,
 		wheelDistance: 0,
-		wheelLockedUntil: 0,
-		wheelResetId: null,
+		wheelGestureUsed: false,
+		wheelLastStrength: 0,
+		wheelLastTime: 0,
 	};
 
 	runtime.sequence.classList.add( READY_CLASS );

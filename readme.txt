@@ -21,6 +21,7 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 * Scroll Section, horizontal track: the sideways-scrolling track can be reached with the keyboard.
 * Scroll Section: the horizontal track styles load only on pages that use that mode, so the block's stylesheet drops from 19.8 KB to 8.3 KB elsewhere.
 * Autoplay videos: the first one of the page (usually the hero background) keeps autoplay, so it starts without waiting for the script; the others still load only near the viewport. With reduced motion it is paused as before.
+* Full-page section: one wheel or trackpad gesture moves one slide at most. Before, the inertia that trackpads keep sending after a swipe could skip a slide; tiny nudges no longer move either.
 * Image lightbox backport: still applied on WordPress 7.1.3 (same core file as 7.1.2), and on sites where the core file was saved with Windows line endings. The core file is checked only on pages that show a lightbox, no longer on every request.
 
 = 0.4.0 =
