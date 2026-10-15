@@ -77,8 +77,44 @@
 /* Sand stream ------------------------------------------------------------- */
 
 .wp-block-group.is-style-sand-stream {
+	overflow: clip;
 	position: relative;
 	view-timeline-name: --nelyqo-sand;
+}
+
+/*
+ * Gold dust: two layers of specks over the sections, fine and coarse, painted from gradients (no
+ * images, no extra elements). Odd tile sizes keep the pattern from repeating visibly. It shows on
+ * dark grounds and nearly disappears on light ones, like dust in the light.
+ */
+.wp-block-group.is-style-sand-stream::before,
+.wp-block-group.is-style-sand-stream::after {
+	background-repeat: repeat;
+	content: "";
+	inset: -30% 0 0;
+	pointer-events: none;
+	position: absolute;
+	z-index: 1;
+}
+
+.wp-block-group.is-style-sand-stream::before {
+	background-image:
+		radial-gradient(1px 1px at 13% 27%, #fff4cc, transparent),
+		radial-gradient(1px 1px at 71% 83%, #f7d98b, transparent),
+		radial-gradient(1px 1px at 43% 57%, #e2b04a, transparent),
+		radial-gradient(1px 1px at 89% 11%, #f7d98b, transparent),
+		radial-gradient(1px 1px at 31% 93%, #fff4cc, transparent);
+	background-size: 173px 211px;
+	opacity: 0.5;
+}
+
+.wp-block-group.is-style-sand-stream::after {
+	--nelyqo-dust-tile: 523px;
+	background-image:
+		radial-gradient(2.2px 2.2px at 47% 53%, #fff4cc, transparent),
+		radial-gradient(1.6px 1.6px at 17% 83%, #f7d98b, transparent);
+	background-size: 419px var(--nelyqo-dust-tile);
+	opacity: 0.45;
 }
 
 /* Sections follow each other edge to edge, so grounds meet without a gap. */
@@ -144,6 +180,43 @@
 			animation-range: entry 40% exit 20%;
 			animation-timeline: --nelyqo-sand;
 		}
+
+		/* Dust drifts down at two depths as the page scrolls (transform), and the coarse layer keeps
+		   falling very slowly at rest (the separate translate property, one tile per loop). */
+		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream::before,
+		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream::after {
+			animation: nelyqo-dust-fall linear both;
+			animation-timeline: --nelyqo-sand;
+			will-change: transform;
+		}
+
+		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream::before {
+			--nelyqo-dust-fall: 10%;
+		}
+
+		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream::after {
+			--nelyqo-dust-fall: 24%;
+			animation: nelyqo-dust-fall linear both, nelyqo-dust-drift 40s linear infinite;
+			animation-timeline: --nelyqo-sand, auto;
+		}
+	}
+}
+
+@keyframes nelyqo-dust-fall {
+
+	to {
+		transform: translate3d(0, var(--nelyqo-dust-fall), 0);
+	}
+}
+
+@keyframes nelyqo-dust-drift {
+
+	from {
+		translate: 0 calc(-1 * var(--nelyqo-dust-tile));
+	}
+
+	to {
+		translate: 0 0;
 	}
 }
 
@@ -160,7 +233,9 @@
 
 @media (forced-colors: active) {
 
-	.nelyqo-sand {
+	.nelyqo-sand,
+	.wp-block-group.is-style-sand-stream::before,
+	.wp-block-group.is-style-sand-stream::after {
 		display: none;
 	}
 }
