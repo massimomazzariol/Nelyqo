@@ -3,9 +3,35 @@
 	"version": 3,
 	"title": "Gold on ivory",
 	"slug": "gem-ivory",
-	"blockTypes": [ "core/group", "core/cover" ],
+	"blockTypes": [
+		"core/group",
+		"core/cover"
+	],
 	"styles": {
-		"color": { "background": "#faf7f1", "text": "#221a12" },
+		"color": {
+			"background": "#faf7f1",
+			"text": "#221a12"
+		},
+		"spacing": {
+			"padding": {
+				"top": "clamp(3.5rem, 9vw, 8rem)",
+				"bottom": "clamp(3.5rem, 9vw, 8rem)",
+				"left": "clamp(1.25rem, 5vw, 4rem)",
+				"right": "clamp(1.25rem, 5vw, 4rem)"
+			}
+		},
+		"elements": {
+			"heading": {
+				"color": {
+					"text": "#221a12"
+				}
+			},
+			"link": {
+				"color": {
+					"text": "#221a12"
+				}
+			}
+		},
 		"css": "--nelyqo-ground: #faf7f1; --nelyqo-muted: #6d6152; --nelyqo-m1: #a67a26; --nelyqo-m2: #93691c; --nelyqo-m3: #7f5a14; --nelyqo-m4: #a17423; --nelyqo-m5: #5e400c;"
 	}
 }

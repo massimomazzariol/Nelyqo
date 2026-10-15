@@ -3,9 +3,35 @@
 	"version": 3,
 	"title": "Gold",
 	"slug": "gem-gold",
-	"blockTypes": [ "core/group", "core/cover" ],
+	"blockTypes": [
+		"core/group",
+		"core/cover"
+	],
 	"styles": {
-		"color": { "background": "#070605", "text": "#f1e8d6" },
+		"color": {
+			"background": "#070605",
+			"text": "#f1e8d6"
+		},
+		"spacing": {
+			"padding": {
+				"top": "clamp(3.5rem, 9vw, 8rem)",
+				"bottom": "clamp(3.5rem, 9vw, 8rem)",
+				"left": "clamp(1.25rem, 5vw, 4rem)",
+				"right": "clamp(1.25rem, 5vw, 4rem)"
+			}
+		},
+		"elements": {
+			"heading": {
+				"color": {
+					"text": "#f1e8d6"
+				}
+			},
+			"link": {
+				"color": {
+					"text": "#f1e8d6"
+				}
+			}
+		},
 		"css": "--nelyqo-ground: #070605; --nelyqo-muted: #b3a688; --nelyqo-m1: #fff4cc; --nelyqo-m2: #f7d98b; --nelyqo-m3: #e2b04a; --nelyqo-m4: #b8862b; --nelyqo-m5: #8c6219;"
 	}
 }

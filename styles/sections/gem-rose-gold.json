@@ -3,9 +3,35 @@
 	"version": 3,
 	"title": "Rose gold",
 	"slug": "gem-rose-gold",
-	"blockTypes": [ "core/group", "core/cover" ],
+	"blockTypes": [
+		"core/group",
+		"core/cover"
+	],
 	"styles": {
-		"color": { "background": "#130b0d", "text": "#f6e7e4" },
+		"color": {
+			"background": "#130b0d",
+			"text": "#f6e7e4"
+		},
+		"spacing": {
+			"padding": {
+				"top": "clamp(3.5rem, 9vw, 8rem)",
+				"bottom": "clamp(3.5rem, 9vw, 8rem)",
+				"left": "clamp(1.25rem, 5vw, 4rem)",
+				"right": "clamp(1.25rem, 5vw, 4rem)"
+			}
+		},
+		"elements": {
+			"heading": {
+				"color": {
+					"text": "#f6e7e4"
+				}
+			},
+			"link": {
+				"color": {
+					"text": "#f6e7e4"
+				}
+			}
+		},
 		"css": "--nelyqo-ground: #130b0d; --nelyqo-muted: #c4a7a2; --nelyqo-m1: #fde9e1; --nelyqo-m2: #f1c3b3; --nelyqo-m3: #d99886; --nelyqo-m4: #b76e79; --nelyqo-m5: #98585f;"
 	}
 }

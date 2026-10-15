@@ -16,6 +16,9 @@ add_action( 'init', 'nelyqo_register_custom_blocks' );
 add_action( 'init', 'nelyqo_register_block_styles' );
 add_filter( 'render_block_core/image', 'nelyqo_backport_lightbox', 20 );
 add_filter( 'render_block_nelyqo/scroll-section', 'nelyqo_scroll_section_script', 10, 2 );
+foreach ( array( 'core/group', 'core/cover', 'core/heading' ) as $nelyqo_block ) {
+	add_filter( "render_block_{$nelyqo_block}", 'nelyqo_precious_styles' );
+}
 
 /**
  * Backports Gutenberg PR #79058 to the core Image lightbox: enlarged images keep their own
@@ -83,6 +86,29 @@ function nelyqo_register_block_styles() {
 			'label' => __( 'Reveal on scroll', 'nelyqo' ),
 		)
 	);
+	register_block_style(
+		'core/heading',
+		array(
+			'name'  => 'foil',
+			'label' => __( 'Metal foil', 'nelyqo' ),
+		)
+	);
+}
+
+/**
+ * Loads the precious metals stylesheet (metal-foil type) only on pages that render a gem section
+ * (styles/sections/gem-*.json) or a "Metal foil" heading.
+ *
+ * @param string $content Rendered block.
+ * @return string
+ */
+function nelyqo_precious_styles( $content ) {
+	if ( ! wp_style_is( 'nelyqo-precious' ) && ( str_contains( $content, 'is-style-gem-' ) || str_contains( $content, 'is-style-foil' ) ) ) {
+		$path = get_template_directory() . '/assets/css/precious.css';
+		wp_enqueue_style( 'nelyqo-precious', get_template_directory_uri() . '/assets/css/precious.css', array(), (string) filemtime( $path ) );
+		wp_style_add_data( 'nelyqo-precious', 'path', $path );
+	}
+	return $content;
 }
 
 /**
@@ -92,7 +118,7 @@ function nelyqo_theme_setup() {
 	add_theme_support( 'align-wide' );
 	add_theme_support( 'editor-styles' );
 	add_theme_support( 'title-tag' );
-	add_editor_style( 'style.css' );
+	add_editor_style( array( 'style.css', 'assets/css/precious.css' ) );
 }
 
 /**

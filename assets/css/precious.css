@@ -1,0 +1,62 @@
+/*
+ * Precious metals: metal-foil type for gem sections (styles/sections/gem-*.json) and the
+ * "Metal foil" heading style. Loaded only on pages that render either (functions.php).
+ */
+
+/* Outside a gem section the foil falls back to the theme's own warm metal. */
+:root {
+	--nelyqo-m1: var(--wp--preset--color--accent);
+	--nelyqo-m2: var(--wp--preset--color--accent);
+	--nelyqo-m3: var(--wp--preset--color--primary);
+	--nelyqo-m4: var(--wp--preset--color--primary);
+	--nelyqo-m5: var(--wp--preset--color--primary-strong);
+}
+
+:where([class*="is-style-gem-"]) :where(p, li, figcaption) {
+	color: var(--nelyqo-muted, inherit);
+}
+
+/* Large type wears the metal: whole "Metal foil" headings, and emphasis inside gem headings. */
+.wp-block-heading.is-style-foil,
+:where([class*="is-style-gem-"]) .wp-block-heading em {
+	--nelyqo-metal: linear-gradient(115deg, var(--nelyqo-m5) 0%, var(--nelyqo-m3) 20%, var(--nelyqo-m1) 34%, var(--nelyqo-m2) 44%, var(--nelyqo-m4) 62%, var(--nelyqo-m2) 80%, var(--nelyqo-m1) 88%, var(--nelyqo-m4) 100%);
+	background: var(--nelyqo-metal);
+	background-size: 250% 100%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+@supports (animation-timeline: view()) {
+
+	@media (prefers-reduced-motion: no-preference) {
+
+		/* The light slides across the metal as the heading crosses the screen. */
+		body:not(.editor-styles-wrapper) .wp-block-heading.is-style-foil,
+		body:not(.editor-styles-wrapper) :where([class*="is-style-gem-"]) .wp-block-heading em {
+			animation: nelyqo-foil-shine linear both;
+			animation-timeline: view();
+		}
+	}
+}
+
+@keyframes nelyqo-foil-shine {
+
+	from {
+		background-position: 100% 0;
+	}
+
+	to {
+		background-position: 0% 0;
+	}
+}
+
+/* Windows high contrast and similar: drop the clipped gradient, keep the text visible. */
+@media (forced-colors: active) {
+
+	.wp-block-heading.is-style-foil,
+	:where([class*="is-style-gem-"]) .wp-block-heading em {
+		background: none;
+		color: CanvasText;
+	}
+}
