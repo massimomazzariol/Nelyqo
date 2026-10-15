@@ -4,7 +4,7 @@ Contributors: Massimo Mazzariol
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.4.0
+Stable tag: 0.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 
 == Changelog ==
 
-= Unreleased =
+= 0.4.1 =
 * Font preloads skip italic faces: they rarely set text in the first screen, and every preload competes with the hero image for bandwidth. The nelyqo_preload_fonts filter can add them back.
 * The emoji option also removes the emoji script and styles from embeds of the site's pages.
 * Scroll Section: the vertical modes now animate with CSS alone (scroll-driven animations), so pages that use only them load no script for the block (7.9 KB less, one request fewer). Browsers without scroll-driven animations, and visitors who prefer reduced motion, see the cards still. The script now loads only for the horizontal track mode.
