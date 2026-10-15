@@ -15,14 +15,16 @@
 
 /*
  * No hard edge between gem sections: a gem that follows another (it receives --nelyqo-from from its
- * neighbour's partial) starts in the previous ground and eases into its own over most of its first
- * screen. The halfway tone carries a touch of its own metal, so night turns into day warmly rather
- * than through grey. The first section has no --nelyqo-from: its gradient is invalid, its ground plain.
+ * neighbour's partial) starts in the previous ground and eases into its own over --nelyqo-fade, by
+ * default the section's top padding, so text always sits on the plain ground (contrast). The
+ * halfway tone carries a touch of its own metal, so night turns into day warmly rather than through
+ * grey. The first section has no --nelyqo-from: its gradient is invalid and its ground stays plain.
  */
 [class*="is-style-gem-"] {
+	--nelyqo-fade: clamp(3.5rem, 9vw, 8rem);
 	--nelyqo-fade-mid: color-mix(in oklab, color-mix(in oklab, var(--nelyqo-from) 50%, var(--nelyqo-ground)) 88%, var(--nelyqo-m4));
-	background-image: linear-gradient(180deg, var(--nelyqo-from) 0%, var(--nelyqo-ground) 70%);
-	background-image: linear-gradient(in oklab 180deg, var(--nelyqo-from) 0%, color-mix(in oklab, var(--nelyqo-from) 82%, var(--nelyqo-ground)) 18%, var(--nelyqo-fade-mid) 36%, color-mix(in oklab, var(--nelyqo-from) 14%, var(--nelyqo-ground)) 54%, var(--nelyqo-ground) 70%);
+	background-image: linear-gradient(180deg, var(--nelyqo-from) 0, var(--nelyqo-ground) var(--nelyqo-fade));
+	background-image: linear-gradient(in oklab 180deg, var(--nelyqo-from) 0, color-mix(in oklab, var(--nelyqo-from) 82%, var(--nelyqo-ground)) calc(var(--nelyqo-fade) * 0.25), var(--nelyqo-fade-mid) calc(var(--nelyqo-fade) * 0.5), color-mix(in oklab, var(--nelyqo-from) 14%, var(--nelyqo-ground)) calc(var(--nelyqo-fade) * 0.77), var(--nelyqo-ground) var(--nelyqo-fade));
 }
 
 :where([class*="is-style-gem-"]) :where(p, li, figcaption) {
@@ -38,6 +40,53 @@
 	-webkit-background-clip: text;
 	background-clip: text;
 	color: transparent;
+}
+
+/* "Eyebrow" paragraph style: the small label above a heading, in the section's metal. */
+.wp-block-paragraph.is-style-eyebrow {
+	color: var(--nelyqo-m2, var(--wp--preset--color--primary));
+	font-size: 0.78rem;
+	letter-spacing: 0.32em;
+	text-transform: uppercase;
+}
+
+/* On light grounds small type stays solid and dark enough to read (see lean/check-gems.mjs). */
+:where([class*="is-style-gem-"]) .wp-block-paragraph.is-style-eyebrow {
+	color: var(--nelyqo-m2);
+}
+
+:where(.is-style-gem-topaz, .is-style-gem-ivory, .is-style-gem-pearl) .wp-block-paragraph.is-style-eyebrow {
+	color: var(--nelyqo-m5);
+}
+
+/* Buttons in a gem: polished light metal with dark letters on night grounds, solid deep metal on light ones. */
+.wp-block-group[class*="is-style-gem-"] .wp-element-button {
+	background: linear-gradient(115deg, var(--nelyqo-m3), var(--nelyqo-m1) 45%, var(--nelyqo-m2) 70%, var(--nelyqo-m3));
+	border-radius: 999px;
+	color: var(--nelyqo-ground);
+	letter-spacing: 0.08em;
+}
+
+.wp-block-group:is(.is-style-gem-topaz, .is-style-gem-ivory, .is-style-gem-pearl) .wp-element-button {
+	background: var(--nelyqo-m5);
+}
+
+/* Theme blocks take the gem's colours instead of painting their own surface.
+   Specific enough to beat the blocks' own tone rules (two classes), as a gem is a deliberate choice. */
+.wp-block-group[class*="is-style-gem-"] .wp-block-nelyqo-scroll-section,
+.wp-block-group[class*="is-style-gem-"] .wp-block-nelyqo-fullpage-section {
+	--nelyqo-scroll-surface: transparent;
+	--nelyqo-scroll-surface-highlight: transparent;
+	--nelyqo-scroll-text: currentcolor;
+	--nelyqo-scroll-muted: var(--nelyqo-muted);
+	--nelyqo-scroll-accent: var(--nelyqo-m2);
+	--nelyqo-fullpage-section-surface: transparent;
+	--nelyqo-fullpage-section-surface-highlight: transparent;
+	--nelyqo-fullpage-section-text: currentcolor;
+	--nelyqo-fullpage-section-muted: var(--nelyqo-muted);
+	--nelyqo-fullpage-section-accent: var(--nelyqo-m2);
+	background: none;
+	color: inherit;
 }
 
 @supports (animation-timeline: view()) {
@@ -79,7 +128,28 @@
 .wp-block-group.is-style-sand-stream {
 	overflow: clip;
 	position: relative;
-	view-timeline-name: --nelyqo-sand;
+}
+
+.wp-block-group.is-style-sand-stream > [class*="is-style-gem-"] {
+	position: relative;
+}
+
+/* On wide screens the text keeps to its side, leaving the stream a lane of its own. */
+@media (min-width: 960px) {
+
+	.wp-block-group.is-style-sand-stream > [class*="is-style-gem-"] + [class*="is-style-gem-"] > .is-style-reveal {
+		max-inline-size: 62%;
+	}
+
+	.wp-block-group.is-style-sand-stream > [class*="is-style-gem-"] + [class*="is-style-gem-"] > .is-style-reveal.is-content-justification-right {
+		margin-inline-start: auto;
+	}
+}
+
+/* In the stream every section after the first opens with a breathing space where the grounds blend. */
+.wp-block-group.is-style-sand-stream > [class*="is-style-gem-"] + [class*="is-style-gem-"] {
+	--nelyqo-fade: 36vh;
+	padding-top: calc(36vh + 2rem);
 }
 
 /*
@@ -122,6 +192,13 @@
 	margin-block: 0;
 }
 
+/* Sand and dust run over the section grounds but under their content. Zero specificity, so blocks
+   that position themselves (Sticky section, Scroll Section) keep their own rules. */
+:where(.wp-block-group.is-style-sand-stream > * > *) {
+	position: relative;
+	z-index: 2;
+}
+
 .nelyqo-sand {
 	height: 100%;
 	inset: 0;
@@ -134,6 +211,7 @@
 
 .nelyqo-sand path {
 	fill: none;
+	stroke: var(--nelyqo-m2);
 	stroke-linecap: round;
 	vector-effect: non-scaling-stroke;
 }
@@ -177,8 +255,8 @@
 		/* The sand pours down with the scroll: a clip reveal, so the drawing itself is never repainted. */
 		body:not(.editor-styles-wrapper) .nelyqo-sand {
 			animation: nelyqo-sand-pour linear both;
-			animation-range: entry 40% exit 20%;
-			animation-timeline: --nelyqo-sand;
+			animation-range: cover 5% cover 60%;
+			animation-timeline: view();
 		}
 
 		/* Dust drifts down at two depths as the page scrolls (transform), and the coarse layer keeps
@@ -186,7 +264,7 @@
 		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream::before,
 		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream::after {
 			animation: nelyqo-dust-fall linear both;
-			animation-timeline: --nelyqo-sand;
+			animation-timeline: view();
 			will-change: transform;
 		}
 
@@ -197,7 +275,7 @@
 		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream::after {
 			--nelyqo-dust-fall: 24%;
 			animation: nelyqo-dust-fall linear both, nelyqo-dust-drift 40s linear infinite;
-			animation-timeline: --nelyqo-sand, auto;
+			animation-timeline: view(), auto;
 		}
 	}
 }

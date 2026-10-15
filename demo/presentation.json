@@ -1,0 +1,174 @@
+{
+	"_note": "Nelyqo presents itself: one gem section per feature, from night to ivory, inside a Sand stream. Build with lean/build-presentation.mjs (writes demo/presentation.html, used by blueprint.json). Every new feature gets a section here. Blocks are [name, attributes, innerBlocks].",
+	"sizes": { "1": "clamp(4.5rem, 15vw, 12rem)", "2": "clamp(2.5rem, 6vw, 4.8rem)" },
+	"sections": [
+		{
+			"gem": "gold",
+			"align": "center",
+			"eyebrow": "A WordPress block theme",
+			"heading": "Nelyqo",
+			"level": 1,
+			"foil": true,
+			"text": "Every section arrives when you are ready for it.",
+			"buttons": [
+				[ "Begin the story", "#story" ],
+				[ "Get the theme", "https://github.com/massimomazzariol/Nelyqo/releases/latest" ]
+			]
+		},
+		{
+			"gem": "rose-gold",
+			"anchor": "story",
+			"eyebrow": "01 · Scroll storytelling",
+			"heading": "Sections that <em>hold still</em> while the story moves.",
+			"text": "Scroll Section keeps its introduction in place while the cards come into focus one by one. The motion is pure CSS: no script loads for it.",
+			"blocks": [
+				[ "nelyqo/scroll-section", { "sectionTone": "dark", "align": "wide" }, [
+					[ "core/group", { "className": "nelyqo-scroll-section__intro" }, [
+						[ "core/heading", { "level": 3, "content": "How a visit unfolds" } ],
+						[ "core/paragraph", { "content": "Three moments, each with its own card." } ]
+					] ],
+					[ "nelyqo/scroll-card", { "tone": "dark" }, [
+						[ "core/heading", { "level": 3, "content": "Arrive" } ],
+						[ "core/paragraph", { "content": "A quiet welcome, nothing to load, nothing to wait for." } ]
+					] ],
+					[ "nelyqo/scroll-card", { "tone": "dark" }, [
+						[ "core/heading", { "level": 3, "content": "Unwind" } ],
+						[ "core/paragraph", { "content": "The page moves at your pace, never ahead of you." } ]
+					] ],
+					[ "nelyqo/scroll-card", { "tone": "dark" }, [
+						[ "core/heading", { "level": 3, "content": "Remember" } ],
+						[ "core/paragraph", { "content": "One clear call to action, when the story is told." } ]
+					] ]
+				] ]
+			]
+		},
+		{
+			"gem": "amethyst",
+			"eyebrow": "02 · Horizontal tracks",
+			"heading": "A <em>sideways</em> journey, scrolled the usual way.",
+			"text": "The horizontal mode turns vertical scrolling into a track of cards, and the track can be reached with the keyboard.",
+			"blocks": [
+				[ "nelyqo/scroll-section", { "mode": "horizontal-track", "sectionTone": "dark", "align": "wide" }, [
+					[ "core/group", { "className": "nelyqo-scroll-section__intro" }, [
+						[ "core/heading", { "level": 3, "content": "Four rooms" } ],
+						[ "core/paragraph", { "content": "Keep scrolling down: the track slides across." } ]
+					] ],
+					[ "nelyqo/scroll-card", { "tone": "dark" }, [
+						[ "core/heading", { "level": 3, "content": "The salon" } ],
+						[ "core/paragraph", { "content": "Velvet, brass and a slow afternoon light." } ]
+					] ],
+					[ "nelyqo/scroll-card", { "tone": "dark" }, [
+						[ "core/heading", { "level": 3, "content": "The library" } ],
+						[ "core/paragraph", { "content": "Every shelf a chapter of the house." } ]
+					] ],
+					[ "nelyqo/scroll-card", { "tone": "dark" }, [
+						[ "core/heading", { "level": 3, "content": "The terrace" } ],
+						[ "core/paragraph", { "content": "The city below, the evening ahead." } ]
+					] ],
+					[ "nelyqo/scroll-card", { "tone": "dark" }, [
+						[ "core/heading", { "level": 3, "content": "The vault" } ],
+						[ "core/paragraph", { "content": "Where the gold is kept." } ]
+					] ]
+				] ]
+			]
+		},
+		{
+			"gem": "sapphire",
+			"eyebrow": "03 · Full-page slides",
+			"heading": "One gesture, <em>one scene</em>.",
+			"text": "Full-page sections fill the screen and turn like pages. A trackpad swipe never skips one, and scrolling away is ordinary scrolling.",
+			"blocks": [
+				[ "nelyqo/fullpage-section", { "sectionTone": "dark", "align": "full" }, [
+					[ "core/heading", { "level": 3, "content": "First scene" } ],
+					[ "core/paragraph", { "content": "Swipe, or press the down arrow." } ]
+				] ],
+				[ "nelyqo/fullpage-section", { "sectionTone": "dark", "align": "full" }, [
+					[ "core/heading", { "level": 3, "content": "Second scene" } ],
+					[ "core/paragraph", { "content": "One gesture moved exactly one scene." } ]
+				] ],
+				[ "nelyqo/fullpage-section", { "sectionTone": "dark", "align": "full" }, [
+					[ "core/heading", { "level": 3, "content": "Third scene" } ],
+					[ "core/paragraph", { "content": "Keep going and the page simply carries on." } ]
+				] ]
+			]
+		},
+		{
+			"gem": "blue-gold",
+			"eyebrow": "04 · Sticky and reveal",
+			"heading": "Text that <em>rises</em> into place.",
+			"text": "Two Group styles do it with CSS alone: Reveal on scroll lets headings and text settle in as they arrive, Sticky section holds a group still for a stretch of the page.",
+			"blocks": [
+				[ "core/group", { "className": "is-style-sticky-section", "align": "wide", "layout": { "type": "constrained" } }, [
+					[ "core/heading", { "level": 3, "content": "Held for a moment" } ],
+					[ "core/paragraph", { "content": "This group stays in place while the page moves past it, then lets go." } ]
+				] ]
+			]
+		},
+		{
+			"gem": "emerald",
+			"eyebrow": "05 · Precious metals",
+			"heading": "Nine gems, <em>one</em> stream of sand.",
+			"text": "Gem section styles, Metal foil headings and the Sand stream are native block styles. Their CSS loads only on the pages that use them, and every gem passes WCAG AA contrast.",
+			"blocks": [
+				[ "nelyqo/pills", {}, [
+					[ "nelyqo/pill", { "text": "Gold" } ],
+					[ "nelyqo/pill", { "text": "Rose gold" } ],
+					[ "nelyqo/pill", { "text": "Amethyst" } ],
+					[ "nelyqo/pill", { "text": "Sapphire" } ],
+					[ "nelyqo/pill", { "text": "Blue gold" } ],
+					[ "nelyqo/pill", { "text": "Emerald" } ],
+					[ "nelyqo/pill", { "text": "Imperial topaz" } ],
+					[ "nelyqo/pill", { "text": "Pearl" } ],
+					[ "nelyqo/pill", { "text": "Gold on ivory" } ]
+				] ]
+			]
+		},
+		{
+			"gem": "topaz",
+			"eyebrow": "06 · Speed",
+			"heading": "Light as <em>air</em>.",
+			"text": "Motion is done by the browser, so there is almost nothing to download. Measured with Lighthouse, five runs per page:",
+			"blocks": [
+				[ "core/columns", { "align": "wide" }, [
+					[ "core/column", {}, [
+						[ "core/heading", { "level": 3, "className": "is-style-foil", "style": { "typography": { "fontSize": "clamp(2.8rem, 6vw, 4.8rem)" } }, "content": "97-100" } ],
+						[ "core/paragraph", { "content": "Performance score, mobile and desktop" } ]
+					] ],
+					[ "core/column", {}, [
+						[ "core/heading", { "level": 3, "className": "is-style-foil", "style": { "typography": { "fontSize": "clamp(2.8rem, 6vw, 4.8rem)" } }, "content": "0 ms" } ],
+						[ "core/paragraph", { "content": "Blocking time" } ]
+					] ],
+					[ "core/column", {}, [
+						[ "core/heading", { "level": 3, "className": "is-style-foil", "style": { "typography": { "fontSize": "clamp(2.8rem, 6vw, 4.8rem)" } }, "content": "0" } ],
+						[ "core/paragraph", { "content": "Layout shift" } ]
+					] ]
+				] ]
+			]
+		},
+		{
+			"gem": "pearl",
+			"eyebrow": "07 · Cookie-less and discreet",
+			"heading": "Nothing to <em>declare</em>.",
+			"text": "The theme sets no cookies, stores nothing in the browser, tracks no one and calls no third party. It also stops announcing how the site is built.",
+			"blocks": [
+				[ "core/list", {}, [
+					[ "core/list-item", { "content": "No cookies, no browser storage" } ],
+					[ "core/list-item", { "content": "No tracking, no third-party requests" } ],
+					[ "core/list-item", { "content": "Self-hosted fonts" } ],
+					[ "core/list-item", { "content": "WordPress version and user names kept private" } ],
+					[ "core/list-item", { "content": "XML-RPC and discovery links switched off" } ]
+				] ]
+			]
+		},
+		{
+			"gem": "ivory",
+			"eyebrow": "08 · Yours to leave",
+			"heading": "Plain Core blocks, <em>forever</em>.",
+			"text": "Switch theme tomorrow and every page is still there, readable and whole. Start from the ready-made patterns, or from nothing at all.",
+			"buttons": [
+				[ "Get Nelyqo", "https://github.com/massimomazzariol/Nelyqo/releases/latest" ],
+				[ "Read the code", "https://github.com/massimomazzariol/Nelyqo" ]
+			]
+		}
+	]
+}
