@@ -32,6 +32,6 @@
 				}
 			}
 		},
-		"css": "--nelyqo-ground: #070605; --nelyqo-muted: #b3a688; --nelyqo-m1: #fff4cc; --nelyqo-m2: #f7d98b; --nelyqo-m3: #e2b04a; --nelyqo-m4: #b8862b; --nelyqo-m5: #8c6219;"
+		"css": "--nelyqo-ground: #070605; --nelyqo-muted: #b3a688; --nelyqo-m1: #fff4cc; --nelyqo-m2: #f7d98b; --nelyqo-m3: #e2b04a; --nelyqo-m4: #b8862b; --nelyqo-m5: #8c6219; & + * { --nelyqo-from: #070605; }"
 	}
 }

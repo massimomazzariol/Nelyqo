@@ -13,6 +13,18 @@
 	--nelyqo-m5: var(--wp--preset--color--primary-strong);
 }
 
+/*
+ * No hard edge between gem sections: a gem that follows another (it receives --nelyqo-from from its
+ * neighbour's partial) starts in the previous ground and eases into its own over most of its first
+ * screen. The halfway tone carries a touch of its own metal, so night turns into day warmly rather
+ * than through grey. The first section has no --nelyqo-from: its gradient is invalid, its ground plain.
+ */
+[class*="is-style-gem-"] {
+	--nelyqo-fade-mid: color-mix(in oklab, color-mix(in oklab, var(--nelyqo-from) 50%, var(--nelyqo-ground)) 88%, var(--nelyqo-m4));
+	background-image: linear-gradient(180deg, var(--nelyqo-from) 0%, var(--nelyqo-ground) 70%);
+	background-image: linear-gradient(in oklab 180deg, var(--nelyqo-from) 0%, color-mix(in oklab, var(--nelyqo-from) 82%, var(--nelyqo-ground)) 18%, var(--nelyqo-fade-mid) 36%, color-mix(in oklab, var(--nelyqo-from) 14%, var(--nelyqo-ground)) 54%, var(--nelyqo-ground) 70%);
+}
+
 :where([class*="is-style-gem-"]) :where(p, li, figcaption) {
 	color: var(--nelyqo-muted, inherit);
 }
