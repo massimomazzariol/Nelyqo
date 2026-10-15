@@ -45,9 +45,9 @@ So the theme adds nothing to your cookie banner or your privacy policy. What plu
 ### Fast because there is little to load
 
 - **Motion in CSS.** Sticky sections, the header that fills in on scroll and the reveal-on-scroll style use `position: sticky` and scroll-driven animations. No animation library, no scroll listeners for these effects.
-- **JavaScript only where a block needs it.** Scroll section animates with CSS alone; its horizontal mode, Horizontal scroll and Full-page section each load their own small script, 1.5-2.8 KB gzipped, and only on pages that use them. The patterns and block styles need none.
+- **JavaScript only where a block needs it.** The interactive blocks (Scroll section, Horizontal scroll, Full-page section) each load their own small script, 1.5-2.8 KB gzipped, and only on pages that use them. The patterns and block styles need none.
 - **Small CSS.** The theme's global CSS is about 3 KB gzipped; each block's CSS loads only with the block.
-- **Good defaults, switchable.** Theme fonts preloaded, no WordPress emoji script, autoplay videos below the first screen loaded only near the viewport, plugin signature comments removed.
+- **Good defaults, switchable.** Theme fonts preloaded, no WordPress emoji script, autoplay videos loaded only near the viewport, leftover HTML comments removed.
 
 ### No lock-in
 
@@ -73,12 +73,12 @@ So the theme adds nothing to your cookie banner or your privacy policy. What plu
 - **Intro with coded list**: section intro next to a ruled list of rows with a short code, a name and a link (airports, branches, services).
 - **Steps and FAQ**: a numbered three-step process next to a FAQ accordion on the Details block.
 
-**Performance** (Appearance > Nelyqo):
+**Performance** (Appearance > Nelyqo, each switch on by default):
 
-- Theme fonts preloaded (upright faces), autoplay videos below the first screen loaded only near the viewport.
+- Theme fonts preloaded, autoplay videos loaded only near the viewport.
 - No WordPress emoji script.
 - No plugin signature comments (name and timing), turned off through each plugin's own switch.
-- Optional, off by default: remove every HTML comment from the page sent to visitors, never inside scripts, styles or preformatted text. Files and saved content are untouched.
+- No HTML comments in the page sent to visitors: removed on the way out only when there are some, never inside scripts, styles or preformatted text. Files and saved content are untouched.
 
 **Discretion** (Appearance > Nelyqo, each switch on by default): pages say less about how the site is built and expose fewer doors.
 
