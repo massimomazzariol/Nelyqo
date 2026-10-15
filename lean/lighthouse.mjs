@@ -16,6 +16,9 @@ const run = ( url, preset ) => {
 		);
 	} catch ( error ) {
 		// On Windows the launcher may fail to delete Chrome's temp folder after the report is written (EPERM).
+		if ( ! error.stdout?.length ) {
+			throw error;
+		}
 		out = error.stdout;
 	}
 	return JSON.parse( out );
