@@ -11,6 +11,8 @@ const PROPERTY_VIEWPORT_HEIGHT = '--nelyqo-fullpage-viewport-height';
 const PROPERTY_ACTIVE_OFFSET = '--nelyqo-fullpage-active-offset';
 const PROPERTY_PANEL_COUNT = '--nelyqo-fullpage-panel-count';
 const EDGE_TOLERANCE_PX = 1;
+// How far (px) the slides may sit from the top of the screen and still count as filling it.
+const DOCK_TOLERANCE_PX = 2;
 const TRANSITION_SETTLE_BUFFER_MS = 50;
 const WHEEL_DELTA_THRESHOLD_RATIO = 0.1;
 // A wheel gesture ends after this pause; trackpad inertia sends events every ~16 ms.
@@ -31,6 +33,7 @@ const HEADER_SELECTOR = [
 ].join( ', ' );
 
 const instances = [];
+let headerOffsetPx = 0;
 let globalsBound = false;
 let measureFrame = null;
 
@@ -108,6 +111,7 @@ const updateHeaderOffset = () => {
 		String( instances.length + 1 )
 	);
 
+	headerOffsetPx = offset;
 	return offset;
 };
 
@@ -265,6 +269,33 @@ const requestMeasurements = () => {
 	} );
 };
 
+// 0 when the slides fill the screen; 1 when they sit lower (reached scrolling down);
+// -1 when they sit higher (reached scrolling back up).
+const getDockDirection = ( state ) => {
+	const offset = state.sequence.getBoundingClientRect().top - headerOffsetPx;
+
+	if ( Math.abs( offset ) <= DOCK_TOLERANCE_PX ) {
+		return 0;
+	}
+
+	return offset > 0 ? 1 : -1;
+};
+
+// Brings the slides to fill the screen: from above on the first slide, from below on the last.
+const dock = ( state, direction ) => {
+	setActiveIndex( state, direction > 0 ? 0 : state.panels.length - 1, {
+		force: true,
+		immediate: true,
+	} );
+	window.scrollTo( {
+		top:
+			window.scrollY +
+			state.sequence.getBoundingClientRect().top -
+			headerOffsetPx,
+		behavior: state.reducedMotionQuery.matches ? 'auto' : 'smooth',
+	} );
+};
+
 const canNavigate = ( state, direction ) => {
 	if ( direction > 0 ) {
 		return state.activeIndex < state.panels.length - 1;
@@ -375,9 +406,10 @@ const handleWheel = ( state, event ) => {
 	}
 
 	const direction = getWheelDirection( event );
-	const deltaY = getNormalizedWheelDeltaY( event, state );
 
-	if ( direction === 0 || Math.abs( deltaY ) <= EDGE_TOLERANCE_PX ) {
+	// Tiny deltas are not ignored: they are the tail of trackpad inertia, and letting them
+	// through would scroll the page a few pixels and undock the slides.
+	if ( direction === 0 ) {
 		return;
 	}
 
@@ -389,7 +421,7 @@ const handleWheel = ( state, event ) => {
 	// 2-3 s after the fingers stop; they belong to the same gesture. A pause, a change of direction
 	// or a clearly stronger push starts a new one.
 	const now = getNow();
-	const strength = Math.abs( deltaY );
+	const strength = Math.abs( getNormalizedWheelDeltaY( event, state ) );
 	const isNewGesture =
 		now - state.wheelLastTime > WHEEL_GESTURE_GAP_MS ||
 		direction !== state.wheelDirection ||
@@ -410,7 +442,15 @@ const handleWheel = ( state, event ) => {
 		return;
 	}
 
-	if ( ! canNavigate( state, direction ) ) {
+	// Slides only page while they fill the screen. Scrolling towards them docks them first;
+	// scrolling away from them is ordinary page scrolling.
+	const dockDirection = getDockDirection( state );
+
+	if ( dockDirection !== 0 && dockDirection !== direction ) {
+		return;
+	}
+
+	if ( dockDirection === 0 && ! canNavigate( state, direction ) ) {
 		if ( ! canScrollPage( direction ) ) {
 			event.preventDefault();
 			event.stopPropagation();
@@ -428,6 +468,12 @@ const handleWheel = ( state, event ) => {
 	}
 
 	state.wheelGestureUsed = true;
+
+	if ( dockDirection !== 0 ) {
+		dock( state, direction );
+		return;
+	}
+
 	setActiveIndex( state, state.activeIndex + direction );
 };
 
@@ -466,6 +512,7 @@ const handleTouchMove = ( state, event ) => {
 
 	if (
 		hasVerticalIntent &&
+		getDockDirection( state ) === 0 &&
 		canNavigate( state, direction ) &&
 		! findScrollableAncestor( event.target, state.sequence, direction )
 	) {
@@ -496,10 +543,17 @@ const handleTouchEnd = ( state, event ) => {
 		Math.abs( deltaY ) > Math.abs( deltaX ) * SWIPE_AXIS_DOMINANCE;
 
 	if (
-		isVerticalSwipe &&
-		canNavigate( state, direction ) &&
-		! findScrollableAncestor( event.target, state.sequence, direction )
+		! isVerticalSwipe ||
+		findScrollableAncestor( event.target, state.sequence, direction )
 	) {
+		return;
+	}
+
+	const dockDirection = getDockDirection( state );
+
+	if ( dockDirection === direction ) {
+		dock( state, direction );
+	} else if ( dockDirection === 0 && canNavigate( state, direction ) ) {
 		event.preventDefault();
 		setActiveIndex( state, state.activeIndex + direction );
 	}
@@ -518,7 +572,11 @@ const isEditableTarget = ( target ) => {
 };
 
 const handleKeyDown = ( state, event ) => {
-	if ( state.panels.length < 2 || isEditableTarget( event.target ) ) {
+	if (
+		state.panels.length < 2 ||
+		isEditableTarget( event.target ) ||
+		getDockDirection( state ) !== 0
+	) {
 		return;
 	}
 
