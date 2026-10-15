@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Imperial topaz",
+	"slug": "gem-topaz",
+	"blockTypes": [ "core/group", "core/cover" ],
+	"styles": {
+		"color": { "background": "#f2ebdf", "text": "#2a2118" },
+		"css": "--nelyqo-ground: #f2ebdf; --nelyqo-muted: #6d5f4e; --nelyqo-m1: #bd6a24; --nelyqo-m2: #a85a19; --nelyqo-m3: #8f4a12; --nelyqo-m4: #b4651f; --nelyqo-m5: #6e340a;"
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Gold on ivory",
+	"slug": "gem-ivory",
+	"blockTypes": [ "core/group", "core/cover" ],
+	"styles": {
+		"color": { "background": "#faf7f1", "text": "#221a12" },
+		"css": "--nelyqo-ground: #faf7f1; --nelyqo-muted: #6d6152; --nelyqo-m1: #a67a26; --nelyqo-m2: #93691c; --nelyqo-m3: #7f5a14; --nelyqo-m4: #a17423; --nelyqo-m5: #5e400c;"
+	}
+}

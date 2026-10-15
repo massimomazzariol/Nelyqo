@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Blue gold",
+	"slug": "gem-blue-gold",
+	"blockTypes": [ "core/group", "core/cover" ],
+	"styles": {
+		"color": { "background": "#090d16", "text": "#e9eef8" },
+		"css": "--nelyqo-ground: #090d16; --nelyqo-muted: #a3afc4; --nelyqo-m1: #f1f6ff; --nelyqo-m2: #cbd8f0; --nelyqo-m3: #9fb3dc; --nelyqo-m4: #6f86b8; --nelyqo-m5: #56699a;"
+	}
+}

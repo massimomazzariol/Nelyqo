@@ -23,9 +23,11 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
+      - name: Gem section styles meet WCAG AA contrast
+        run: node lean/check-gems.mjs
       - name: Validate theme files
         run: |
-          php -r 'json_decode(file_get_contents("theme.json"), true, 512, JSON_THROW_ON_ERROR);'
+          for f in theme.json styles/*.json styles/sections/*.json; do php -r 'json_decode(file_get_contents($argv[1]), true, 512, JSON_THROW_ON_ERROR);' "$f"; done
           for f in functions.php inc/*.php patterns/*.php; do php -l "$f"; done
           git diff --check
           git diff --exit-code
