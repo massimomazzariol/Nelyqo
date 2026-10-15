@@ -131,7 +131,7 @@ pnpm check   # lint JS and CSS, then build
 
 CI runs the same checks, lints the PHP files and rejects uncommitted build output.
 
-Read [AGENTS.md](AGENTS.md) and the [project principles](docs/PROJECT-PRINCIPLES.md) before architectural changes.
+Read the [project principles](docs/PROJECT-PRINCIPLES.md) before architectural changes.
 
 ## License
 
