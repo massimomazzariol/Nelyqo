@@ -153,10 +153,10 @@ function nelyqo_remove_comments( $html ) {
  * Autoplaying videos no longer download on page load: the server drops autoplay and sets
  * preload="none", and assets/js/lazy-video.js plays each one when it nears the viewport (within the
  * 'nelyqo_lazy_video_margin' filter value, an IntersectionObserver rootMargin).
- * The first autoplay video of the page keeps autoplay: it is usually the hero background, in the
- * first screen, and waiting for the script would delay it. The script still pauses it off screen.
- * With reduced motion requested they stay paused on their first frame. Without JavaScript
- * the others simply do not autoplay.
+ * The first autoplay video of the page (usually the hero background, in the first screen) gets
+ * preload="auto" instead, so its download starts at once and the script only has to press play.
+ * Autoplay itself is always left to the script, so with reduced motion requested no video ever
+ * moves: they stay paused on their first frame. Without JavaScript they simply do not autoplay.
  *
  * @param string $content Rendered block.
  */
@@ -168,15 +168,14 @@ function nelyqo_lazy_video( $content ) {
 	$tags = new WP_HTML_Tag_Processor( $content );
 	$lazy = false;
 	while ( $tags->next_tag( 'video' ) ) {
-		if ( null === $tags->get_attribute( 'autoplay' ) ) {
+		// Covers are filtered after their inner blocks, so an inner Video block can come by twice.
+		if ( null === $tags->get_attribute( 'autoplay' ) || null !== $tags->get_attribute( 'data-nelyqo-autoplay' ) ) {
 			continue;
 		}
-		if ( $first_seen ) {
-			$tags->remove_attribute( 'autoplay' );
-			$tags->set_attribute( 'preload', 'none' );
-		}
-		$first_seen = true;
+		$tags->remove_attribute( 'autoplay' );
+		$tags->set_attribute( 'preload', $first_seen ? 'none' : 'auto' );
 		$tags->set_attribute( 'data-nelyqo-autoplay', '' );
+		$first_seen = true;
 		$lazy = true;
 	}
 	if ( $lazy ) {

@@ -9,9 +9,6 @@ const nelyqoObserver = new window.IntersectionObserver(
 			const video = entry.target;
 			if ( nelyqoReduceMotion ) {
 				// Reduced motion: no playback, just the first frame instead of a blank box.
-				// The first video of the page kept autoplay, so stop it too.
-				video.autoplay = false;
-				video.pause();
 				if ( entry.isIntersecting ) {
 					video.preload = 'metadata';
 					nelyqoObserver.unobserve( video );
