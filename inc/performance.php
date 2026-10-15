@@ -153,12 +153,15 @@ function nelyqo_remove_comments( $html ) {
  * Autoplaying videos no longer download on page load: the server drops autoplay and sets
  * preload="none", and assets/js/lazy-video.js plays each one when it nears the viewport (within the
  * 'nelyqo_lazy_video_margin' filter value, an IntersectionObserver rootMargin).
+ * The first autoplay video of the page keeps autoplay: it is usually the hero background, in the
+ * first screen, and waiting for the script would delay it. The script still pauses it off screen.
  * With reduced motion requested they stay paused on their first frame. Without JavaScript
- * they simply do not autoplay.
+ * the others simply do not autoplay.
  *
  * @param string $content Rendered block.
  */
 function nelyqo_lazy_video( $content ) {
+	static $first_seen = false;
 	if ( ! str_contains( $content, '<video' ) || ! apply_filters( 'nelyqo_lazy_video', true ) ) {
 		return $content;
 	}
@@ -168,8 +171,11 @@ function nelyqo_lazy_video( $content ) {
 		if ( null === $tags->get_attribute( 'autoplay' ) ) {
 			continue;
 		}
-		$tags->remove_attribute( 'autoplay' );
-		$tags->set_attribute( 'preload', 'none' );
+		if ( $first_seen ) {
+			$tags->remove_attribute( 'autoplay' );
+			$tags->set_attribute( 'preload', 'none' );
+		}
+		$first_seen = true;
 		$tags->set_attribute( 'data-nelyqo-autoplay', '' );
 		$lazy = true;
 	}
