@@ -17,6 +17,8 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 = Unreleased =
 * Font preloads skip italic faces: they rarely set text in the first screen, and every preload competes with the hero image for bandwidth. The nelyqo_preload_fonts filter can add them back.
 * The emoji option also removes the emoji script and styles from embeds of the site's pages.
+* Scroll Section: the vertical modes now animate with CSS alone (scroll-driven animations), so pages that use only them load no script for the block (7.9 KB less, one request fewer). Browsers without scroll-driven animations, and visitors who prefer reduced motion, see the cards still. The script now loads only for the horizontal track mode.
+* Scroll Section, horizontal track: the sideways-scrolling track can be reached with the keyboard.
 
 = 0.4.0 =
 * Performance defaults: the woff2 files of every theme.json fontFace (child included) are preloaded, the emoji polyfill is removed, and autoplay videos load and play only near the viewport (paused on their first frame with reduced motion). Filters: nelyqo_preload_fonts, nelyqo_disable_emoji, nelyqo_lazy_video, nelyqo_lazy_video_margin (how early videos start loading, default 200px).

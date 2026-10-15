@@ -15,6 +15,7 @@ add_action( 'wp_enqueue_scripts', 'nelyqo_enqueue_styles' );
 add_action( 'init', 'nelyqo_register_custom_blocks' );
 add_action( 'init', 'nelyqo_register_block_styles' );
 add_action( 'init', 'nelyqo_backport_lightbox' );
+add_filter( 'render_block_nelyqo/scroll-section', 'nelyqo_scroll_section_script', 10, 2 );
 
 /**
  * Backports Gutenberg PR #79058 to the core Image lightbox: enlarged images keep their own
@@ -112,6 +113,32 @@ function nelyqo_enqueue_styles() {
 	// With a path, WordPress inlines these small stylesheets (within styles_inline_size_limit): two requests fewer.
 	wp_style_add_data( 'nelyqo-style', 'path', get_template_directory() . '/style.css' );
 	wp_style_add_data( 'nelyqo-structure', 'path', get_template_directory() . '/assets/css/structure.css' );
+}
+
+/**
+ * Loads the Scroll Section script only for the horizontal track mode. The vertical modes animate
+ * with CSS alone, so pages that use only them load no script for the block.
+ *
+ * @param string $content Rendered block.
+ * @param array  $block   Parsed block.
+ * @return string
+ */
+function nelyqo_scroll_section_script( $content, $block ) {
+	if ( 'horizontal-track' === ( $block['attrs']['mode'] ?? '' ) && ! wp_script_is( 'nelyqo-scroll-section-view' ) ) {
+		$build = '/blocks/scroll-section/build/';
+		$asset = require get_template_directory() . $build . 'view.asset.php';
+		wp_enqueue_script(
+			'nelyqo-scroll-section-view',
+			get_template_directory_uri() . $build . 'view.js',
+			$asset['dependencies'],
+			$asset['version'],
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
+	}
+	return $content;
 }
 
 /**

@@ -1,5 +1,3 @@
-const VERTICAL_SELECTOR =
-	'.wp-block-nelyqo-scroll-section.has-motion:not(.is-mode-horizontal-track)';
 const HORIZONTAL_SELECTOR =
 	'.wp-block-nelyqo-scroll-section.is-mode-horizontal-track';
 const SECTION_BREAKPOINT = 960;
@@ -102,168 +100,12 @@ const setCardVisuals = (
 	);
 };
 
-const clearCardState = ( card ) => {
-	card.classList.remove(
-		'is-active',
-		'is-before-active',
-		'is-after-active',
-		'is-in-view'
-	);
-	card.style.removeProperty( '--nelyqo-scroll-card-offset-x' );
-	card.style.removeProperty( '--nelyqo-scroll-card-offset-y' );
-	card.style.removeProperty( '--nelyqo-scroll-card-scale' );
-	card.style.removeProperty( '--nelyqo-scroll-card-opacity' );
-	card.style.removeProperty( '--nelyqo-scroll-card-saturate' );
-};
-
-const clearSectionState = ( sectionState ) => {
-	sectionState.element.classList.remove( 'is-motion-ready' );
-	sectionState.cards.forEach( clearCardState );
-	sectionState.activeIndex = -1;
-};
-
 const updateCardClasses = ( cards, activeIndex ) => {
 	cards.forEach( ( card, index ) => {
 		card.classList.toggle( 'is-active', index === activeIndex );
 		card.classList.toggle( 'is-before-active', index < activeIndex );
 		card.classList.toggle( 'is-after-active', index > activeIndex );
 	} );
-};
-
-const updateVerticalSectionState = ( sectionState ) => {
-	const { element, cards } = sectionState;
-
-	if ( ! cards.length ) {
-		return;
-	}
-
-	const viewportHeight = window.innerHeight || 1;
-	const focusLine =
-		window.innerWidth >= SECTION_BREAKPOINT
-			? viewportHeight * 0.42
-			: viewportHeight * 0.5;
-	const emphasisDisabled = element.classList.contains(
-		'has-no-card-emphasis'
-	);
-	const preset = getMotionPreset( element );
-	let activeIndex = 0;
-	let smallestDistance = Number.POSITIVE_INFINITY;
-
-	element.classList.add( 'is-motion-ready' );
-
-	cards.forEach( ( card, index ) => {
-		const rect = card.getBoundingClientRect();
-		const cardCenter = rect.top + rect.height / 2;
-		const rawDistance = ( cardCenter - focusLine ) / viewportHeight;
-		const clampedDistance = clamp( rawDistance, -1.15, 1.15 );
-		const proximity = clamp( 1 - Math.abs( rawDistance ) * 1.35, 0, 1 );
-		const offsetY = clampedDistance * preset.shift;
-		const scale = emphasisDisabled
-			? 1
-			: preset.scaleFloor + proximity * ( 1 - preset.scaleFloor );
-		const opacity = emphasisDisabled
-			? 1
-			: preset.opacityFloor + proximity * ( 1 - preset.opacityFloor );
-		const saturate = emphasisDisabled
-			? 1
-			: preset.saturateFloor + proximity * ( 1 - preset.saturateFloor );
-
-		if ( Math.abs( rawDistance ) < smallestDistance ) {
-			smallestDistance = Math.abs( rawDistance );
-			activeIndex = index;
-		}
-
-		setCardVisuals( card, {
-			offsetY,
-			scale,
-			opacity,
-			saturate,
-		} );
-		card.classList.toggle(
-			'is-in-view',
-			rect.bottom > viewportHeight * 0.08 &&
-				rect.top < viewportHeight * 0.92
-		);
-	} );
-
-	sectionState.activeIndex = activeIndex;
-	updateCardClasses( cards, activeIndex );
-};
-
-const initVerticalSections = ( reducedMotionQuery ) => {
-	const sections = Array.from(
-		document.querySelectorAll( VERTICAL_SELECTOR )
-	)
-		.map( ( element ) => ( {
-			element,
-			layout: getLayout( element ),
-			cards: getDirectCards( getLayout( element ) ),
-			activeIndex: -1,
-		} ) )
-		.filter(
-			( sectionState ) => sectionState.layout && sectionState.cards.length
-		);
-
-	if ( ! sections.length ) {
-		return;
-	}
-
-	let animationFrame = null;
-	const visibleSections = new Set();
-
-	const requestUpdate = () => {
-		if ( reducedMotionQuery.matches ) {
-			sections.forEach( clearSectionState );
-			return;
-		}
-
-		if ( animationFrame !== null ) {
-			return;
-		}
-
-		animationFrame = window.requestAnimationFrame( () => {
-			animationFrame = null;
-
-			sections.forEach( ( sectionState ) => {
-				if (
-					visibleSections.size &&
-					! visibleSections.has( sectionState.element )
-				) {
-					return;
-				}
-
-				updateVerticalSectionState( sectionState );
-			} );
-		} );
-	};
-
-	const observer = new window.IntersectionObserver(
-		( entries ) => {
-			entries.forEach( ( entry ) => {
-				if ( entry.isIntersecting ) {
-					visibleSections.add( entry.target );
-					return;
-				}
-
-				visibleSections.delete( entry.target );
-			} );
-
-			requestUpdate();
-		},
-		{
-			rootMargin: '20% 0px 20% 0px',
-			threshold: [ 0, 0.1, 0.25, 0.5, 0.75, 1 ],
-		}
-	);
-
-	sections.forEach( ( sectionState ) => {
-		observer.observe( sectionState.element );
-	} );
-
-	window.addEventListener( 'scroll', requestUpdate, { passive: true } );
-	window.addEventListener( 'resize', requestUpdate );
-
-	requestUpdate();
 };
 
 const unwrapLegacyHorizontalStage = ( layout ) => {
@@ -355,6 +197,8 @@ const ensureHorizontalStructure = ( sectionState ) => {
 		return false;
 	}
 
+	// The track scrolls sideways on its own when it is not pinned: keyboard users need to reach it.
+	shell.tabIndex = 0;
 	element.classList.add( 'is-horizontal-enhanced' );
 
 	return true;
@@ -686,7 +530,6 @@ const initScrollSections = () => {
 		'(prefers-reduced-motion: reduce)'
 	);
 
-	initVerticalSections( reducedMotionQuery );
 	initHorizontalSections( reducedMotionQuery );
 };
 
