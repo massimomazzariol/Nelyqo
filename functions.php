@@ -14,24 +14,35 @@ add_action( 'after_setup_theme', 'nelyqo_theme_setup' );
 add_action( 'wp_enqueue_scripts', 'nelyqo_enqueue_styles' );
 add_action( 'init', 'nelyqo_register_custom_blocks' );
 add_action( 'init', 'nelyqo_register_block_styles' );
-add_action( 'init', 'nelyqo_backport_lightbox' );
+add_filter( 'render_block_core/image', 'nelyqo_backport_lightbox', 20 );
 add_filter( 'render_block_nelyqo/scroll-section', 'nelyqo_scroll_section_script', 10, 2 );
 
 /**
  * Backports Gutenberg PR #79058 to the core Image lightbox: enlarged images keep their own
  * proportions instead of the gallery/thumbnail crop. The patched module replaces core's only
  * while core ships the exact file it was made from (WordPress 7.1.2); any core update turns the
- * backport off by itself, so it can never pin an outdated copy.
+ * backport off by itself, so it can never pin an outdated copy. Runs only on pages that render
+ * a lightbox (core adds it at priority 15), once per page.
+ *
+ * @param string $content Rendered Image block.
+ * @return string
  */
-function nelyqo_backport_lightbox() {
+function nelyqo_backport_lightbox( $content ) {
+	static $done = false;
+	if ( $done || ! str_contains( $content, 'wp-lightbox-container' ) ) {
+		return $content;
+	}
+	$done = true;
+
 	// MD5 of wp-includes/js/dist/script-modules/block-library/image/view.js in WordPress 7.1.2 (unchanged in 7.1.3).
 	$patched_from = '62f41374a716f8279dbad485c21344a9';
 	$core_file    = ABSPATH . WPINC . '/js/dist/script-modules/block-library/image/view.js';
 	// Line endings are normalized: git checkouts on Windows and FTP text mode turn LF into CRLF.
 	if ( ! is_readable( $core_file ) || md5( str_replace( "\r\n", "\n", (string) file_get_contents( $core_file ) ) ) !== $patched_from ) {
-		return;
+		return $content;
 	}
 
+	// Core has already enqueued its module while rendering the block: swap it and enqueue ours.
 	$id = '@wordpress/block-library/image/view';
 	wp_deregister_script_module( $id );
 	wp_register_script_module(
@@ -44,20 +55,12 @@ function nelyqo_backport_lightbox() {
 			'in_footer'     => true,
 		)
 	);
+	wp_enqueue_script_module( $id );
 
-	// The matching styles, only on pages that actually render a lightbox (core adds it at priority 15).
-	add_filter(
-		'render_block_core/image',
-		static function ( $content ) {
-			if ( str_contains( $content, 'wp-lightbox-container' ) && ! wp_style_is( 'nelyqo-lightbox' ) ) {
-				$path = get_template_directory() . '/assets/css/lightbox.css';
-				wp_enqueue_style( 'nelyqo-lightbox', get_template_directory_uri() . '/assets/css/lightbox.css', array(), (string) filemtime( $path ) );
-				wp_style_add_data( 'nelyqo-lightbox', 'path', $path );
-			}
-			return $content;
-		},
-		20
-	);
+	$path = get_template_directory() . '/assets/css/lightbox.css';
+	wp_enqueue_style( 'nelyqo-lightbox', get_template_directory_uri() . '/assets/css/lightbox.css', array(), (string) filemtime( $path ) );
+	wp_style_add_data( 'nelyqo-lightbox', 'path', $path );
+	return $content;
 }
 
 /**
