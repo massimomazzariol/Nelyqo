@@ -1,0 +1,10 @@
+{
+	"core": "WordPress/WordPress#6.9",
+	"phpVersion": "8.2",
+	"themes": [ "." ],
+	"port": 8890,
+	"testsEnvironment": false,
+	"lifecycleScripts": {
+		"afterStart": "wp-env run cli --config=.wp-env.wp69.json wp theme activate nelyqo"
+	}
+}

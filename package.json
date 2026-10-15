@@ -7,7 +7,11 @@
 		"format": "pnpm -r --if-present run format",
 		"lint:js": "pnpm -r --if-present run lint:js",
 		"lint:css": "pnpm --filter nelyqo-hero exec wp-scripts lint-style --config ../../.stylelintrc.json \"../../blocks/**/src/**/*.scss\" \"../../assets/css/*.css\" \"../../style.css\"",
-		"check": "pnpm lint:js && pnpm lint:css && pnpm build"
+		"check": "pnpm lint:js && pnpm lint:css && pnpm build",
+		"wp-env": "wp-env"
 	},
-	"packageManager": "pnpm@10.34.5"
+	"packageManager": "pnpm@10.34.5",
+	"devDependencies": {
+		"@wordpress/env": "^11.17.0"
+	}
 }

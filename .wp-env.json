@@ -1,4 +1,9 @@
 {
-	"core": null,
-	"themes": [ "." ]
+	"core": "WordPress/WordPress#7.1.3",
+	"phpVersion": "8.2",
+	"themes": [ "." ],
+	"testsEnvironment": false,
+	"lifecycleScripts": {
+		"afterStart": "wp-env run cli wp theme activate nelyqo"
+	}
 }
