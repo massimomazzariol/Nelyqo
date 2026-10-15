@@ -2,7 +2,7 @@
 	"type": "theme",
 	"slug": "nelyqo",
 	"blueprint": "lean/scroll-blueprint.json",
-	"pages": [ "/scroll-static/", "/scroll-vertical/", "/scroll-horizontal/" ],
+	"pages": [ "/scroll-static/", "/scroll-vertical/", "/scroll-horizontal/", "/fullpage/" ],
 	"budget": {
 		"a11y": 0
 	}
