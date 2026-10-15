@@ -1,6 +1,7 @@
 /*
- * Precious metals: metal-foil type for gem sections (styles/sections/gem-*.json) and the
- * "Metal foil" heading style. Loaded only on pages that render either (functions.php).
+ * Precious metals: metal-foil type for gem sections (styles/sections/gem-*.json), the
+ * "Metal foil" heading style and the "Sand stream" Group style, whose SVG comes from
+ * nelyqo_sand_stream(). Loaded only on pages that render one of them (inc/precious.php).
  */
 
 /* Outside a gem section the foil falls back to the theme's own warm metal. */
@@ -58,5 +59,96 @@
 	:where([class*="is-style-gem-"]) .wp-block-heading em {
 		background: none;
 		color: CanvasText;
+	}
+}
+
+/* Sand stream ------------------------------------------------------------- */
+
+.wp-block-group.is-style-sand-stream {
+	position: relative;
+	view-timeline-name: --nelyqo-sand;
+}
+
+/* Sections follow each other edge to edge, so grounds meet without a gap. */
+.wp-block-group.is-style-sand-stream > * {
+	margin-block: 0;
+}
+
+.nelyqo-sand {
+	height: 100%;
+	inset: 0;
+	overflow: visible;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+	z-index: 1;
+}
+
+.nelyqo-sand path {
+	fill: none;
+	stroke-linecap: round;
+	vector-effect: non-scaling-stroke;
+}
+
+/* Grains: round dots from a dash pattern of zero-length dashes, three strands with co-prime spacings. */
+.nelyqo-sand__fine {
+	stroke-dasharray: 0 5 0 8 0 4;
+	stroke-width: 1.5;
+	transform: translate(-2.5px, 0);
+}
+
+.nelyqo-sand__mid {
+	stroke-dasharray: 0 11 0 6 0 15;
+	stroke-width: 2.5;
+}
+
+.nelyqo-sand__coarse {
+	opacity: 0.85;
+	stroke-dasharray: 0 23 0 31;
+	stroke-width: 3.6;
+	transform: translate(2px, 0);
+}
+
+/* A few larger flakes catch the light. */
+.nelyqo-sand__glint {
+	stroke-dasharray: 0 131 0 197;
+	stroke-width: 5;
+}
+
+@media (max-width: 781px) {
+
+	.nelyqo-sand {
+		opacity: 0.55;
+	}
+}
+
+@supports (animation-timeline: view()) {
+
+	@media (prefers-reduced-motion: no-preference) {
+
+		/* The sand pours down with the scroll: a clip reveal, so the drawing itself is never repainted. */
+		body:not(.editor-styles-wrapper) .nelyqo-sand {
+			animation: nelyqo-sand-pour linear both;
+			animation-range: entry 40% exit 20%;
+			animation-timeline: --nelyqo-sand;
+		}
+	}
+}
+
+@keyframes nelyqo-sand-pour {
+
+	from {
+		clip-path: inset(0 0 100% 0);
+	}
+
+	to {
+		clip-path: inset(0 0 0 0);
+	}
+}
+
+@media (forced-colors: active) {
+
+	.nelyqo-sand {
+		display: none;
 	}
 }
