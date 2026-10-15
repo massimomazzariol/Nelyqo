@@ -21,7 +21,7 @@ A WordPress block theme for scroll-driven storytelling: sections that hold still
 
 Made for small local businesses that sell on trust and booking requests (private drivers, guides, studios, B&Bs): one strong hero with a request card, clear lists, a short process and a FAQ.
 
-**[Try the live demo in WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/massimomazzariol/Nelyqo/master/blueprint.json)**: it runs in your browser, nothing to install.
+**[Try the live demo in WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/massimomazzariol/Nelyqo/master/blueprint.json)**: Nelyqo presents itself, every feature in one scroll from night to ivory. It runs in your browser, nothing to install.
 
 ![The three Nelyqo patterns on the front page](docs/screenshots/patterns.png)
 
