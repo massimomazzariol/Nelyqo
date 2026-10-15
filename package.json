@@ -12,6 +12,7 @@
 	},
 	"packageManager": "pnpm@10.34.5",
 	"devDependencies": {
-		"@wordpress/env": "^11.17.0"
+		"@wordpress/env": "^11.17.0",
+		"lighthouse": "^13.5.0"
 	}
 }

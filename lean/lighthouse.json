@@ -1,0 +1,6 @@
+{
+	"base": "http://localhost:8888",
+	"pages": [ "/", "/sample-page/", "/fullpage/", "/lightbox/" ],
+	"runs": 5,
+	"presets": [ "mobile", "desktop" ]
+}
