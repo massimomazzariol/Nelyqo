@@ -1,0 +1,37 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Amethyst",
+	"slug": "gem-amethyst",
+	"blockTypes": [
+		"core/group",
+		"core/cover"
+	],
+	"styles": {
+		"color": {
+			"background": "#120c18",
+			"text": "#efe7f6"
+		},
+		"spacing": {
+			"padding": {
+				"top": "clamp(3.5rem, 9vw, 8rem)",
+				"bottom": "clamp(3.5rem, 9vw, 8rem)",
+				"left": "clamp(1.25rem, 5vw, 4rem)",
+				"right": "clamp(1.25rem, 5vw, 4rem)"
+			}
+		},
+		"elements": {
+			"heading": {
+				"color": {
+					"text": "#efe7f6"
+				}
+			},
+			"link": {
+				"color": {
+					"text": "#efe7f6"
+				}
+			}
+		},
+		"css": "--nelyqo-ground: #120c18; --nelyqo-muted: #b4a6c6; --nelyqo-m1: #f1e4ff; --nelyqo-m2: #d4b8f0; --nelyqo-m3: #b493dc; --nelyqo-m4: #9070c0; --nelyqo-m5: #7a5aa8; & + * { --nelyqo-from: #120c18; }"
+	}
+}

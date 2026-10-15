@@ -1,0 +1,37 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Sapphire",
+	"slug": "gem-sapphire",
+	"blockTypes": [
+		"core/group",
+		"core/cover"
+	],
+	"styles": {
+		"color": {
+			"background": "#060c1c",
+			"text": "#e6edfb"
+		},
+		"spacing": {
+			"padding": {
+				"top": "clamp(3.5rem, 9vw, 8rem)",
+				"bottom": "clamp(3.5rem, 9vw, 8rem)",
+				"left": "clamp(1.25rem, 5vw, 4rem)",
+				"right": "clamp(1.25rem, 5vw, 4rem)"
+			}
+		},
+		"elements": {
+			"heading": {
+				"color": {
+					"text": "#e6edfb"
+				}
+			},
+			"link": {
+				"color": {
+					"text": "#e6edfb"
+				}
+			}
+		},
+		"css": "--nelyqo-ground: #060c1c; --nelyqo-muted: #a2b2d4; --nelyqo-m1: #e3ecff; --nelyqo-m2: #aec4f4; --nelyqo-m3: #7b9ee6; --nelyqo-m4: #5a80d0; --nelyqo-m5: #4a6cbc; & + * { --nelyqo-from: #060c1c; }"
+	}
+}

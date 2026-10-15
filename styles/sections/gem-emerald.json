@@ -1,0 +1,37 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Emerald",
+	"slug": "gem-emerald",
+	"blockTypes": [
+		"core/group",
+		"core/cover"
+	],
+	"styles": {
+		"color": {
+			"background": "#06140f",
+			"text": "#e4f3ec"
+		},
+		"spacing": {
+			"padding": {
+				"top": "clamp(3.5rem, 9vw, 8rem)",
+				"bottom": "clamp(3.5rem, 9vw, 8rem)",
+				"left": "clamp(1.25rem, 5vw, 4rem)",
+				"right": "clamp(1.25rem, 5vw, 4rem)"
+			}
+		},
+		"elements": {
+			"heading": {
+				"color": {
+					"text": "#e4f3ec"
+				}
+			},
+			"link": {
+				"color": {
+					"text": "#e4f3ec"
+				}
+			}
+		},
+		"css": "--nelyqo-ground: #06140f; --nelyqo-muted: #9fc4b3; --nelyqo-m1: #dff7ea; --nelyqo-m2: #a3e2c3; --nelyqo-m3: #66c49a; --nelyqo-m4: #43a37a; --nelyqo-m5: #2f8a63; & + * { --nelyqo-from: #06140f; }"
+	}
+}
