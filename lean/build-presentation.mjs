@@ -32,9 +32,9 @@ try {
 			// left in odd ones (nelyqo_sand_stream() in inc/precious.php).
 			const side = section.align || ( index % 2 ? 'right' : 'left' );
 			const intro = [
-				[ 'core/paragraph', { className: 'is-style-eyebrow', align: side, content: section.eyebrow } ],
+				[ 'core/paragraph', { className: 'is-style-eyebrow', style: { typography: { textAlign: side } }, content: section.eyebrow } ],
 				[ 'core/heading', { level: section.level || 2, className: section.foil ? 'is-style-foil' : undefined, content: section.heading, style: { typography: { textAlign: side, fontSize: sizes[ section.level || 2 ] } } } ],
-				[ 'core/paragraph', { align: side, content: section.text } ],
+				[ 'core/paragraph', { style: { typography: { textAlign: side } }, content: section.text } ],
 			];
 			if ( section.buttons ) {
 				intro.push( [ 'core/buttons', { layout: { type: 'flex', justifyContent: side } }, section.buttons.map( ( [ text, url ] ) => [ 'core/button', { text, url } ] ) ] );
