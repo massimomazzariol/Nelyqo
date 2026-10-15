@@ -17,8 +17,10 @@ add_action( 'nelyqo_options_sections', 'nelyqo_performance_options', 5 );
 add_action( 'admin_post_nelyqo_performance', 'nelyqo_save_performance_options' );
 
 /**
- * Font files to preload: the first woff2 source of every fontFace that the active theme
- * (child included) declares in theme.json. Filter 'nelyqo_preload_fonts' to change the list.
+ * Font files to preload: the first woff2 source of every upright fontFace that the active theme
+ * (child included) declares in theme.json. Italic faces are skipped: they rarely set text in the
+ * first screen, and each preload competes with the hero image for bandwidth. Filter
+ * 'nelyqo_preload_fonts' to change the list.
  *
  * @return string[] Font URLs.
  */
@@ -27,6 +29,9 @@ function nelyqo_font_preloads() {
 	$families = wp_get_global_settings( array( 'typography', 'fontFamilies', 'theme' ) );
 	foreach ( is_array( $families ) ? $families : array() as $family ) {
 		foreach ( $family['fontFace'] ?? array() as $face ) {
+			if ( 'normal' !== ( $face['fontStyle'] ?? 'normal' ) ) {
+				continue;
+			}
 			foreach ( (array) ( $face['src'] ?? array() ) as $src ) {
 				if ( str_ends_with( $src, '.woff2' ) ) {
 					$urls[] = str_starts_with( $src, 'file:./' ) ? get_theme_file_uri( substr( $src, 7 ) ) : $src;

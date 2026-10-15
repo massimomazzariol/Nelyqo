@@ -14,6 +14,10 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 
 == Changelog ==
 
+= Unreleased =
+* Font preloads skip italic faces: they rarely set text in the first screen, and every preload competes with the hero image for bandwidth. The nelyqo_preload_fonts filter can add them back.
+* The emoji option also removes the emoji script and styles from embeds of the site's pages.
+
 = 0.4.0 =
 * Performance defaults: the woff2 files of every theme.json fontFace (child included) are preloaded, the emoji polyfill is removed, and autoplay videos load and play only near the viewport (paused on their first frame with reduced motion). Filters: nelyqo_preload_fonts, nelyqo_disable_emoji, nelyqo_lazy_video, nelyqo_lazy_video_margin (how early videos start loading, default 200px).
 * Appearance > Nelyqo > Performance: three switches, all on by default: remove the emoji script, turn off plugin signature comments through each plugin's own switch (list in data/clean-html.json), and remove HTML comments from pages as they are sent (never inside scripts, styles or preformatted text; the files and the saved content are not changed).
