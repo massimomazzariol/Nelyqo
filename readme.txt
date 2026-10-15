@@ -21,6 +21,7 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 * Scroll Section, horizontal track: the sideways-scrolling track can be reached with the keyboard.
 * Scroll Section: the horizontal track styles load only on pages that use that mode, so the block's stylesheet drops from 19.8 KB to 8.3 KB elsewhere.
 * Autoplay videos: the first one of the page (usually the hero background) keeps autoplay, so it starts without waiting for the script; the others still load only near the viewport. With reduced motion it is paused as before.
+* Removing HTML comments from pages is now off by default: measured on a standard site it removed almost nothing (WordPress already prints almost no comments, and plugin signatures have their own switch), while it holds every page in memory until complete. Sites that saved the Performance options keep their choice.
 * Image lightbox backport: still applied on WordPress 7.1.3 (same core file as 7.1.2), and on sites where the core file was saved with Windows line endings. The core file is checked only on pages that show a lightbox, no longer on every request.
 
 = 0.4.0 =

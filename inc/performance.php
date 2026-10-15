@@ -1,8 +1,8 @@
 <?php
 /**
- * Front-end performance defaults: font preloading, no emoji polyfill, lazy autoplay videos, clean HTML
- * (no plugin signature comments, no HTML comments). Each default can be turned off in
- * Appearance > Nelyqo > Performance.
+ * Front-end performance defaults: font preloading, no emoji polyfill, lazy autoplay videos, no plugin
+ * signature comments. Appearance > Nelyqo > Performance turns them off, and turns on the removal of
+ * all HTML comments (off by default).
  *
  * @package Nelyqo
  */
@@ -77,7 +77,8 @@ function nelyqo_disable_emoji() {
 }
 
 /**
- * Performance options, all on by default (theme mods).
+ * Performance options (theme mods): emoji and signature removal on by default; HTML comment removal
+ * off, since it buffers the whole page and WordPress already prints almost no comments.
  *
  * @return array<string, bool> remove_emoji, remove_signatures, remove_comments.
  */
@@ -85,7 +86,7 @@ function nelyqo_performance_settings() {
 	return array(
 		'remove_emoji'      => (bool) get_theme_mod( 'nelyqo_remove_emoji', true ),
 		'remove_signatures' => (bool) get_theme_mod( 'nelyqo_remove_signatures', true ),
-		'remove_comments'   => (bool) get_theme_mod( 'nelyqo_remove_comments', true ),
+		'remove_comments'   => (bool) get_theme_mod( 'nelyqo_remove_comments', false ),
 	);
 }
 
@@ -213,7 +214,7 @@ function nelyqo_performance_options() {
 		<p>
 			<label><input type="checkbox" name="nelyqo_remove_comments" value="1" aria-describedby="nelyqo-comments-help" <?php checked( $settings['remove_comments'] ); ?>> <?php esc_html_e( 'Remove HTML comments from pages', 'nelyqo' ); ?></label>
 		</p>
-		<p class="description" id="nelyqo-comments-help"><?php esc_html_e( 'Notes left in the page source by WordPress, plugins and themes. Scripts, styles and preformatted text are never touched.', 'nelyqo' ); ?></p>
+		<p class="description" id="nelyqo-comments-help"><?php esc_html_e( 'Notes left in the page source by plugins and themes. Off by default: WordPress itself leaves almost none, and this holds each page in memory until it is complete. Turn it on if a plugin leaves notes that its own settings cannot remove. Scripts, styles and preformatted text are never touched.', 'nelyqo' ); ?></p>
 		<?php submit_button( __( 'Save performance options', 'nelyqo' ) ); ?>
 	</form>
 	<?php
