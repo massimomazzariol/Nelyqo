@@ -1,3 +1,5 @@
+import './horizontal.scss';
+
 const HORIZONTAL_SELECTOR =
 	'.wp-block-nelyqo-scroll-section.is-mode-horizontal-track';
 const SECTION_BREAKPOINT = 960;

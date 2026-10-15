@@ -19,6 +19,7 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 * The emoji option also removes the emoji script and styles from embeds of the site's pages.
 * Scroll Section: the vertical modes now animate with CSS alone (scroll-driven animations), so pages that use only them load no script for the block (7.9 KB less, one request fewer). Browsers without scroll-driven animations, and visitors who prefer reduced motion, see the cards still. The script now loads only for the horizontal track mode.
 * Scroll Section, horizontal track: the sideways-scrolling track can be reached with the keyboard.
+* Scroll Section: the horizontal track styles load only on pages that use that mode, so the block's stylesheet drops from 19.8 KB to 8.3 KB elsewhere.
 * Image lightbox backport: still applied on WordPress 7.1.3 (same core file as 7.1.2), and on sites where the core file was saved with Windows line endings.
 
 = 0.4.0 =

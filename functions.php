@@ -117,8 +117,8 @@ function nelyqo_enqueue_styles() {
 }
 
 /**
- * Loads the Scroll Section script only for the horizontal track mode. The vertical modes animate
- * with CSS alone, so pages that use only them load no script for the block.
+ * Loads the Scroll Section script and styles of the horizontal track mode only where a section uses
+ * it. The vertical modes animate with CSS alone, so pages that use only them load neither.
  *
  * @param string $content Rendered block.
  * @param array  $block   Parsed block.
@@ -138,6 +138,9 @@ function nelyqo_scroll_section_script( $content, $block ) {
 				'strategy'  => 'defer',
 			)
 		);
+		wp_enqueue_style( 'nelyqo-scroll-section-horizontal', get_template_directory_uri() . $build . 'view.css', array( 'nelyqo-scroll-section-style' ), $asset['version'] );
+		wp_style_add_data( 'nelyqo-scroll-section-horizontal', 'rtl', 'replace' );
+		wp_style_add_data( 'nelyqo-scroll-section-horizontal', 'path', get_template_directory() . $build . 'view.css' );
 	}
 	return $content;
 }
