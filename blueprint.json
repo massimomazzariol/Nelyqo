@@ -1,8 +1,8 @@
 {
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
 	"meta": {
-		"title": "Nelyqo demo",
-		"description": "Nelyqo block theme with its patterns on the front page.",
+		"title": "Nelyqo presentation",
+		"description": "Nelyqo presents itself: every feature in one scroll-driven journey from night to ivory.",
 		"author": "massimomazzariol"
 	},
 	"landingPage": "/",
@@ -24,7 +24,7 @@
 		},
 		{
 			"step": "runPHP",
-			"code": "<?php require '/wordpress/wp-load.php'; $content = implode( \"\\n\\n\", array_map( fn( $slug ) => '<!-- wp:pattern {\"slug\":\"nelyqo/' . $slug . '\"} /-->', array( 'hero-split', 'coded-list', 'steps-faq' ) ) ); $id = wp_insert_post( array( 'post_type' => 'page', 'post_title' => 'Home', 'post_status' => 'publish', 'post_content' => $content ) ); update_option( 'show_on_front', 'page' ); update_option( 'page_on_front', $id ); update_option( 'blogname', 'Nelyqo' ); update_option( 'blogdescription', 'Scroll-driven block theme' );"
+			"code": "<?php require '/wordpress/wp-load.php'; $id = wp_insert_post( array( 'post_type' => 'page', 'post_title' => 'Nelyqo', 'post_status' => 'publish', 'post_content' => file_get_contents( get_stylesheet_directory() . '/demo/presentation.html' ) ) ); update_option( 'show_on_front', 'page' ); update_option( 'page_on_front', $id ); update_option( 'blogname', 'Nelyqo' ); update_option( 'blogdescription', 'Scroll-driven block theme' );"
 		}
 	]
 }
