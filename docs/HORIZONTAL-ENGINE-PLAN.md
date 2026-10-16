@@ -1,6 +1,6 @@
 # One engine for horizontal scrolling (plan for 0.6.0)
 
-Status: proposal, waiting for approval. Nothing here changes saved content until it is approved.
+Status: approved with changes (see Decisions). Saved content never changes.
 
 ## Today: two engines for one effect
 
@@ -37,3 +37,25 @@ Both engines do the same job, and 0.5.0 brought the Scroll Section mode to the b
 1. Keep Scroll Section as the one public block (recommended), or the other way round?
 2. Hide Horizontal Scroll from the inserter in 0.6.0, or only mark it "legacy" in its description first?
 3. Per-card emphasis (cards grow and brighten in the middle): keep it as an option, or drop it for a lighter track?
+
+## Decisions (user, 2026-10-16)
+
+- **Both blocks stay public** (Horizontal Scroll stays in the inserter): two blocks, one engine.
+- **One engine moves everything**: the script measures, CSS moves (scroll-driven animations on the compositor); a small script fallback moves the track where scroll-driven animations are missing (Firefox today).
+- **Card emphasis** becomes an option: on by default in Scroll Section (existing sites look the same), off by default in Horizontal Scroll; subtle / medium / strong. Done in CSS from each card's position in the track, no per-frame script.
+- **New options, on both blocks** (attributes read at render time: the saved markup does not change, so existing posts stay valid):
+  1. Direction: cards travel left or right; the default follows the writing direction (left in left-to-right languages, right in right-to-left ones).
+  2. Progress indicator: a thin bar under the track, CSS only.
+  3. Settle on a card: when scrolling stops inside the pinned stretch, the track settles on the nearest whole card.
+  4. Speed: slow / normal / fast (how much page scroll crosses the track).
+  5. Phone (under 960px): swipe (cards scroll sideways with the finger, today's behaviour, default) or stack (cards one under the other).
+- The presentation gets a Horizontal Scroll section showing the options.
+
+## Engine design
+
+- `assets/js/horizontal-engine.js`, plain script, no build, loaded only on pages that render either block (render_block filter, as the Scroll Section script today). Replaces `blocks/horizontal-scroll/src/view.js` and the horizontal part of `blocks/scroll-section/src/view.js`.
+- The script, on load and on resize only: builds the runtime track around the cards (as today), measures the travel distance and sets `--nelyqo-h-travel`, `--nelyqo-h-distance`, the section height and the pin top.
+- CSS: the section declares a view timeline; the track's `translate`, the progress bar and the card emphasis are animations on that timeline whose range starts when the stage pins and ends `--nelyqo-h-travel` later.
+- Fallback (no `animation-timeline`): the script updates `--nelyqo-h-offset` in a passive scroll listener, as today, without card effects.
+- Reduced motion: no pin; cards in a native sideways scroller (or stacked, per the phone option).
+- Settle: on `scrollend` (debounced `scroll` where missing) inside the pinned stretch, smooth-scroll to the nearest card's position; never while the user is still scrolling, never outside the stretch.
