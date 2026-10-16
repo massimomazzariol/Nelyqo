@@ -325,10 +325,13 @@
 
 	@media (prefers-reduced-motion: no-preference) {
 
-		/* The sand pours down with the scroll: a clip reveal, so the drawing itself is never repainted. */
+		/* The sand pours down with the scroll: a clip reveal, so the drawing itself is never repainted.
+		   The poured tip stays on one line of the screen (35vh above its bottom edge): entry-crossing
+		   spans exactly the section's height, so a stretch is complete when its bottom reaches that
+		   line, the moment the next stretch starts there. One unbroken line, never two loose ends. */
 		body:not(.editor-styles-wrapper) .nelyqo-sand {
 			animation: nelyqo-sand-pour linear both;
-			animation-range: cover 5% cover 60%;
+			animation-range: entry-crossing 35vh entry-crossing calc(100% + 35vh);
 			animation-timeline: view();
 		}
 
