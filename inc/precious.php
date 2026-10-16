@@ -127,6 +127,14 @@ function nelyqo_sand_stream( $content, $block ) {
 		$strands .= sprintf( '<path class="nelyqo-sand__%s" d="%s"/>', $strand, $path );
 	}
 	$gradient = sprintf( '<defs><linearGradient id="%s" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000"><stop offset="0" class="nelyqo-sand__from"/><stop offset=".3" class="nelyqo-sand__m1"/><stop offset=".65" class="nelyqo-sand__m4"/><stop offset="1" class="nelyqo-sand__m2"/></linearGradient></defs>', $id );
-	$svg      = sprintf( '<svg class="nelyqo-sand" style="--nelyqo-sand-paint:url(#%s)" aria-hidden="true" focusable="false" viewBox="0 0 1000 1000" preserveAspectRatio="none">%s%s</svg>', $id, $gradient, $strands );
-	return false === $open ? $content : substr_replace( $content, $svg, $open + 1, 0 );
+	$line     = '<svg class="nelyqo-sand__line" focusable="false" viewBox="0 0 1000 1000" preserveAspectRatio="none">%s</svg>';
+	// The line in its gradient (a plain metal where the gradient cannot be found), then the same
+	// grains again in light metal, seen through a band that runs down the line (precious.css).
+	$sand = sprintf(
+		'<span class="nelyqo-sand" style="--nelyqo-sand-paint:url(#%s) var(--nelyqo-m2)" aria-hidden="true">%s<span class="nelyqo-sand__light">%s</span></span>',
+		$id,
+		sprintf( $line, $gradient . $strands ),
+		sprintf( $line, $strands )
+	);
+	return false === $open ? $content : substr_replace( $content, $sand, $open + 1, 0 );
 }

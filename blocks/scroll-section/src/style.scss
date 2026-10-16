@@ -284,8 +284,8 @@
 		flex-direction: column;
 		grid-row: 1 / span var(--nelyqo-scroll-card-count);
 		justify-content: center;
-		min-height: 100vh;
-		min-height: 100svh;
+		min-height: min(100vh, 100%);
+		min-height: min(100svh, 100%);
 		top: 0;
 	}
 

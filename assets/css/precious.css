@@ -249,13 +249,23 @@
 }
 
 .nelyqo-sand {
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	z-index: 1;
+}
+
+.nelyqo-sand__line {
 	height: 100%;
 	inset: 0;
 	overflow: visible;
-	pointer-events: none;
 	position: absolute;
 	width: 100%;
-	z-index: 1;
+}
+
+/* The running light is shown only with motion allowed (below). */
+.nelyqo-sand__light {
+	display: none;
 }
 
 .nelyqo-sand path {
@@ -292,26 +302,30 @@
 /* Grains: round dots from a dash pattern of zero-length dashes, three strands with co-prime spacings. */
 .nelyqo-sand__fine {
 	stroke-dasharray: 0 5 0 8 0 4;
-	stroke-width: 1.5;
+	--nelyqo-sand-grain: 1.5px;
+	stroke-width: var(--nelyqo-sand-grain);
 	transform: translate(-2.5px, 0);
 }
 
 .nelyqo-sand__mid {
 	stroke-dasharray: 0 11 0 6 0 15;
-	stroke-width: 2.5;
+	--nelyqo-sand-grain: 2.5px;
+	stroke-width: var(--nelyqo-sand-grain);
 }
 
 .nelyqo-sand__coarse {
 	opacity: 0.85;
 	stroke-dasharray: 0 23 0 31;
-	stroke-width: 3.6;
+	--nelyqo-sand-grain: 3.6px;
+	stroke-width: var(--nelyqo-sand-grain);
 	transform: translate(2px, 0);
 }
 
 /* A few larger flakes catch the light. */
 .nelyqo-sand__glint {
 	stroke-dasharray: 0 131 0 197;
-	stroke-width: 5;
+	--nelyqo-sand-grain: 5px;
+	stroke-width: var(--nelyqo-sand-grain);
 }
 
 @media (max-width: 781px) {
@@ -333,6 +347,12 @@
 			animation: nelyqo-sand-pour linear both;
 			animation-range: entry-crossing 35vh entry-crossing calc(100% + 35vh);
 			animation-timeline: view();
+		}
+
+		/* The page may end with the last section: its stretch completes as its bottom reaches the
+		   bottom of the screen, which the page can always scroll to. */
+		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream > :last-child > .nelyqo-sand {
+			animation-range-end: entry-crossing 100%;
 		}
 
 		/* The first stretch is on screen at load: it pours by itself instead of waiting for a scroll. */
@@ -379,39 +399,58 @@
 	}
 }
 
-/* The grains keep flowing down the line: each strand's dash pattern slides along the path at its
-   own pace. Only with motion allowed; the still line is the fallback. */
+/*
+ * Light runs down the line: the grains drawn again in the lightest metal, seen through soft bands
+ * of light one --nelyqo-sand-gap apart. The masked layer slides down by one gap and loops, while
+ * the drawing inside it slides up by the same amount, so the grains stay put and only the light
+ * moves, at the same pace in every section. Transforms only: the browser moves layers and never
+ * redraws the sand (animating the dashes themselves cost a third of a slow phone's main thread
+ * at rest). Only with motion allowed and masks supported; the still line is the fallback.
+ */
 @media (prefers-reduced-motion: no-preference) {
 
-	body:not(.editor-styles-wrapper) .nelyqo-sand path {
-		animation: nelyqo-sand-flow 6s linear infinite;
-	}
+	@supports (mask-image: none) or (-webkit-mask-image: none) {
 
-	body:not(.editor-styles-wrapper) .nelyqo-sand__fine {
-		--nelyqo-sand-cycle: -17px;
-		animation-duration: 1.6s;
-	}
+		body:not(.editor-styles-wrapper) .nelyqo-sand__light {
+			--nelyqo-sand-gap: 22rem;
+			--nelyqo-sand-band: repeating-linear-gradient(transparent 0, #000 5rem, transparent 10rem, transparent var(--nelyqo-sand-gap));
+			animation: nelyqo-sand-band 2.4s linear infinite;
+			display: block;
+			height: calc(100% + var(--nelyqo-sand-gap));
+			inset: calc(-1 * var(--nelyqo-sand-gap)) 0 auto;
+			-webkit-mask-image: var(--nelyqo-sand-band);
+			mask-image: var(--nelyqo-sand-band);
+			overflow: hidden;
+			position: absolute;
+		}
 
-	body:not(.editor-styles-wrapper) .nelyqo-sand__mid {
-		--nelyqo-sand-cycle: -32px;
-		animation-duration: 2.6s;
-	}
+		/* As tall as the section, starting at its top. */
+		body:not(.editor-styles-wrapper) .nelyqo-sand__light .nelyqo-sand__line {
+			animation: nelyqo-sand-band-hold 2.4s linear infinite;
+			height: calc(100% - var(--nelyqo-sand-gap));
+			inset: var(--nelyqo-sand-gap) 0 auto;
+		}
 
-	body:not(.editor-styles-wrapper) .nelyqo-sand__coarse {
-		--nelyqo-sand-cycle: -54px;
-		animation-duration: 4.2s;
-	}
-
-	body:not(.editor-styles-wrapper) .nelyqo-sand__glint {
-		--nelyqo-sand-cycle: -328px;
-		animation-duration: 14s;
+		/* Lit grains turn whiter and swell a little, like sand catching the light. */
+		.nelyqo-sand__light path {
+			stroke: var(--nelyqo-m1);
+			stroke: color-mix(in oklab, var(--nelyqo-m1) 50%, #fff);
+			stroke-width: calc(var(--nelyqo-sand-grain) + 1px);
+		}
 	}
 }
 
-@keyframes nelyqo-sand-flow {
+@keyframes nelyqo-sand-band {
 
 	to {
-		stroke-dashoffset: var(--nelyqo-sand-cycle);
+		transform: translateY(var(--nelyqo-sand-gap));
+	}
+}
+
+@keyframes nelyqo-sand-band-hold {
+
+	to {
+		transform: translateY(calc(-1 * var(--nelyqo-sand-gap)));
 	}
 }
 

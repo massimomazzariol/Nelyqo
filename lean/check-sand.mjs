@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 const url = process.argv[ 2 ] ?? 'http://localhost:8888/';
 const data = JSON.parse( readFileSync( join( dirname( fileURLToPath( import.meta.url ) ), '..', 'demo', 'presentation.json' ), 'utf8' ) );
 const html = await ( await fetch( url ) ).text();
-const found = html.match( /<svg class="nelyqo-sand"/g )?.length ?? 0;
+const found = html.match( /<span class="nelyqo-sand"/g )?.length ?? 0;
 // A section with blocks renders as two gem sections (heading, then blocks), each with its stretch.
 const expected = data.sections.reduce( ( sum, s ) => sum + ( s.blocks || s.gemPills ? 2 : 1 ), 0 );
 console.log( `${ found === expected ? 'ok' : 'FAIL' }: ${ found } sand stretches, ${ expected } expected` );
