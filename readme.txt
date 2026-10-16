@@ -18,13 +18,13 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 * Precious metals: nine gem section styles for Group and Cover (gold, rose gold, amethyst, sapphire, blue gold, emerald, imperial topaz, pearl, gold on ivory). Each sets its ground, text and a five-tone metal, and every gem passes WCAG AA contrast (checked in CI). Native theme.json section styles: their CSS loads only on pages that use them.
 * Gem sections that follow each other blend with a long gradient instead of a hard edge.
 * "Metal foil" heading style, and emphasis inside gem headings in the gem's metal, with a light that slides across as the heading crosses the screen. Plain text in Windows high contrast mode.
-* "Sand stream" Group style: a line of metal grains pours down through its gem sections as the page scrolls, with gold dust drifting at two depths. Drawn at render time, never saved in the content; CSS only, still with reduced motion.
+* "Sand stream" Group style: a line of metal grains pours down through its gem sections as the page scrolls, with gold dust drifting at two depths. Drawn at render time, never saved in the content; CSS only. With reduced motion the line and the dust stay still.
 * "Eyebrow" paragraph style for the small label above a heading.
-* Sand stream: the line carries a gradient through each gem's metals and its grains keep flowing down (both still with reduced motion). The first stretch pours in on load instead of waiting for a scroll. A gem section that follows one of the same gem continues the line straight down the middle, so the curve stays beside the heading and wide blocks get a clear lane.
+* Sand stream: the line carries a gradient through each gem's metals and its grains keep flowing down; with reduced motion the line stays still. The first stretch pours in on load instead of waiting for a scroll. A gem section that follows one of the same gem continues the line straight down the middle, so the curve stays beside the heading and wide blocks get a clear lane.
 * Buttons in gem sections: on hover and keyboard focus the light runs across the metal and the button lifts. Pills in gem sections wear the gem's metal.
 * Scroll Section, vertical sticky mode: the introduction now spans every card row and holds still in the middle of the screen, out of reach of a sticky header (it used to stop near the top).
 * Scroll Section, horizontal track: the pinned track holds in the middle of the screen instead of near the top.
-* Full-page section: the slides now dock below the theme's sticky header instead of under it. A long scroll step that carries the page past the slides on the way in no longer skips them, the wheel works with the pointer anywhere on the page while they are on screen, and the arrow keys page them without focusing them first.
+* Full-page section: the slides now dock below the theme's sticky header instead of under it. A long scroll step that carries the page past the slides on the way in no longer skips them, the wheel works with the pointer anywhere on the page while they are on screen, and the arrow keys and Page Up/Down page them without focusing them first. On touch screens a swipe that starts above the slides, or carries the page past them, docks them too.
 * The live demo is now a presentation of the theme: every feature in one scroll from night to ivory.
 
 = 0.4.1 =

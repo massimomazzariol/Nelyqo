@@ -304,6 +304,26 @@ const dock = ( state, direction ) => {
 	} );
 };
 
+// Slides only page while they fill the screen. Moving towards them (wheel, swipe or key) docks
+// them once they cover half the screen; moving away from them is ordinary page scrolling. A long
+// step can carry the page past the docking point on the way in (first slide going down, last going
+// up): that still counts as arriving, so the slides dock back instead of being skipped.
+const shouldDock = ( state, direction ) => {
+	const dockDirection = getDockDirection( state );
+	const isNear =
+		Math.abs( getDockOffset( state ) ) <
+		state.viewportHeight * DOCK_REACH_RATIO;
+	const isArrivingPast =
+		dockDirection === -direction &&
+		state.activeIndex === ( direction > 0 ? 0 : state.panels.length - 1 );
+
+	return (
+		dockDirection !== 0 &&
+		isNear &&
+		( dockDirection === direction || isArrivingPast )
+	);
+};
+
 const canNavigate = ( state, direction ) => {
 	if ( direction > 0 ) {
 		return state.activeIndex < state.panels.length - 1;
@@ -450,22 +470,9 @@ const handleWheel = ( state, event ) => {
 		return;
 	}
 
-	// Slides only page while they fill the screen. Scrolling towards them docks them once they
-	// cover half the screen; scrolling away from them is ordinary page scrolling. A long scroll
-	// step can carry the page past the docking point on the way in (first slide going down, last
-	// going up): that still counts as arriving, so the slides dock back instead of being skipped.
 	const dockDirection = getDockDirection( state );
-	const dockOffset = getDockOffset( state );
-	const isNear =
-		Math.abs( dockOffset ) < state.viewportHeight * DOCK_REACH_RATIO;
-	const isArrivingPast =
-		dockDirection === -direction &&
-		state.activeIndex === ( direction > 0 ? 0 : state.panels.length - 1 );
 
-	if (
-		dockDirection !== 0 &&
-		! ( isNear && ( dockDirection === direction || isArrivingPast ) )
-	) {
+	if ( dockDirection !== 0 && ! shouldDock( state, direction ) ) {
 		return;
 	}
 
@@ -507,8 +514,8 @@ const handleTouchStart = ( state, event ) => {
 	}
 
 	state.touchStart = {
-		x: touch.pageX,
-		y: touch.pageY,
+		x: touch.clientX,
+		y: touch.clientY,
 	};
 };
 
@@ -523,8 +530,8 @@ const handleTouchMove = ( state, event ) => {
 		return;
 	}
 
-	const deltaX = touch.pageX - state.touchStart.x;
-	const deltaY = touch.pageY - state.touchStart.y;
+	const deltaX = touch.clientX - state.touchStart.x;
+	const deltaY = touch.clientY - state.touchStart.y;
 	const direction = deltaY < 0 ? 1 : -1;
 	const hasVerticalIntent =
 		Math.abs( deltaY ) > Math.abs( deltaX ) * SWIPE_AXIS_DOMINANCE;
@@ -554,8 +561,8 @@ const handleTouchEnd = ( state, event ) => {
 		return;
 	}
 
-	const deltaX = touch.pageX - touchStart.x;
-	const deltaY = touch.pageY - touchStart.y;
+	const deltaX = touch.clientX - touchStart.x;
+	const deltaY = touch.clientY - touchStart.y;
 	const direction = deltaY < 0 ? 1 : -1;
 	const isVerticalSwipe =
 		Math.abs( deltaY ) >= getSwipeThreshold( state ) &&
@@ -568,11 +575,12 @@ const handleTouchEnd = ( state, event ) => {
 		return;
 	}
 
-	const dockDirection = getDockDirection( state );
-
-	if ( dockDirection === direction ) {
+	if ( shouldDock( state, direction ) ) {
 		dock( state, direction );
-	} else if ( dockDirection === 0 && canNavigate( state, direction ) ) {
+	} else if (
+		getDockDirection( state ) === 0 &&
+		canNavigate( state, direction )
+	) {
 		event.preventDefault();
 		setActiveIndex( state, state.activeIndex + direction );
 	}
@@ -591,30 +599,40 @@ const isEditableTarget = ( target ) => {
 };
 
 const handleKeyDown = ( state, event ) => {
-	if (
-		state.panels.length < 2 ||
-		isEditableTarget( event.target ) ||
-		getDockDirection( state ) !== 0
-	) {
+	if ( state.panels.length < 2 || isEditableTarget( event.target ) ) {
 		return;
 	}
 
-	const keyActions = {
+	const steps = {
 		ArrowDown: 1,
 		ArrowUp: -1,
-		End: state.panels.length - 1,
-		Home: 0,
 		PageDown: 1,
 		PageUp: -1,
+		' ': event.shiftKey ? -1 : 1,
 	};
+	const step = steps[ event.key ];
 	let nextIndex = null;
 
-	if ( event.key === ' ' ) {
-		nextIndex = state.activeIndex + ( event.shiftKey ? -1 : 1 );
-	} else if ( event.key === 'Home' || event.key === 'End' ) {
-		nextIndex = keyActions[ event.key ];
-	} else if ( keyActions[ event.key ] ) {
-		nextIndex = state.activeIndex + keyActions[ event.key ];
+	if ( step && getDockDirection( state ) !== 0 ) {
+		if ( shouldDock( state, step ) ) {
+			event.preventDefault();
+			dock( state, step );
+		}
+		return;
+	}
+
+	if ( getDockDirection( state ) !== 0 ) {
+		return;
+	}
+
+	if ( step ) {
+		nextIndex = state.activeIndex + step;
+	} else if (
+		( event.key === 'Home' || event.key === 'End' ) &&
+		state.sequence.contains( event.target )
+	) {
+		// Home and End page the slides only when they have focus: elsewhere they move the page.
+		nextIndex = event.key === 'Home' ? 0 : state.panels.length - 1;
 	}
 
 	if ( nextIndex === null ) {
@@ -746,14 +764,17 @@ const initSequence = ( panels ) => {
 	// A page-wide non-passive wheel listener makes every scroll wait for the script, so it is
 	// attached only while the slides are on screen.
 	const onWheel = ( event ) => handleWheel( state, event );
-	new window.IntersectionObserver( ( [ entry ] ) => {
-		if ( entry.isIntersecting ) {
+	new window.IntersectionObserver( ( entries ) => {
+		// A fast fling can queue an entry and an exit together: the last one is current.
+		if ( entries[ entries.length - 1 ].isIntersecting ) {
 			window.addEventListener( 'wheel', onWheel, { passive: false } );
 		} else {
 			window.removeEventListener( 'wheel', onWheel );
 		}
 	} ).observe( runtime.sequence );
-	runtime.sequence.addEventListener(
+	// A swipe that brings the slides in may start above them, so start and end are read page-wide;
+	// neither blocks scrolling. touchmove, which can, stays on the slides (it acts only when docked).
+	window.addEventListener(
 		'touchstart',
 		( event ) => handleTouchStart( state, event ),
 		{ passive: true }
@@ -763,7 +784,7 @@ const initSequence = ( panels ) => {
 		( event ) => handleTouchMove( state, event ),
 		{ passive: false }
 	);
-	runtime.sequence.addEventListener(
+	window.addEventListener(
 		'touchend',
 		( event ) => handleTouchEnd( state, event ),
 		{ passive: false }
