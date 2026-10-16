@@ -5,6 +5,7 @@ import {
 	useInnerBlocksProps,
 } from '@wordpress/block-editor';
 import { Notice, PanelBody, SelectControl } from '@wordpress/components';
+import HorizontalMotionPanel from '../../shared/horizontal-motion-panel';
 import './editor.scss';
 
 const CONTENT_TEMPLATE = [
@@ -131,6 +132,11 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 					/>
 				</PanelBody>
+				<HorizontalMotionPanel
+					attributes={ attributes }
+					setAttributes={ setAttributes }
+					withEmphasis
+				/>
 			</InspectorControls>
 
 			<section { ...blockProps }>

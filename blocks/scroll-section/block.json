@@ -7,10 +7,16 @@
 	"category": "design",
 	"icon": "columns",
 	"description": "Scroll-driven section with sticky intro content and stacked cards.",
-	"allowedBlocks": [ "core/group", "nelyqo/scroll-card" ],
+	"allowedBlocks": [
+		"core/group",
+		"nelyqo/scroll-card"
+	],
 	"supports": {
 		"html": false,
-		"align": [ "full", "wide" ]
+		"align": [
+			"full",
+			"wide"
+		]
 	},
 	"attributes": {
 		"mode": {
@@ -44,6 +50,40 @@
 		"sectionTone": {
 			"type": "string",
 			"default": "light"
+		},
+		"trackDirection": {
+			"type": "string",
+			"enum": [
+				"auto",
+				"left",
+				"right"
+			],
+			"default": "auto"
+		},
+		"trackSpeed": {
+			"type": "string",
+			"enum": [
+				"slow",
+				"normal",
+				"fast"
+			],
+			"default": "normal"
+		},
+		"showProgress": {
+			"type": "boolean",
+			"default": false
+		},
+		"settleOnCard": {
+			"type": "boolean",
+			"default": false
+		},
+		"mobileLayout": {
+			"type": "string",
+			"enum": [
+				"swipe",
+				"stack"
+			],
+			"default": "swipe"
 		}
 	},
 	"textdomain": "nelyqo-scroll-section",

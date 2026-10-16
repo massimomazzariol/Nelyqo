@@ -13,7 +13,10 @@
 	],
 	"supports": {
 		"html": false,
-		"align": [ "full", "wide" ]
+		"align": [
+			"full",
+			"wide"
+		]
 	},
 	"attributes": {
 		"trackCardWidth": {
@@ -23,6 +26,53 @@
 		"sectionTone": {
 			"type": "string",
 			"default": "light"
+		},
+		"trackDirection": {
+			"type": "string",
+			"enum": [
+				"auto",
+				"left",
+				"right"
+			],
+			"default": "auto"
+		},
+		"trackSpeed": {
+			"type": "string",
+			"enum": [
+				"slow",
+				"normal",
+				"fast"
+			],
+			"default": "normal"
+		},
+		"showProgress": {
+			"type": "boolean",
+			"default": false
+		},
+		"settleOnCard": {
+			"type": "boolean",
+			"default": false
+		},
+		"mobileLayout": {
+			"type": "string",
+			"enum": [
+				"swipe",
+				"stack"
+			],
+			"default": "swipe"
+		},
+		"cardEmphasis": {
+			"type": "boolean",
+			"default": false
+		},
+		"motionIntensity": {
+			"type": "string",
+			"enum": [
+				"subtle",
+				"medium",
+				"strong"
+			],
+			"default": "medium"
 		}
 	},
 	"textdomain": "nelyqo-horizontal-scroll",

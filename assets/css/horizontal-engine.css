@@ -8,17 +8,24 @@
 
 /* Options without the script, or with reduced motion: the still layouts. */
 
-/* Phones, "stack": the cards one under the other instead of a sideways scroller. */
+/* Phones, "stack": the cards one under the other, full width, instead of a sideways scroller.
+   Selectors one step stronger than each block's own phone rules. */
 @media (max-width: 781px) {
 
-	.is-h-mobile-stack .nelyqo-h-track {
+	.wp-block-nelyqo-horizontal-scroll.is-h-mobile-stack .nelyqo-h-track,
+	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-h-mobile-stack .nelyqo-h-track {
+		align-items: stretch;
 		flex-direction: column;
+		inline-size: auto;
+		min-inline-size: 0;
 		overflow: visible;
-		width: auto;
 	}
 
-	.is-h-mobile-stack .nelyqo-h-track > .nelyqo-h-card {
-		flex-basis: auto;
+	.wp-block-nelyqo-horizontal-scroll.is-h-mobile-stack .nelyqo-h-track > .nelyqo-h-card,
+	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-h-mobile-stack .nelyqo-h-track > .nelyqo-h-card {
+		align-self: stretch;
+		flex: none;
+		inline-size: auto;
 		max-inline-size: none;
 		min-inline-size: 0;
 	}

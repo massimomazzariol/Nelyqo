@@ -4,7 +4,8 @@
 // page scrolls in the expected direction, and it reaches its end before the stage lets go. With
 // reduced motion nothing is held. Exits 1 on a failed step.
 // Usage: node lean/horizontal-check.mjs <page with a horizontal track> <dir with playwright installed>
-// ENGINE=firefox|webkit picks the browser (default chromium); DIRECTION=right expects cards moving right.
+// ENGINE=firefox|webkit picks the browser (default chromium); DIRECTION=right expects cards moving right;
+// RTL=1 makes the page right-to-left; SPEED=slow|fast expects that speed option; SETTLE=1 checks "Settle on a card" instead of the walk.
 // Example: node lean/horizontal-check.mjs http://localhost:8888/ ~/repos/wp-lean-check
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
@@ -12,6 +13,8 @@ import { join } from 'node:path';
 const [ url, playwrightDir ] = process.argv.slice( 2 );
 const engine = process.env.ENGINE || 'chromium';
 const sign = process.env.DIRECTION === 'right' ? 1 : -1;
+// Track px per page px: 1 at normal speed (SPEED=slow: 1 / 1.5, SPEED=fast: 1 / 0.6).
+const ratio = { slow: 1 / 1.5, fast: 1 / 0.6 }[ process.env.SPEED ] ?? 1;
 const browserType = createRequire( join( playwrightDir, 'package.json' ) )( 'playwright' )[ engine ];
 const browser = await browserType.launch();
 const ROOT = '.wp-block-nelyqo-horizontal-scroll, .is-mode-horizontal-track';
@@ -41,9 +44,57 @@ const walk = async ( page ) => {
 	return samples.map( ( s, i ) => ( { ...s, held: i > 0 && s.scrolled - samples[ i - 1 ].scrolled > 40 && Math.abs( s.top - samples[ i - 1 ].top ) < 1 } ) );
 };
 
+// SETTLE=1: for a track with "Settle on a card". Wheel into the travel, stop between two cards, and
+// the track must finish its move to the nearest whole card.
+const settleCheck = async ( page ) => {
+	const read = () => page.evaluate( ( root ) => {
+		const el = document.querySelector( root );
+		const shell = el.querySelector( '.nelyqo-scroll-section__horizontal-shell, .nelyqo-horizontal-scroll__horizontal' ).getBoundingClientRect();
+		const middle = shell.left + shell.width / 2;
+		const cards = [ ...el.querySelectorAll( '.wp-block-nelyqo-scroll-card' ) ].map( ( c ) => c.getBoundingClientRect() );
+		return { x: cards[ 0 ].left, top: cards[ 0 ].top, pitch: Math.abs( cards[ 1 ].left - cards[ 0 ].left ), off: Math.min( ...cards.map( ( c ) => Math.abs( ( c.left + c.right ) / 2 - middle ) ) ) };
+	}, ROOT );
+	await page.evaluate( ( root ) => window.scrollTo( 0, document.querySelector( root ).getBoundingClientRect().top + window.scrollY - 400 ), ROOT );
+	await page.mouse.move( 700, 450 );
+	let before = await read();
+	// Wheel until the stage holds and the track has started.
+	for ( let i = 0; i < 40; i++ ) {
+		await page.mouse.wheel( 0, 120 );
+		await page.waitForTimeout( 60 );
+		const now = await read();
+		if ( Math.abs( now.top - before.top ) < 1 && now.x !== before.x ) {
+			break;
+		}
+		before = now;
+	}
+	// Two stops in the middle of the travel (the last card may never reach the middle of the window).
+	for ( let round = 0; round < 2; round++ ) {
+		await page.mouse.wheel( 0, 90 );
+		await page.waitForTimeout( 40 );
+		const stopped = await read();
+		await page.waitForTimeout( 1500 );
+		const settled = await read();
+		const pitch = settled.pitch;
+		check( settled.off < 3, `settles on a whole card (round ${ round + 1 }: ${ Math.round( stopped.off ) }px off when scrolling stopped, ${ Math.round( settled.off ) }px after)` );
+		check( Math.abs( settled.x - stopped.x ) <= pitch / 2 + 2, `settling moved to the nearest card (${ Math.round( settled.x - stopped.x ) }px, half a card is ${ Math.round( pitch / 2 ) }px)` );
+	}
+};
+
 try {
 	const page = await browser.newPage( { viewport: { width: 1440, height: 900 } } );
 	await page.goto( url, { waitUntil: 'networkidle' } );
+	if ( process.env.RTL ) {
+		// A right-to-left page: the engine reads the direction when it measures (on resize).
+		await page.evaluate( () => {
+			document.documentElement.dir = 'rtl';
+			window.dispatchEvent( new Event( 'resize' ) );
+		} );
+		await page.waitForTimeout( 300 );
+	}
+	if ( process.env.SETTLE ) {
+		await settleCheck( page );
+		throw new Error( 'done' );
+	}
 	const samples = await walk( page );
 	const held = samples.filter( ( s ) => s.held );
 	check( held.length > 4, `${ engine }: the stage holds (${ held.length } steps of 50px)` );
@@ -53,13 +104,17 @@ try {
 	const end = samples.reduce( ( far, s ) => ( ( s.x - start ) * sign > ( far - start ) * sign ? s.x : far ), start );
 	// Whole steps between the first and the last card (the steps where the track starts or stops are partial).
 	const steps = held.filter( ( s, i ) => i && held[ i - 1 ].x !== start && s.x !== end ).map( ( s ) => ( s.x - held[ held.indexOf( s ) - 1 ].x ) / 50 );
-	check( steps.length > 2 && steps.every( ( r ) => r * sign > 0.7 && r * sign < 1.35 ), `the track follows the scroll ${ sign < 0 ? 'leftwards' : 'rightwards' } (px per scroll px: ${ steps.map( ( r ) => r.toFixed( 2 ) ).join( ' ' ) })` );
+	check( steps.length > 2 && steps.every( ( r ) => r * sign > 0.7 * ratio && r * sign < 1.35 * ratio ), `the track follows the scroll ${ sign < 0 ? 'leftwards' : 'rightwards' } (px per scroll px: ${ steps.map( ( r ) => r.toFixed( 2 ) ).join( ' ' ) })` );
 	check( Math.abs( end - start ) > 100 && held.at( -1 ).x === end, `the track reaches its end (${ Math.round( end - start ) }px) before the stage lets go` );
 
 	const still = await browser.newPage( { viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' } );
 	await still.goto( url, { waitUntil: 'networkidle' } );
 	const quiet = await walk( still );
 	check( ! quiet.some( ( s ) => s.held ) && quiet.every( ( s ) => s.x === quiet[ 0 ].x ), 'reduced motion: nothing held, the track does not move by itself' );
+} catch ( error ) {
+	if ( error.message !== 'done' ) {
+		throw error;
+	}
 } finally {
 	await browser.close();
 }

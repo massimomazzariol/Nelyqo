@@ -250,6 +250,24 @@
 			window.innerWidth >= adapter.breakpoint &&
 			! reducedMotion.matches &&
 			adapter.canPin( root );
+		// Measure the track at rest (no animation, no fallback offset), in its pinned layout.
+		root.classList.remove( 'is-h-timeline' );
+		track.style.translate = '';
+		const unpin = () => {
+			state.pinned = false;
+			adapter.pin( state, false );
+			root.classList.remove( 'is-h-pinned' );
+			// Unpinned (phones, reduced motion), the cards keep the page's own order and direction.
+			shell.removeAttribute( 'dir' );
+			state.cards.forEach( ( card ) => {
+				card.style.removeProperty( '--nelyqo-h-e' );
+				card.removeAttribute( 'dir' );
+			} );
+		};
+		if ( ! pinnable ) {
+			unpin();
+			return;
+		}
 		// Cards travel left, or right when asked (or in right-to-left languages): the window is laid
 		// out in that direction, so the first card starts on the side the cards come from.
 		const pageDirection = window.getComputedStyle( root ).direction;
@@ -263,21 +281,6 @@
 		} );
 		state.sign = right ? 1 : -1;
 
-		// Measure the track at rest (no animation, no fallback offset), in its pinned layout.
-		root.classList.remove( 'is-h-timeline' );
-		track.style.translate = '';
-		const unpin = () => {
-			state.pinned = false;
-			adapter.pin( state, false );
-			root.classList.remove( 'is-h-pinned' );
-			state.cards.forEach( ( card ) =>
-				card.style.removeProperty( '--nelyqo-h-e' )
-			);
-		};
-		if ( ! pinnable ) {
-			unpin();
-			return;
-		}
 		const viewport = scrollportHeight();
 		Object.assign( state, { travel: 0, endHold: 0, pinTop: headerOffset } );
 		state.stageHeight = adapter.stageHeight( state, viewport );
@@ -371,8 +374,8 @@
 		}
 	};
 
-	// When scrolling stops inside the travel, finish the move to the next whole card in the
-	// direction the page was going (never back against it, never in the end hold or outside).
+	// When scrolling stops inside the travel, finish the move to the nearest whole card (never in
+	// the end hold or outside the travel), as a snapping carousel does.
 	const settle = ( state ) => {
 		if (
 			! state.pinned ||
@@ -385,17 +388,12 @@
 		if ( progress <= 0 || progress >= 1 ) {
 			return;
 		}
-		const stops = [ ...new Set( state.focus ) ].sort( ( a, b ) => a - b );
-		const forward = state.lastDirection >= 0;
-		const target = forward
-			? stops.find( ( stop ) => stop >= progress - 0.001 )
-			: [ ...stops ]
-					.reverse()
-					.find( ( stop ) => stop <= progress + 0.001 );
-		if (
-			target === undefined ||
-			Math.abs( target - progress ) * state.travel < 2
-		) {
+		const target = state.focus.reduce( ( near, stop ) =>
+			Math.abs( stop - progress ) < Math.abs( near - progress )
+				? stop
+				: near
+		);
+		if ( Math.abs( target - progress ) * state.travel < 2 ) {
 			return;
 		}
 		state.settling = true;
@@ -453,8 +451,6 @@
 					adapter,
 					...parts,
 					active: -1,
-					lastDirection: 1,
-					lastY: window.scrollY,
 				} );
 			} );
 		} );
@@ -462,32 +458,11 @@
 			return;
 		}
 
+		// Scrolling has stopped: scrollend where it fires, or a short pause in scroll events (not
+		// every browser fires scrollend after wheel or keyboard scrolling).
 		let idle = null;
-		window.addEventListener(
-			'scroll',
-			() => {
-				const y = window.scrollY;
-				instances.forEach( ( state ) => {
-					if ( y !== state.lastY ) {
-						state.lastDirection = y > state.lastY ? 1 : -1;
-						state.lastY = y;
-					}
-				} );
-				requestUpdate();
-				if ( ! ( 'onscrollend' in window ) ) {
-					window.clearTimeout( idle );
-					idle = window.setTimeout(
-						() =>
-							window.dispatchEvent(
-								new Event( 'nelyqo-scrollend' )
-							),
-						SCROLL_IDLE_MS
-					);
-				}
-			},
-			{ passive: true }
-		);
-		const onScrollEnd = () =>
+		const onScrollEnd = () => {
+			window.clearTimeout( idle );
 			instances.forEach( ( state ) => {
 				// The end of our own settling move ends the settling, it does not start another.
 				if ( state.settling ) {
@@ -496,8 +471,17 @@
 				}
 				settle( state );
 			} );
+		};
+		window.addEventListener(
+			'scroll',
+			() => {
+				requestUpdate();
+				window.clearTimeout( idle );
+				idle = window.setTimeout( onScrollEnd, SCROLL_IDLE_MS );
+			},
+			{ passive: true }
+		);
 		window.addEventListener( 'scrollend', onScrollEnd );
-		window.addEventListener( 'nelyqo-scrollend', onScrollEnd );
 		// Any new input cancels a settling move in progress, so the page never fights the user.
 		[ 'wheel', 'touchstart', 'keydown' ].forEach( ( type ) =>
 			window.addEventListener(

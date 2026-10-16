@@ -14,6 +14,7 @@ import {
 	SelectControl,
 	ToggleControl,
 } from '@wordpress/components';
+import HorizontalMotionPanel from '../../shared/horizontal-motion-panel';
 import './editor.scss';
 
 const INTRO_CLASS = 'nelyqo-scroll-section__intro';
@@ -350,6 +351,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						/>
 					) }
 				</PanelBody>
+				{ mode === 'horizontal-track' && (
+					<HorizontalMotionPanel
+						attributes={ attributes }
+						setAttributes={ setAttributes }
+					/>
+				) }
 			</InspectorControls>
 
 			<section { ...blockProps }>
