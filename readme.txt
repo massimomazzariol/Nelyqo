@@ -4,7 +4,7 @@ Contributors: Massimo Mazzariol
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.4.1
+Stable tag: 0.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 
 == Changelog ==
 
-= Unreleased =
+= 0.5.0 =
 * Precious metals: nine gem section styles for Group and Cover (gold, rose gold, amethyst, sapphire, blue gold, emerald, imperial topaz, pearl, gold on ivory). Each sets its ground, text and a five-tone metal, and every gem passes WCAG AA contrast (checked in CI). Native theme.json section styles: their CSS loads only on pages that use them.
 * Gem sections that follow each other blend with a long gradient instead of a hard edge.
 * "Metal foil" heading style, and emphasis inside gem headings in the gem's metal, with a light that slides across as the heading crosses the screen. Plain text in Windows high contrast mode.
