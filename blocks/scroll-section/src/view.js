@@ -6,8 +6,10 @@ const SECTION_BREAKPOINT = 960;
 const HORIZONTAL_STAGE_MIN_HEIGHT = 360;
 const HORIZONTAL_STAGE_VIEWPORT_GUTTER = 12;
 const HORIZONTAL_STAGE_VIEWPORT_RATIO = 0.58;
-const HORIZONTAL_SCROLL_RANGE_FACTOR = 0.66;
-const HORIZONTAL_SCROLL_RANGE_FACTOR_FLOOR = 0.52;
+// The track moves as far as the page scrolls (1:1, like a normal scroll turned sideways); very long
+// tracks go a little faster so the pinned stretch does not get tedious.
+const HORIZONTAL_SCROLL_RANGE_FACTOR = 1;
+const HORIZONTAL_SCROLL_RANGE_FACTOR_FLOOR = 0.8;
 const HORIZONTAL_SCROLL_RANGE_DECAY = 0.08;
 const HORIZONTAL_SCROLL_RANGE_MIN_VIEWPORT_FACTOR = 0.14;
 const HORIZONTAL_PROGRESS_LEAD_FACTOR = 0.14;
@@ -75,9 +77,6 @@ const getNumericCustomProperty = ( element, propertyName, fallback = 0 ) => {
 
 	return Number.isFinite( value ) ? value : fallback;
 };
-
-const easeOutSine = ( value ) =>
-	Math.sin( clamp( value, 0, 1 ) * ( Math.PI / 2 ) );
 
 const setCardVisuals = (
 	card,
@@ -338,7 +337,7 @@ const updateHorizontalSectionState = ( sectionState, reducedMotionQuery ) => {
 			1
 		);
 
-		trackOffset = -easeOutSine( progress ) * maxDistance;
+		trackOffset = -progress * maxDistance;
 	}
 
 	element.style.setProperty(

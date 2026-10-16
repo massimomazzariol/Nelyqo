@@ -304,7 +304,9 @@
 		min-width: 0;
 	}
 
+	/* The stage is centred on screen; its row (intro and cards, tops aligned) sits in its middle. */
 	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-horizontal-pinned > .nelyqo-scroll-section__layout {
+		align-content: center;
 		position: sticky;
 		top: var(--nelyqo-scroll-horizontal-pin-top, var(--nelyqo-scroll-sticky-offset));
 	}
