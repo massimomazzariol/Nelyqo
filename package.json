@@ -5,7 +5,7 @@
 	"scripts": {
 		"build": "pnpm -r --if-present run build",
 		"format": "pnpm -r --if-present run format",
-		"lint:js": "pnpm -r --if-present run lint:js",
+		"lint:js": "pnpm -r --if-present run lint:js && pnpm --filter nelyqo-hero exec wp-scripts lint-js ../../assets/js/horizontal-engine.js ../../assets/js/lazy-video.js",
 		"lint:css": "pnpm --filter nelyqo-hero exec wp-scripts lint-style --config ../../.stylelintrc.json \"../../blocks/**/src/**/*.scss\" \"../../assets/css/*.css\" \"../../style.css\"",
 		"check": "pnpm lint:js && pnpm lint:css && pnpm build",
 		"wp-env": "node --require ./lean/dns-fallback.cjs node_modules/@wordpress/env/bin/wp-env"

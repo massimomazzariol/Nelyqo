@@ -177,31 +177,18 @@
 	width: max-content;
 }
 
+// Card emphasis (scale, opacity) comes from the horizontal engine; here only the resting card.
 .wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced
 .nelyqo-scroll-section__horizontal-track > .wp-block-nelyqo-scroll-card {
 	flex: 0 0 var(--nelyqo-scroll-horizontal-card-width);
-	filter: saturate(var(--nelyqo-scroll-card-saturate, 1));
 	max-inline-size: var(--nelyqo-scroll-horizontal-card-width);
 	min-inline-size: var(--nelyqo-scroll-horizontal-card-width);
-	opacity: var(--nelyqo-scroll-card-opacity, 1);
 	scroll-snap-align: start;
 	scroll-snap-stop: always;
-	transform:
-		translate3d(var(--nelyqo-scroll-card-offset-x, 0), calc(var(--nelyqo-scroll-card-offset-y, 0px) +
-		var(--nelyqo-scroll-card-featured-offset, 0px)), 0)
-		scale(var(--nelyqo-scroll-card-scale, 1));
-	transition:
-		transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
-		opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
-		filter 320ms cubic-bezier(0.22, 1, 0.36, 1),
-		box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1),
-		border-color 320ms cubic-bezier(0.22, 1, 0.36, 1);
-	will-change: transform, opacity, filter;
-}
-
-.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced:not(.has-motion)
-.nelyqo-scroll-section__horizontal-track > .wp-block-nelyqo-scroll-card {
-	filter: none;
+	transform: translate3d(0, var(--nelyqo-scroll-card-featured-offset, 0), 0);
+	// The focus shadow and border switch at once: a transition would repaint the large blurred
+	// shadow on every frame while the track travels.
+	transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.has-motion:not(.has-no-card-emphasis)
@@ -239,10 +226,7 @@
 
 	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced
 	.nelyqo-scroll-section__horizontal-track > .wp-block-nelyqo-scroll-card:hover {
-		transform:
-			translate3d(var(--nelyqo-scroll-card-offset-x, 0), calc(var(--nelyqo-scroll-card-offset-y, 0px) +
-			var(--nelyqo-scroll-card-featured-offset, 0px) - 6px), 0)
-			scale(var(--nelyqo-scroll-card-scale, 1));
+		transform: translate3d(0, calc(var(--nelyqo-scroll-card-featured-offset, 0px) - 6px), 0);
 	}
 }
 
@@ -250,11 +234,8 @@
 
 	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced
 	.nelyqo-scroll-section__horizontal-track > .wp-block-nelyqo-scroll-card {
-		filter: none;
-		opacity: 1;
 		transform: none;
 		transition: none;
-		will-change: auto;
 	}
 }
 

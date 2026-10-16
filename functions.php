@@ -16,7 +16,8 @@ add_action( 'wp_enqueue_scripts', 'nelyqo_enqueue_styles' );
 add_action( 'init', 'nelyqo_register_custom_blocks' );
 add_action( 'init', 'nelyqo_register_block_styles' );
 add_filter( 'render_block_core/image', 'nelyqo_backport_lightbox', 20 );
-add_filter( 'render_block_nelyqo/scroll-section', 'nelyqo_scroll_section_script', 10, 2 );
+add_filter( 'render_block_nelyqo/scroll-section', 'nelyqo_horizontal_engine', 10, 2 );
+add_filter( 'render_block_nelyqo/horizontal-scroll', 'nelyqo_horizontal_engine', 10, 2 );
 add_filter( 'render_block_nelyqo/scroll-section', 'nelyqo_scroll_section_card_count', 10, 2 );
 
 /**
@@ -122,32 +123,76 @@ function nelyqo_enqueue_styles() {
 }
 
 /**
- * Loads the Scroll Section script and styles of the horizontal track mode only where a section uses
- * it. The vertical modes animate with CSS alone, so pages that use only them load neither.
+ * Horizontal engine (assets/js/horizontal-engine.js) for the Horizontal Scroll block and the Scroll
+ * Section horizontal track: loads the script and its styles only where one renders, and turns the
+ * block's motion options into classes at render time, so the saved markup never changes. The
+ * vertical Scroll Section modes animate with CSS alone and load neither.
  *
  * @param string $content Rendered block.
  * @param array  $block   Parsed block.
  * @return string
  */
-function nelyqo_scroll_section_script( $content, $block ) {
-	if ( 'horizontal-track' === ( $block['attrs']['mode'] ?? '' ) && ! wp_script_is( 'nelyqo-scroll-section-view' ) ) {
-		$build = '/blocks/scroll-section/build/';
-		$asset = require get_template_directory() . $build . 'view.asset.php';
+function nelyqo_horizontal_engine( $content, $block ) {
+	$attrs = $block['attrs'] ?? array();
+	$own   = 'nelyqo/horizontal-scroll' === $block['blockName'];
+	if ( ! $own && 'horizontal-track' !== ( $attrs['mode'] ?? '' ) ) {
+		return $content;
+	}
+	if ( ! wp_script_is( 'nelyqo-horizontal-engine' ) ) {
+		$version = (string) filemtime( get_template_directory() . '/assets/js/horizontal-engine.js' );
 		wp_enqueue_script(
-			'nelyqo-scroll-section-view',
-			get_template_directory_uri() . $build . 'view.js',
-			$asset['dependencies'],
-			$asset['version'],
+			'nelyqo-horizontal-engine',
+			get_template_directory_uri() . '/assets/js/horizontal-engine.js',
+			array(),
+			$version,
 			array(
 				'in_footer' => true,
 				'strategy'  => 'defer',
 			)
 		);
+		$path = get_template_directory() . '/assets/css/horizontal-engine.css';
+		wp_enqueue_style( 'nelyqo-horizontal-engine', get_template_directory_uri() . '/assets/css/horizontal-engine.css', array(), (string) filemtime( $path ) );
+		wp_style_add_data( 'nelyqo-horizontal-engine', 'path', $path );
+	}
+	if ( ! $own && ! wp_style_is( 'nelyqo-scroll-section-horizontal' ) ) {
+		$build = '/blocks/scroll-section/build/';
+		$asset = require get_template_directory() . $build . 'view.asset.php';
 		wp_enqueue_style( 'nelyqo-scroll-section-horizontal', get_template_directory_uri() . $build . 'view.css', array( 'nelyqo-scroll-section-style' ), $asset['version'] );
 		wp_style_add_data( 'nelyqo-scroll-section-horizontal', 'rtl', 'replace' );
 		wp_style_add_data( 'nelyqo-scroll-section-horizontal', 'path', get_template_directory() . $build . 'view.css' );
 	}
-	return $content;
+
+	$classes = array();
+	if ( ! empty( $attrs['showProgress'] ) ) {
+		$classes[] = 'has-h-progress';
+	}
+	if ( ! empty( $attrs['settleOnCard'] ) ) {
+		$classes[] = 'has-h-settle';
+	}
+	if ( in_array( $attrs['trackSpeed'] ?? '', array( 'slow', 'fast' ), true ) ) {
+		$classes[] = 'is-h-speed-' . $attrs['trackSpeed'];
+	}
+	if ( in_array( $attrs['trackDirection'] ?? '', array( 'left', 'right' ), true ) ) {
+		$classes[] = 'is-h-dir-' . $attrs['trackDirection'];
+	}
+	if ( 'stack' === ( $attrs['mobileLayout'] ?? '' ) ) {
+		$classes[] = 'is-h-mobile-stack';
+	}
+	// Scroll Section saves its own emphasis classes; Horizontal Scroll gets them here (off by default).
+	if ( $own && ! empty( $attrs['cardEmphasis'] ) ) {
+		$classes[] = 'has-h-emphasis';
+		if ( in_array( $attrs['motionIntensity'] ?? '', array( 'subtle', 'strong' ), true ) ) {
+			$classes[] = 'is-motion-' . $attrs['motionIntensity'];
+		}
+	}
+	$tags = new WP_HTML_Tag_Processor( $content );
+	if ( ! $classes || ! $tags->next_tag() ) {
+		return $content;
+	}
+	foreach ( $classes as $class ) {
+		$tags->add_class( $class );
+	}
+	return $tags->get_updated_html();
 }
 
 /**

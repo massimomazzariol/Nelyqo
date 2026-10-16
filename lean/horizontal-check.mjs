@@ -32,7 +32,9 @@ const walk = async ( page ) => {
 		await page.evaluate( () => new Promise( ( done ) => requestAnimationFrame( () => requestAnimationFrame( done ) ) ) );
 		samples.push( { y, ...( await page.evaluate( ( root ) => {
 			const card = document.querySelector( root ).querySelector( '.wp-block-nelyqo-scroll-card' ).getBoundingClientRect();
-			return { x: card.left, top: card.top, centre: ( card.top + card.bottom ) / 2, scrolled: window.scrollY };
+			// The stage's content: the cards, with the introduction above them (Horizontal Scroll) or beside them.
+			const intro = document.querySelector( root ).querySelector( '.nelyqo-horizontal-scroll__content, .nelyqo-scroll-section__intro' )?.getBoundingClientRect() ?? card;
+			return { x: card.left, top: card.top, centre: ( Math.min( card.top, intro.top ) + Math.max( card.bottom, intro.bottom ) ) / 2, scrolled: window.scrollY };
 		}, ROOT ) ) } );
 	}
 	// Held: the page moved (it may not, at its end) but the cards did not move up.
@@ -46,7 +48,7 @@ try {
 	const held = samples.filter( ( s ) => s.held );
 	check( held.length > 4, `${ engine }: the stage holds (${ held.length } steps of 50px)` );
 	const off = Math.max( ...held.map( ( s ) => Math.abs( s.centre - 468 ) ) );
-	check( off < 70, `cards in the middle of the screen while held (off by ${ Math.round( off ) }px at most)` );
+	check( off < 70, `the stage's content in the middle of the screen while held (off by ${ Math.round( off ) }px at most)` );
 	const start = samples[ 0 ].x;
 	const end = samples.reduce( ( far, s ) => ( ( s.x - start ) * sign > ( far - start ) * sign ? s.x : far ), start );
 	// Whole steps between the first and the last card (the steps where the track starts or stops are partial).

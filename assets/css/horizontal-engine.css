@@ -1,0 +1,110 @@
+/*
+ * Horizontal engine (assets/js/horizontal-engine.js): what moves, for both the Horizontal Scroll
+ * block and the Scroll Section horizontal track. The script sets the travel in px
+ * (--nelyqo-h-start, --nelyqo-h-end within the section's cover range, --nelyqo-h-shift); the browser
+ * moves the track and the progress bar on the section's scroll timeline, off the main thread.
+ * Without scroll-driven animations the script moves them itself (is-h-timeline is then absent).
+ */
+
+/* Options without the script, or with reduced motion: the still layouts. */
+
+/* Phones, "stack": the cards one under the other instead of a sideways scroller. */
+@media (max-width: 781px) {
+
+	.is-h-mobile-stack .nelyqo-h-track {
+		flex-direction: column;
+		overflow: visible;
+		width: auto;
+	}
+
+	.is-h-mobile-stack .nelyqo-h-track > .nelyqo-h-card {
+		flex-basis: auto;
+		max-inline-size: none;
+		min-inline-size: 0;
+	}
+}
+
+.is-h-pinned {
+	view-timeline: --nelyqo-h;
+}
+
+/* Progress bar under the track: shown only while the track travels. */
+.nelyqo-h-progress {
+	display: none;
+}
+
+.is-h-pinned.has-h-progress .nelyqo-h-progress {
+	background: currentcolor;
+	block-size: 2px;
+	border-radius: 2px;
+	display: block;
+	inset: auto 0 0;
+	opacity: 0.5;
+	position: absolute;
+	scale: var(--nelyqo-h-progress, 0) 1;
+	transform-origin: left;
+}
+
+.is-h-pinned.has-h-progress .nelyqo-h-progress:dir(rtl) {
+	transform-origin: right;
+}
+
+/* Card emphasis: a card is fully lit in the middle of the window (--nelyqo-h-e, from the script). */
+.is-h-emphasis {
+	--nelyqo-h-scale-floor: 0.965;
+	--nelyqo-h-opacity-floor: 0.78;
+}
+
+.is-h-emphasis.is-motion-subtle {
+	--nelyqo-h-scale-floor: 0.982;
+	--nelyqo-h-opacity-floor: 0.88;
+}
+
+.is-h-emphasis.is-motion-strong {
+	--nelyqo-h-scale-floor: 0.94;
+	--nelyqo-h-opacity-floor: 0.66;
+}
+
+.is-h-emphasis .nelyqo-h-card {
+	opacity: calc(var(--nelyqo-h-opacity-floor) + (1 - var(--nelyqo-h-opacity-floor)) * var(--nelyqo-h-e, 1));
+	scale: calc(var(--nelyqo-h-scale-floor) + (1 - var(--nelyqo-h-scale-floor)) * var(--nelyqo-h-e, 1));
+	will-change: scale, opacity;
+}
+
+@supports (animation-timeline: view()) {
+
+	.is-h-timeline .nelyqo-h-track {
+		animation: nelyqo-h-travel linear both;
+		animation-range: cover var(--nelyqo-h-start) cover var(--nelyqo-h-end);
+		animation-timeline: --nelyqo-h;
+		will-change: translate;
+	}
+
+	.is-h-timeline.has-h-progress .nelyqo-h-progress {
+		animation: nelyqo-h-progress linear both;
+		animation-range: cover var(--nelyqo-h-start) cover var(--nelyqo-h-end);
+		animation-timeline: --nelyqo-h;
+	}
+}
+
+@keyframes nelyqo-h-travel {
+
+	from {
+		translate: 0 0;
+	}
+
+	to {
+		translate: var(--nelyqo-h-shift) 0;
+	}
+}
+
+@keyframes nelyqo-h-progress {
+
+	from {
+		scale: 0 1;
+	}
+
+	to {
+		scale: 1 1;
+	}
+}
