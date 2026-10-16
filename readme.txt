@@ -4,7 +4,7 @@ Contributors: Massimo Mazzariol
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,9 +14,11 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 
 == Changelog ==
 
-= Unreleased =
+= 0.6.0 =
 * Horizontal scrolling: one engine now moves both the Horizontal Scroll block and the Scroll Section horizontal track. The browser moves the cards on its own (scroll-driven animations), the script only measures on load and resize; browsers without scroll-driven animations get a small script fallback. Horizontal Scroll now respects reduced motion, and both blocks hold their stage centred below the header.
 * New "Horizontal motion" settings on both blocks: cards travel left or right (automatic follows the language, so right-to-left sites travel right), speed (slow, normal, fast), a progress bar, settle on the nearest whole card when scrolling stops, and on phones swipe or stack the cards. Horizontal Scroll gets card emphasis (off by default; subtle, medium or strong). Read at render time: saved content does not change.
+* Scroll Section, horizontal track: in a section as wide as the text the introduction sits above the cards, so a whole card always shows (it used to leave room for half a card beside the introduction). The track now holds from 782px wide like Horizontal Scroll (it used to start at 960px), and neither block holds a stage taller than the screen: the cards scroll sideways instead of holding cut off.
+* The demo presentation shows both horizontal blocks: the second travels right, with the progress bar and card emphasis.
 * Discretion: "Hide versions" also drops the "X-Redirect-By: WordPress" header from redirects; "Remove discovery links" also drops the comments feed link while new posts take no comments; new "Remove feed links" switch, off by default (the feeds keep working at their addresses).
 
 = 0.5.0 =
