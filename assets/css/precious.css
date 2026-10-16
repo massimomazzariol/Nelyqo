@@ -19,7 +19,13 @@
  * default the section's top padding, so text always sits on the plain ground (contrast). The
  * halfway tone carries a touch of its own metal, so night turns into day warmly rather than through
  * grey. The first section has no --nelyqo-from: its gradient is invalid and its ground stays plain.
+ * The value is not inherited, so a gem nested inside the next section does not fade from it too.
  */
+@property --nelyqo-from {
+	syntax: "*";
+	inherits: false;
+}
+
 [class*="is-style-gem-"] {
 	--nelyqo-fade: clamp(3.5rem, 9vw, 8rem);
 	--nelyqo-fade-mid: color-mix(in oklab, color-mix(in oklab, var(--nelyqo-from) 50%, var(--nelyqo-ground)) 88%, var(--nelyqo-m4));
@@ -50,25 +56,18 @@
 	text-transform: uppercase;
 }
 
-/* On light grounds small type stays solid and dark enough to read (see lean/check-gems.mjs). */
+/* Small type stays solid and dark enough to read: light gems set --nelyqo-label (lean/check-gems.mjs). */
 :where([class*="is-style-gem-"]) .wp-block-paragraph.is-style-eyebrow {
-	color: var(--nelyqo-m2);
+	color: var(--nelyqo-label, var(--nelyqo-m2));
 }
 
-:where(.is-style-gem-topaz, .is-style-gem-ivory, .is-style-gem-pearl) .wp-block-paragraph.is-style-eyebrow {
-	color: var(--nelyqo-m5);
-}
-
-/* Buttons in a gem: polished light metal with dark letters on night grounds, solid deep metal on light ones. */
+/* Buttons in a gem: polished light metal with dark letters on night grounds, solid deep metal
+   (--nelyqo-button) on light ones. */
 .wp-block-group[class*="is-style-gem-"] .wp-element-button {
-	background: linear-gradient(115deg, var(--nelyqo-m3), var(--nelyqo-m1) 45%, var(--nelyqo-m2) 70%, var(--nelyqo-m3));
+	background: var(--nelyqo-button, linear-gradient(115deg, var(--nelyqo-m3), var(--nelyqo-m1) 45%, var(--nelyqo-m2) 70%, var(--nelyqo-m3)));
 	border-radius: 999px;
 	color: var(--nelyqo-ground);
 	letter-spacing: 0.08em;
-}
-
-.wp-block-group:is(.is-style-gem-topaz, .is-style-gem-ivory, .is-style-gem-pearl) .wp-element-button {
-	background: var(--nelyqo-m5);
 }
 
 /* Theme blocks take the gem's colours instead of painting their own surface.

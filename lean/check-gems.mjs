@@ -24,6 +24,10 @@ for ( const file of readdirSync( dir ).filter( ( f ) => f.startsWith( 'gem-' ) &
 		[ 'text', gem.styles.color.text, 4.5 ],
 		[ 'muted', vars.muted, 4.5 ],
 		...[ 'm1', 'm2', 'm3', 'm4', 'm5' ].map( ( k ) => [ k, vars[ k ], 3 ] ),
+		// Small type in precious.css: the eyebrow label (--nelyqo-label, else m2) and the button letters
+		// (the ground) on --nelyqo-button, else on the m1-m3 metal gradient.
+		[ 'label', vars.label ?? vars.m2, 4.5 ],
+		...( vars.button ? [ [ 'button', vars.button, 4.5 ] ] : [ 'm1', 'm2', 'm3' ].map( ( k ) => [ `button ${ k }`, vars[ k ], 4.5 ] ) ),
 	];
 	const bad = checks.filter( ( [ , color, min ] ) => ! color || contrast( color, ground ) < min );
 	failures += bad.length;

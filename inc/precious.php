@@ -7,9 +7,12 @@
  */
 
 add_action( 'init', 'nelyqo_register_precious_styles' );
-add_filter( 'render_block_core/group', 'nelyqo_sand_stream', 10, 2 );
+add_filter( 'render_block_data', 'nelyqo_sand_stream_mark' );
 foreach ( array( 'core/group', 'core/cover', 'core/heading', 'core/paragraph' ) as $nelyqo_block ) {
 	add_filter( "render_block_{$nelyqo_block}", 'nelyqo_precious_styles' );
+}
+foreach ( array( 'core/group', 'core/cover' ) as $nelyqo_block ) {
+	add_filter( "render_block_{$nelyqo_block}", 'nelyqo_sand_stream', 10, 2 );
 }
 
 /**
@@ -64,32 +67,48 @@ function nelyqo_precious_styles( $content ) {
  * so the stretches join into one line. The SVG is added at render time and never saved: the content
  * stays plain Core blocks.
  *
+ * Only the stream's own gem sections take part: a gem nested deeper (a Cover inside a section)
+ * gets no stretch and does not shift the left/right order.
+ *
+ * @param array $block Parsed block.
+ * @return array
+ */
+function nelyqo_sand_stream_mark( $block ) {
+	if ( 'core/group' !== $block['blockName'] || ! str_contains( $block['attrs']['className'] ?? '', 'is-style-sand-stream' ) ) {
+		return $block;
+	}
+	$index = 0;
+	foreach ( $block['innerBlocks'] as &$inner ) {
+		if ( str_contains( $inner['attrs']['className'] ?? '', 'is-style-gem-' ) ) {
+			$inner['attrs']['nelyqoSand'] = $index++;
+		}
+	}
+	return $block;
+}
+
+/**
+ * Draws a gem section's stretch of the sand stream, right after its opening tag.
+ *
  * @param string $content Rendered block.
  * @param array  $block   Parsed block.
  * @return string
  */
 function nelyqo_sand_stream( $content, $block ) {
-	if ( ! str_contains( $block['attrs']['className'] ?? '', 'is-style-sand-stream' ) ) {
+	$index = $block['attrs']['nelyqoSand'] ?? null;
+	$open  = strpos( $content, '>' );
+	if ( ! is_int( $index ) || false === $open ) {
 		return $content;
 	}
-	$index = 0;
-	return (string) preg_replace_callback(
-		'/<(?:div|section)\b[^>]*\bclass="[^"]*\bis-style-gem-[^"]*"[^>]*>/',
-		static function ( $tag ) use ( &$index ) {
-			if ( 0 === $index ) {
-				// Under the centred opening text, straight down.
-				$path = 'M500 660 C 500 820, 500 880, 500 1000';
-			} else {
-				$side = 1 === $index % 2 ? 170 : 830;
-				$path = sprintf( 'M500 0 C 500 220, %1$d 280, %1$d 500 C %1$d 720, 500 780, 500 1000', $side );
-			}
-			++$index;
-			$strands = '';
-			foreach ( array( 'fine', 'mid', 'coarse', 'glint' ) as $strand ) {
-				$strands .= sprintf( '<path class="nelyqo-sand__%s" d="%s"/>', $strand, $path );
-			}
-			return $tag[0] . '<svg class="nelyqo-sand" aria-hidden="true" focusable="false" viewBox="0 0 1000 1000" preserveAspectRatio="none">' . $strands . '</svg>';
-		},
-		$content
-	);
+	if ( 0 === $index ) {
+		// Under the centred opening text, straight down.
+		$path = 'M500 660 C 500 820, 500 880, 500 1000';
+	} else {
+		$side = 1 === $index % 2 ? 170 : 830;
+		$path = sprintf( 'M500 0 C 500 220, %1$d 280, %1$d 500 C %1$d 720, 500 780, 500 1000', $side );
+	}
+	$strands = '';
+	foreach ( array( 'fine', 'mid', 'coarse', 'glint' ) as $strand ) {
+		$strands .= sprintf( '<path class="nelyqo-sand__%s" d="%s"/>', $strand, $path );
+	}
+	return substr_replace( $content, '<svg class="nelyqo-sand" aria-hidden="true" focusable="false" viewBox="0 0 1000 1000" preserveAspectRatio="none">' . $strands . '</svg>', $open + 1, 0 );
 }
