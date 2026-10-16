@@ -14,6 +14,9 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 
 == Changelog ==
 
+= Unreleased =
+* Discretion: "Hide versions" also drops the "X-Redirect-By: WordPress" header from redirects; "Remove discovery links" also drops the comments feed link while new posts take no comments; new "Remove feed links" switch, off by default (the feeds keep working at their addresses).
+
 = 0.5.0 =
 * Discretion, "Hide user names": the user list is now left out of the sitemap as intended (the filter was added after core had built the sitemaps).
 * WordPress 6.9: the Eyebrow style, the Hero introduction and Scroll Card paragraphs are styled again (6.9 paragraphs carry no wp-block-paragraph class).

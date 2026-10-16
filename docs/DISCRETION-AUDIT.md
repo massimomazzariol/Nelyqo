@@ -26,7 +26,7 @@ So the goal of Discretion stays what it is today: **say nothing more than the pl
 | --- | --- | --- | --- |
 | `X-Redirect-By: WordPress` header on redirects (`/wp-admin/`, `?p=1`) | yes | theme (`x_redirect_by` filter) | add to "Hide versions"; safe, one filter |
 | Feed links in `<head>` (posts and comments feeds) | yes | theme (`feed_links` actions) | new switch, **off by default**: feed readers find feeds through these links |
-| Comments feed | yes | theme | remove only the comments feed link when comments are closed site-wide (no switch needed) |
+| Comments feed link | yes | theme | remove it with "Remove discovery links" while new posts take no comments |
 | `readme.html`, `license.txt` in the site root | 200 | server | advice: delete them or deny them in `.htaccess` (they return after core updates) |
 | `wp-links-opml.php` | 200 | server | advice: deny in `.htaccess` (old link manager, unused by block themes) |
 | `wp-login.php`, `/wp-admin/` redirect | reachable | plugin or server | advice: rate limiting and two-factor login; a custom login address is plugin territory |
@@ -38,11 +38,11 @@ So the goal of Discretion stays what it is today: **say nothing more than the pl
 | `wp-cron.php` | 200 | server | advice for busy sites: real cron and `DISABLE_WP_CRON`; not a discretion issue |
 | Dotfiles (`/.git/HEAD` answered 200 on this dev site) | dev only | server | advice: deny dotfiles; never deploy `.git` |
 
-## Proposed for 0.6.0
+## Done in 0.6.0 (items 1-3) and proposed
 
 1. **Hide versions** also removes `X-Redirect-By` (filter `x_redirect_by`, list in `data/discretion.json`).
 2. **New switch "Remove feed links"**, off by default; the feeds keep working at their addresses.
-3. **Comments feed link** goes away by itself when comments are closed everywhere.
+3. **Comments feed link** goes away with "Remove discovery links" while new posts take no comments (`default_comment_status` closed).
 4. **Server advice** (the "Still visible" rows marked server) goes to the read-only Nelyqo Checkup page on Site Health (Phase 2), with copyable `.htaccess` snippets for Apache and LiteSpeed and the Nginx equivalents as text. The theme never writes `.htaccess`.
 5. **Path masking** stays in the companion plugin plan (not the theme).
 

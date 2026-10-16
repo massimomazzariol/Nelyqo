@@ -20,6 +20,8 @@ check( ! /<meta name="generator"/i.test( html ), 'no generator tag' );
 check( ! html.includes( 'https://api.w.org/' ) && ! home.headers.get( 'link' ), 'no API discovery link or header' );
 check( ! /EditURI|wlwmanifest|rel="shortlink"/.test( html ), 'no editing-client or shortlink links' );
 data.headers.forEach( ( header ) => check( ! home.headers.has( header ), `no ${ header } header` ) );
+const redirect = await get( '/?p=1' );
+check( redirect.status >= 300 && redirect.status < 400 && ! redirect.headers.has( 'x-redirect-by' ), `redirects carry no X-Redirect-By header (status ${ redirect.status })` );
 check( ( await get( '/?author=1' ) ).status === 404, '?author=1 answers 404' );
 check( ( await get( '/wp-json/wp/v2/users' ) ).status === 404, 'the REST user list answers 404' );
 check( ( await get( '/xmlrpc.php' ) ).status === 403, 'xmlrpc.php answers 403' );

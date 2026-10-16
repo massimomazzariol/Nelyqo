@@ -4,9 +4,12 @@
  * Each switch is on by default and can be turned off in Appearance > Nelyqo > Discretion.
  *
  * - Hide versions: no generator tag, core asset versions replaced by a site-specific code (browser
- *   caches still refresh on updates), no PHP version header.
+ *   caches still refresh on updates), no PHP version header, no "X-Redirect-By: WordPress" header.
  * - Remove discovery links: the links and headers announcing the API, editing clients, shortlinks
- *   and embeds (data/discretion.json). The features themselves keep working.
+ *   and embeds (data/discretion.json), and the comments feed link while new posts take no comments.
+ *   The features themselves keep working.
+ * - Remove feed links (off by default): the head links that point feed readers to the feeds. The
+ *   feeds keep working at their addresses.
  * - Turn off XML-RPC: the old remote-publishing door, a frequent target of password guessing.
  * - Hide user names: the public list of authors (API, author pages, embeds, sitemap) is closed to
  *   visitors, so login names are not handed out.
@@ -21,7 +24,7 @@ add_action( 'admin_post_nelyqo_discretion', 'nelyqo_save_discretion_options' );
 add_filter( 'wp_sitemaps_add_provider', 'nelyqo_hide_user_sitemap', 10, 2 );
 
 /**
- * Discretion switches, all on by default (theme mods).
+ * Discretion switches (theme mods): all on by default except the feed links, which feed readers use.
  *
  * @return array<string, bool>
  */
@@ -31,6 +34,7 @@ function nelyqo_discretion_settings() {
 		'hide_discovery'  => (bool) get_theme_mod( 'nelyqo_hide_discovery', true ),
 		'disable_xmlrpc'  => (bool) get_theme_mod( 'nelyqo_disable_xmlrpc', true ),
 		'hide_user_names' => (bool) get_theme_mod( 'nelyqo_hide_user_names', true ),
+		'hide_feed_links' => (bool) get_theme_mod( 'nelyqo_hide_feed_links', false ),
 	);
 }
 
@@ -59,6 +63,7 @@ function nelyqo_apply_discretion() {
 		add_filter( 'style_loader_src', 'nelyqo_mask_core_version' );
 		add_filter( 'script_loader_src', 'nelyqo_mask_core_version' );
 		add_filter( 'script_module_loader_src', 'nelyqo_mask_core_version' );
+		add_filter( 'x_redirect_by', '__return_false' );
 	}
 	if ( $settings['hide_versions'] || $settings['hide_discovery'] ) {
 		add_action( 'send_headers', 'nelyqo_remove_headers' );
@@ -69,6 +74,14 @@ function nelyqo_apply_discretion() {
 				remove_action( (string) $action[0], (string) $action[1], (int) $action[2] );
 			}
 		}
+		// A comments feed link is an empty door while new posts take no comments.
+		if ( 'closed' === get_option( 'default_comment_status' ) ) {
+			add_filter( 'feed_links_show_comments_feed', '__return_false' );
+		}
+	}
+	if ( $settings['hide_feed_links'] ) {
+		remove_action( 'wp_head', 'feed_links', 2 );
+		remove_action( 'wp_head', 'feed_links_extra', 3 );
 	}
 	if ( $settings['disable_xmlrpc'] ) {
 		if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
@@ -163,6 +176,7 @@ function nelyqo_discretion_options() {
 		'hide_discovery'  => array( __( 'Remove discovery links', 'nelyqo' ), __( 'The links that announce the API, editing apps, short links and embeds. Everything keeps working; the page just stops advertising it.', 'nelyqo' ) ),
 		'disable_xmlrpc'  => array( __( 'Turn off XML-RPC', 'nelyqo' ), __( 'An old door for remote publishing and pingbacks, often used to guess passwords. Turn this off only if an app or service needs it.', 'nelyqo' ) ),
 		'hide_user_names' => array( __( 'Hide user names', 'nelyqo' ), __( 'Visitors can no longer list the site users through the API, author pages, embeds or the sitemap, so login names are not handed out. Turn this off if the site shows author pages.', 'nelyqo' ) ),
+		'hide_feed_links' => array( __( 'Remove feed links', 'nelyqo' ), __( 'The links in every page that point feed readers to the site feeds. The feeds keep working at their addresses, but readers that look for them in the page will not find them. Off by default.', 'nelyqo' ) ),
 	);
 	?>
 	<h2><?php esc_html_e( 'Discretion', 'nelyqo' ); ?></h2>
