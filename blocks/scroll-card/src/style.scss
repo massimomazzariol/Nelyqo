@@ -172,7 +172,7 @@
 	text-wrap: balance;
 }
 
-.wp-block-nelyqo-scroll-card .nelyqo-scroll-card__content > .wp-block-paragraph {
+.wp-block-nelyqo-scroll-card .nelyqo-scroll-card__content > :is(p, .wp-block-paragraph) {
 	color: var(--nelyqo-scroll-card-muted);
 	max-width: 56ch;
 }

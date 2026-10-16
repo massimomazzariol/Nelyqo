@@ -156,7 +156,7 @@
 	text-wrap: balance;
 }
 
-.wp-block-nelyqo-scroll-card .wp-block-paragraph {
+.wp-block-nelyqo-scroll-card :is(p, .wp-block-paragraph) {
 	color: var(--nelyqo-scroll-card-muted);
 	max-width: 56ch;
 }

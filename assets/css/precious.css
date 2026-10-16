@@ -49,7 +49,7 @@
 }
 
 /* "Eyebrow" paragraph style: the small label above a heading, in the section's metal. */
-.wp-block-paragraph.is-style-eyebrow {
+:is(p, .wp-block-paragraph).is-style-eyebrow {
 	color: var(--nelyqo-m2, var(--wp--preset--color--primary));
 	font-size: 0.78rem;
 	letter-spacing: 0.32em;
@@ -57,7 +57,7 @@
 }
 
 /* Small type stays solid and dark enough to read: light gems set --nelyqo-label (lean/check-gems.mjs). */
-:where([class*="is-style-gem-"]) .wp-block-paragraph.is-style-eyebrow {
+:where([class*="is-style-gem-"]) :is(p, .wp-block-paragraph).is-style-eyebrow {
 	color: var(--nelyqo-label, var(--nelyqo-m2));
 }
 

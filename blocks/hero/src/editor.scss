@@ -152,14 +152,14 @@
 }
 
 .wp-block-nelyqo-hero .wp-block-heading,
-.wp-block-nelyqo-hero .wp-block-paragraph {
+.wp-block-nelyqo-hero :is(p, .wp-block-paragraph) {
 	margin: 0;
 
 	/* color intentionally omitted - children inherit from hero root;
 	   Gutenberg's has-text-color / .has-*-color classes and inline styles win naturally */
 }
 
-.wp-block-nelyqo-hero .wp-block-paragraph.nelyqo-hero__intro {
+.wp-block-nelyqo-hero :is(p, .wp-block-paragraph).nelyqo-hero__intro {
 	font-size: 0.875rem;
 	line-height: 1.2;
 	letter-spacing: 0.14em;
@@ -172,7 +172,7 @@
 	max-width: 14ch;
 } */
 
-.wp-block-nelyqo-hero .wp-block-paragraph:not(.nelyqo-hero__intro) {
+.wp-block-nelyqo-hero :is(p, .wp-block-paragraph):not(.nelyqo-hero__intro) {
 	max-width: 42rem;
 }
 

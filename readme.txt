@@ -16,6 +16,7 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 
 = 0.5.0 =
 * Discretion, "Hide user names": the user list is now left out of the sitemap as intended (the filter was added after core had built the sitemaps).
+* WordPress 6.9: the Eyebrow style, the Hero introduction and Scroll Card paragraphs are styled again (6.9 paragraphs carry no wp-block-paragraph class).
 * Precious metals: nine gem section styles for Group and Cover (gold, rose gold, amethyst, sapphire, blue gold, emerald, imperial topaz, pearl, gold on ivory). Each sets its ground, text and a five-tone metal, and every gem passes WCAG AA contrast (checked in CI). Native theme.json section styles: their CSS loads only on pages that use them.
 * Gem sections that follow each other blend with a long gradient instead of a hard edge.
 * "Metal foil" heading style, and emphasis inside gem headings in the gem's metal, with a light that slides across as the heading crosses the screen. Plain text in Windows high contrast mode.
