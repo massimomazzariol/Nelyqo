@@ -59,8 +59,6 @@
 }
 
 .wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced {
-	// The layout below picks side by side or stacked from the section's own width.
-	container-type: inline-size;
 	min-height: var(--nelyqo-scroll-horizontal-section-height, auto);
 	padding-block: clamp(28px, 4vw, 56px);
 }
@@ -289,25 +287,22 @@
 	padding-bottom: 0;
 }
 
-/* Intro beside the cards only when the section itself is wide enough for a whole card next to
-   it (a section as wide as the text keeps the intro above). Without container queries the intro
-   stays above. */
-@container (min-width: 880px) {
+/* Intro beside the cards when the section is wide enough for a whole card next to it (is-h-side,
+   set by the horizontal engine from the section's width); a section as wide as the text keeps the
+   intro above. Not a container query: size containment collapses the section in flex groups. */
+.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-h-side > .nelyqo-scroll-section__layout {
+	align-items: start;
+	column-gap: var(--nelyqo-scroll-horizontal-stage-gap);
+	display: grid;
+	grid-template-columns: clamp(220px, 22vw, 292px) minmax(0, 1fr);
+}
 
-	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced > .nelyqo-scroll-section__layout {
-		align-items: start;
-		column-gap: var(--nelyqo-scroll-horizontal-stage-gap);
-		display: grid;
-		grid-template-columns: clamp(220px, 22vw, 292px) minmax(0, 1fr);
-	}
+.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-h-side > .nelyqo-scroll-section__layout > .nelyqo-scroll-section__intro {
+	grid-column: 1;
+	max-inline-size: none;
+}
 
-	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced > .nelyqo-scroll-section__layout > .nelyqo-scroll-section__intro {
-		grid-column: 1;
-		max-inline-size: none;
-	}
-
-	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced > .nelyqo-scroll-section__layout > .nelyqo-scroll-section__horizontal-shell {
-		grid-column: 2;
-		min-width: 0;
-	}
+.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-h-side > .nelyqo-scroll-section__layout > .nelyqo-scroll-section__horizontal-shell {
+	grid-column: 2;
+	min-width: 0;
 }

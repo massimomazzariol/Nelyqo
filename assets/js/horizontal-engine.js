@@ -31,6 +31,8 @@
 	// Narrower windows (phones) keep the cards in a sideways scroller or a stack: the blocks' phone
 	// styles use (max-width: 781px).
 	const PIN_MIN_WIDTH = 782;
+	// Scroll Section width (inside its padding) from which the intro sits beside the cards.
+	const SIDE_MIN_WIDTH = 880;
 
 	const reducedMotion = window.matchMedia(
 		'(prefers-reduced-motion: reduce)'
@@ -84,6 +86,16 @@
 			emphasis: ( root ) =>
 				root.classList.contains( 'has-motion' ) &&
 				! root.classList.contains( 'has-no-card-emphasis' ),
+			// Intro beside the cards (is-h-side) only where a whole card fits next to it; otherwise
+			// above them.
+			arrange( { root } ) {
+				const style = window.getComputedStyle( root );
+				const inner =
+					root.clientWidth -
+					parseFloat( style.paddingLeft ) -
+					parseFloat( style.paddingRight );
+				root.classList.toggle( 'is-h-side', inner >= SIDE_MIN_WIDTH );
+			},
 			build( root ) {
 				const layout = root.querySelector(
 					':scope > .nelyqo-scroll-section__layout'
@@ -258,6 +270,7 @@
 
 	const measure = ( state ) => {
 		const { root, adapter, shell, track } = state;
+		adapter.arrange?.( state );
 		const pinnable =
 			window.innerWidth >= PIN_MIN_WIDTH &&
 			! reducedMotion.matches &&
@@ -327,6 +340,12 @@
 		state.travel = Math.round( state.distance * speed );
 		state.endHold = Math.round( viewport * END_HOLD_RATIO );
 		state.stageHeight = adapter.stageHeight( state, viewport );
+		// A stage taller than the screen below the header would hold with its cards cut off: the
+		// cards scroll sideways instead.
+		if ( state.stageHeight > viewport - headerOffset + 1 ) {
+			unpin();
+			return;
+		}
 		// Centred in the part of the screen below the header.
 		state.pinTop =
 			headerOffset +

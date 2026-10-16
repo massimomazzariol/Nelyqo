@@ -81,6 +81,11 @@
 	position: relative;
 }
 
+// The progress bar (horizontal engine) runs just under the cards, not under the track's padding.
+.wp-block-nelyqo-horizontal-scroll.is-h-pinned.has-h-progress .nelyqo-h-progress {
+	inset-block-end: max(0px, var(--nelyqo-horizontal-scroll-padding-block) - 16px);
+}
+
 // Content area (new architecture): editorial blocks that stay static in the sticky stage.
 .nelyqo-horizontal-scroll__content {
 	box-sizing: border-box;

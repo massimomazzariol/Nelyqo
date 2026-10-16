@@ -5,7 +5,7 @@
 // reduced motion nothing is held. Exits 1 on a failed step.
 // Usage: node lean/horizontal-check.mjs <page with a horizontal track> <dir with playwright installed>
 // ENGINE=firefox|webkit picks the browser (default chromium); DIRECTION=right expects cards moving right;
-// RTL=1 makes the page right-to-left; SPEED=slow|fast expects that speed option; SETTLE=1 checks "Settle on a card" instead of the walk, NOSETTLE=1 walks such a track without it.
+// SIZE=834x1112 sets the window (default 1440x900); RTL=1 makes the page right-to-left; SPEED=slow|fast expects that speed option; SETTLE=1 checks "Settle on a card" instead of the walk, NOSETTLE=1 walks such a track without it.
 // Example: node lean/horizontal-check.mjs http://localhost:8888/ ~/repos/wp-lean-check
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
@@ -18,6 +18,7 @@ const ratio = { slow: 1 / 1.5, fast: 1 / 0.6 }[ process.env.SPEED ] ?? 1;
 const browserType = createRequire( join( playwrightDir, 'package.json' ) )( 'playwright' )[ engine ];
 const browser = await browserType.launch();
 // ROOT=<selector> picks which horizontal block to check (default: the first on the page).
+const [ WIDTH, HEIGHT ] = ( process.env.SIZE || '1440x900' ).split( 'x' ).map( Number );
 const ROOT = process.env.ROOT || '.wp-block-nelyqo-horizontal-scroll, .is-mode-horizontal-track';
 let failures = 0;
 const check = ( ok, text ) => {
@@ -29,7 +30,7 @@ const check = ( ok, text ) => {
 const walk = async ( page ) => {
 	const top = await page.evaluate( ( root ) => document.querySelector( root ).getBoundingClientRect().top + window.scrollY, ROOT );
 	const samples = [];
-	for ( let y = top - 900; y < top + 3500; y += 50 ) {
+	for ( let y = top - HEIGHT; y < top + 3500; y += 50 ) {
 		await page.evaluate( ( v ) => window.scrollTo( 0, v ), y );
 		await page.waitForTimeout( 120 );
 		// Scripts update on the next frame after the scroll event: let two frames pass.
@@ -77,7 +78,8 @@ const settleCheck = async ( page ) => {
 		before = now;
 	}
 	let at = await rest();
-	check( at.off < 3, `rests on a whole card when the stage holds (card ${ at.card + 1 }, ${ Math.round( at.off ) }px off)` );
+	// At the start of the travel the first card rests at the window's edge, not in its middle.
+	check( at.off < 3 || at.card === 0, `rests on a whole card when the stage holds (card ${ at.card + 1 }, ${ Math.round( at.off ) }px off)` );
 	// One wheel notch at a time: each goes on to the next card.
 	const perCard = [];
 	// (The last card may never reach the middle: the travel ends when it is fully in view.)
@@ -106,7 +108,7 @@ const settleCheck = async ( page ) => {
 };
 
 try {
-	const page = await browser.newPage( { viewport: { width: 1440, height: 900 } } );
+	const page = await browser.newPage( { viewport: { width: WIDTH, height: HEIGHT } } );
 	await page.goto( url, { waitUntil: 'networkidle' } );
 	if ( process.env.NOSETTLE ) {
 		// Walk a track that has "Settle on a card" without it, to check its direction and speed.
@@ -127,7 +129,7 @@ try {
 	const samples = await walk( page );
 	const held = samples.filter( ( s ) => s.held );
 	check( held.length > 4, `${ engine }: the stage holds (${ held.length } steps of 50px)` );
-	const off = Math.max( ...held.map( ( s ) => Math.abs( s.centre - 468 ) ) );
+	const off = Math.max( ...held.map( ( s ) => Math.abs( s.centre - ( HEIGHT + 36 ) / 2 ) /* middle below the 36px header */ ) );
 	check( off < 70, `the stage's content in the middle of the screen while held (off by ${ Math.round( off ) }px at most)` );
 	// A section as wide as the text must still show a whole card in its window.
 	const fit = await page.evaluate( ( root ) => {
@@ -143,7 +145,7 @@ try {
 	check( steps.length > 2 && steps.every( ( r ) => r * sign > 0.7 * ratio && r * sign < 1.35 * ratio ), `the track follows the scroll ${ sign < 0 ? 'leftwards' : 'rightwards' } (px per scroll px: ${ steps.map( ( r ) => r.toFixed( 2 ) ).join( ' ' ) })` );
 	check( Math.abs( end - start ) > 100 && held.at( -1 ).x === end, `the track reaches its end (${ Math.round( end - start ) }px) before the stage lets go` );
 
-	const still = await browser.newPage( { viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' } );
+	const still = await browser.newPage( { viewport: { width: WIDTH, height: HEIGHT }, reducedMotion: 'reduce' } );
 	await still.goto( url, { waitUntil: 'networkidle' } );
 	const quiet = await walk( still );
 	check( ! quiet.some( ( s ) => s.held ) && quiet.every( ( s ) => s.x === quiet[ 0 ].x ), 'reduced motion: nothing held, the track does not move by itself' );
