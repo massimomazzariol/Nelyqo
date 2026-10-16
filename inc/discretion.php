@@ -17,6 +17,8 @@
 add_action( 'init', 'nelyqo_apply_discretion' );
 add_action( 'nelyqo_options_sections', 'nelyqo_discretion_options', 6 );
 add_action( 'admin_post_nelyqo_discretion', 'nelyqo_save_discretion_options' );
+// Core builds the sitemaps on init before the theme's init runs, so this filter is added up front.
+add_filter( 'wp_sitemaps_add_provider', 'nelyqo_hide_user_sitemap', 10, 2 );
 
 /**
  * Discretion switches, all on by default (theme mods).
@@ -81,12 +83,6 @@ function nelyqo_apply_discretion() {
 		add_filter( 'rest_endpoints', 'nelyqo_hide_user_routes' );
 		add_filter( 'oembed_response_data', 'nelyqo_hide_oembed_author' );
 		add_action( 'template_redirect', 'nelyqo_hide_author_pages', 1 ); // Before the canonical redirect, which would name the user.
-		add_filter(
-			'wp_sitemaps_add_provider',
-			static fn( $provider, $name ) => 'users' === $name ? false : $provider,
-			10,
-			2
-		);
 	}
 }
 
@@ -136,6 +132,17 @@ function nelyqo_hide_oembed_author( $data ) {
 		unset( $data[ $field ] );
 	}
 	return $data;
+}
+
+/**
+ * Leaves the user list out of the sitemap ("Hide user names"); search engines crawl it as visitors.
+ *
+ * @param WP_Sitemaps_Provider|false $provider Sitemap provider.
+ * @param string                     $name     Provider name.
+ * @return WP_Sitemaps_Provider|false
+ */
+function nelyqo_hide_user_sitemap( $provider, $name ) {
+	return 'users' === $name && nelyqo_discretion_settings()['hide_user_names'] ? false : $provider;
 }
 
 /** Author pages (and ?author=N, which redirects to them) answer "not found" to visitors. */
