@@ -121,3 +121,9 @@
 		scale: 1 1;
 	}
 }
+
+/* A track the keyboard can scroll shows where the focus is. */
+.nelyqo-h-track:focus-visible {
+	outline: 2px solid currentcolor;
+	outline-offset: 4px;
+}

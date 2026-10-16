@@ -214,6 +214,12 @@
 			pin( state, on ) {
 				const { root, holder } = state;
 				root.classList.toggle( 'is-nelyqo-horizontal-ready', on );
+				// Unpinned, the cards scroll sideways on their own: keyboard users need to reach them.
+				if ( on ) {
+					state.track.removeAttribute( 'tabindex' );
+				} else {
+					state.track.tabIndex = 0;
+				}
 				root.style.setProperty(
 					'--nelyqo-horizontal-pin-top',
 					`${ state.pinTop }px`
