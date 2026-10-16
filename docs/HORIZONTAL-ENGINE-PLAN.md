@@ -1,6 +1,6 @@
 # One engine for horizontal scrolling (plan for 0.6.0)
 
-Status: approved with changes (see Decisions). Saved content never changes.
+Status: done on branch feat/0.6.0-plan (2026-10-16). Saved content never changes.
 
 ## Today: two engines for one effect
 
@@ -42,7 +42,7 @@ Both engines do the same job, and 0.5.0 brought the Scroll Section mode to the b
 
 - **Both blocks stay public** (Horizontal Scroll stays in the inserter): two blocks, one engine.
 - **One engine moves everything**: the script measures, CSS moves (scroll-driven animations on the compositor); a small script fallback moves the track where scroll-driven animations are missing (Firefox today).
-- **Card emphasis** becomes an option: on by default in Scroll Section (existing sites look the same), off by default in Horizontal Scroll; subtle / medium / strong. Done in CSS from each card's position in the track, no per-frame script.
+- **Card emphasis** becomes an option: on by default in Scroll Section (existing sites look the same), off by default in Horizontal Scroll; subtle / medium / strong. Implemented as one custom property per card written from the page position (no layout read, no filters, no transitions on scale or shadow): a pure-CSS version could not keep the first card lit before the travel and the last one lit in the end hold.
 - **New options, on both blocks** (attributes read at render time: the saved markup does not change, so existing posts stay valid):
   1. Direction: cards travel left or right; the default follows the writing direction (left in left-to-right languages, right in right-to-left ones).
   2. Progress indicator: a thin bar under the track, CSS only.
