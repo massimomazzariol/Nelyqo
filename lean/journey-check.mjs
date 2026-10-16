@@ -22,7 +22,7 @@ const cdp = touch ? await context.newCDPSession( page ) : null;
 await page.mouse.move( 300, 150 );
 
 const read = () => page.evaluate( () => {
-	const hz = document.querySelector( '.is-mode-horizontal-track' );
+	const hz = document.querySelector( '.wp-block-nelyqo-horizontal-scroll, .is-mode-horizontal-track' )?.querySelector( '.wp-block-nelyqo-scroll-card' );
 	// Share of a stretch not yet poured (0-100): its window slides down from 100% above its section.
 	const clip = ( s ) => {
 		const y = s.getBoundingClientRect().top - s.parentElement.getBoundingClientRect().top;
@@ -52,7 +52,8 @@ const read = () => page.evaluate( () => {
 		y: Math.round( scrollY ),
 		max: document.documentElement.scrollHeight - innerHeight,
 		scene: [ ...document.querySelectorAll( '.nelyqo-fullpage-section__panel' ) ].findIndex( ( p ) => p.classList.contains( 'is-active' ) ),
-		hz: parseFloat( hz?.style.getPropertyValue( '--nelyqo-scroll-horizontal-track-offset' ) ) || 0,
+		// Where the track's first card is: read from what is on screen, whatever moves it.
+		hz: hz ? hz.getBoundingClientRect().left : 0,
 		gap,
 		loose,
 	};
@@ -88,11 +89,13 @@ for ( const dir of [ 1, -1 ] ) {
 	const scenes = [ s.scene ];
 	let still = 0;
 	let hzBack = 0;
+	const hzSeen = [ s.hz ];
 	for ( let i = 0; i < 400; i++ ) {
 		const next = await step( dir );
 		if ( next.scene !== scenes.at( -1 ) ) {
 			scenes.push( next.scene );
 		}
+		hzSeen.push( next.hz );
 		// Going down the track only moves left (more negative), going up only right.
 		if ( ( next.hz - s.hz ) * dir > 0.5 ) {
 			hzBack++;
@@ -114,6 +117,10 @@ for ( const dir of [ 1, -1 ] ) {
 	const expected = dir > 0 ? '0,1,2' : '2,1,0';
 	if ( scenes.join( ',' ) !== expected ) {
 		problems.push( `${ name }: scenes seen ${ scenes.join( ' ' ) }, expected ${ expected.replaceAll( ',', ' ' ) }` );
+	}
+	// On a desktop screen with motion the track travels: it must cover some distance each way.
+	if ( +width >= 960 && ! process.env.REDUCED && Math.max( ...hzSeen ) - Math.min( ...hzSeen ) < 100 ) {
+		problems.push( `${ name }: the horizontal track hardly moved` );
 	}
 	if ( hzBack ) {
 		problems.push( `${ name }: horizontal track moved the wrong way ${ hzBack } time(s)` );
