@@ -129,6 +129,13 @@ try {
 	check( held.length > 4, `${ engine }: the stage holds (${ held.length } steps of 50px)` );
 	const off = Math.max( ...held.map( ( s ) => Math.abs( s.centre - 468 ) ) );
 	check( off < 70, `the stage's content in the middle of the screen while held (off by ${ Math.round( off ) }px at most)` );
+	// A section as wide as the text must still show a whole card in its window.
+	const fit = await page.evaluate( ( root ) => {
+		const el = document.querySelector( root );
+		const shell = el.querySelector( '.nelyqo-scroll-section__horizontal-shell, .nelyqo-horizontal-scroll__horizontal' );
+		return { shell: shell.clientWidth, card: el.querySelector( '.wp-block-nelyqo-scroll-card' ).offsetWidth };
+	}, ROOT );
+	check( fit.shell >= fit.card, `a whole card fits in the window (window ${ fit.shell }px, card ${ fit.card }px)` );
 	const start = samples[ 0 ].x;
 	const end = samples.reduce( ( far, s ) => ( ( s.x - start ) * sign > ( far - start ) * sign ? s.x : far ), start );
 	// Whole steps between the first and the last card (the steps where the track starts or stops are partial).

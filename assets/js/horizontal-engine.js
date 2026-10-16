@@ -28,6 +28,9 @@
 	const SPEEDS = { slow: 1.5, normal: 1, fast: 0.6 };
 	// Scrolling has stopped when no scroll event came for this long (browsers without scrollend).
 	const SCROLL_IDLE_MS = 150;
+	// Narrower windows (phones) keep the cards in a sideways scroller or a stack: the blocks' phone
+	// styles use (max-width: 781px).
+	const PIN_MIN_WIDTH = 782;
 
 	const reducedMotion = window.matchMedia(
 		'(prefers-reduced-motion: reduce)'
@@ -75,7 +78,6 @@
 		{
 			selector:
 				'.wp-block-nelyqo-scroll-section.is-mode-horizontal-track',
-			breakpoint: 960,
 			// Unpinned, this window is what scrolls sideways (card emphasis follows it).
 			shellScrolls: true,
 			canPin: ( root ) => root.classList.contains( 'has-sticky' ),
@@ -113,10 +115,12 @@
 				};
 			},
 			stageHeight( state, viewport ) {
-				const content = Math.max(
-					state.intro.offsetHeight,
-					state.shell.offsetHeight
-				);
+				// Intro and cards side by side, or the intro above the cards (narrow sections).
+				const intro = state.intro.getBoundingClientRect();
+				const shell = state.shell.getBoundingClientRect();
+				const content =
+					Math.max( intro.bottom, shell.bottom ) -
+					Math.min( intro.top, shell.top );
 				return Math.ceil(
 					Math.max(
 						360,
@@ -168,7 +172,6 @@
 		},
 		{
 			selector: '.wp-block-nelyqo-horizontal-scroll',
-			breakpoint: 782,
 			canPin: () => true,
 			emphasis: ( root ) => root.classList.contains( 'has-h-emphasis' ),
 			build( root ) {
@@ -256,7 +259,7 @@
 	const measure = ( state ) => {
 		const { root, adapter, shell, track } = state;
 		const pinnable =
-			window.innerWidth >= adapter.breakpoint &&
+			window.innerWidth >= PIN_MIN_WIDTH &&
 			! reducedMotion.matches &&
 			adapter.canPin( root );
 		// Measure the track at rest (no animation, no fallback offset), in its pinned layout.

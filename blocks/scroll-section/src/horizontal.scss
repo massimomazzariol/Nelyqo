@@ -59,6 +59,8 @@
 }
 
 .wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced {
+	// The layout below picks side by side or stacked from the section's own width.
+	container-type: inline-size;
 	min-height: var(--nelyqo-scroll-horizontal-section-height, auto);
 	padding-block: clamp(28px, 4vw, 56px);
 }
@@ -265,14 +267,38 @@
 	}
 }
 
-@media (min-width: 960px) {
+/* The stage is centred on screen: intro and cards side by side (tops aligned), or the intro above
+   the cards in a narrow section, sit in its middle. */
+.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-horizontal-pinned > .nelyqo-scroll-section__layout {
+	align-content: center;
+	justify-content: center;
+	min-height: var(--nelyqo-scroll-horizontal-stage-height, auto);
+	position: sticky;
+	top: var(--nelyqo-scroll-horizontal-pin-top, var(--nelyqo-scroll-sticky-offset));
+}
+
+.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-horizontal-pinned
+.nelyqo-scroll-section__horizontal-shell {
+	overflow: hidden;
+	scroll-snap-type: none;
+}
+
+/* The progress bar keeps the room under the cards. */
+.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-horizontal-pinned:not(.has-h-progress)
+.nelyqo-scroll-section__horizontal-shell {
+	padding-bottom: 0;
+}
+
+/* Intro beside the cards only when the section itself is wide enough for a whole card next to
+   it (a section as wide as the text keeps the intro above). Without container queries the intro
+   stays above. */
+@container (min-width: 880px) {
 
 	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced > .nelyqo-scroll-section__layout {
 		align-items: start;
 		column-gap: var(--nelyqo-scroll-horizontal-stage-gap);
 		display: grid;
 		grid-template-columns: clamp(220px, 22vw, 292px) minmax(0, 1fr);
-		min-height: var(--nelyqo-scroll-horizontal-stage-height, auto);
 	}
 
 	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced > .nelyqo-scroll-section__layout > .nelyqo-scroll-section__intro {
@@ -283,19 +309,5 @@
 	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced > .nelyqo-scroll-section__layout > .nelyqo-scroll-section__horizontal-shell {
 		grid-column: 2;
 		min-width: 0;
-	}
-
-	/* The stage is centred on screen; its row (intro and cards, tops aligned) sits in its middle. */
-	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-horizontal-pinned > .nelyqo-scroll-section__layout {
-		align-content: center;
-		position: sticky;
-		top: var(--nelyqo-scroll-horizontal-pin-top, var(--nelyqo-scroll-sticky-offset));
-	}
-
-	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-horizontal-pinned
-	.nelyqo-scroll-section__horizontal-shell {
-		overflow: hidden;
-		padding-bottom: 0;
-		scroll-snap-type: none;
 	}
 }

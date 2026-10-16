@@ -48,7 +48,7 @@ Both engines do the same job, and 0.5.0 brought the Scroll Section mode to the b
   2. Progress indicator: a thin bar under the track, CSS only.
   3. Settle on a card: when scrolling stops inside the pinned stretch, the track settles on the nearest whole card.
   4. Speed: slow / normal / fast (how much page scroll crosses the track).
-  5. Phone (under 960px): swipe (cards scroll sideways with the finger, today's behaviour, default) or stack (cards one under the other).
+  5. Phone (under 782px): swipe (cards scroll sideways with the finger, today's behaviour, default) or stack (cards one under the other).
 - The presentation gets a Horizontal Scroll section showing the options.
 
 ## Engine design
