@@ -76,6 +76,8 @@
 			selector:
 				'.wp-block-nelyqo-scroll-section.is-mode-horizontal-track',
 			breakpoint: 960,
+			// Unpinned, this window is what scrolls sideways (card emphasis follows it).
+			shellScrolls: true,
 			canPin: ( root ) => root.classList.contains( 'has-sticky' ),
 			emphasis: ( root ) =>
 				root.classList.contains( 'has-motion' ) &&
@@ -234,16 +236,17 @@
 	];
 
 	// Where the cards' centres meet the middle of the window, as a share of the travel (0 to 1).
-	const measureFocus = ( state ) => {
+	// shift: how far the track sits from its resting place now (a window scrolled sideways).
+	const measureFocus = ( state, shift ) => {
 		const shell = state.shell.getBoundingClientRect();
 		const track = state.track.getBoundingClientRect();
 		const focus = shell.left + shell.width / 2;
+		const rest = track.left + shift;
 		state.focus = state.cards.map( ( card ) => {
 			const rect = card.getBoundingClientRect();
 			const centre = rect.left - track.left + rect.width / 2;
 			return clamp(
-				( focus - track.left - centre ) /
-					( state.sign * state.distance ),
+				( focus - rest - centre ) / ( state.sign * state.distance ),
 				0,
 				1
 			);
@@ -263,12 +266,18 @@
 			state.pinned = false;
 			adapter.pin( state, false );
 			root.classList.remove( 'is-h-pinned' );
-			// Unpinned (phones, reduced motion), the cards keep the page's own order and direction.
+			// Unpinned (phones, reduced motion, sticky off), the cards keep the page's own order and
+			// direction, and scroll sideways in the window (Scroll Section) or the track.
 			shell.removeAttribute( 'dir' );
-			state.cards.forEach( ( card ) => {
-				card.style.removeProperty( '--nelyqo-h-e' );
-				card.removeAttribute( 'dir' );
-			} );
+			state.cards.forEach( ( card ) => card.removeAttribute( 'dir' ) );
+			state.sign =
+				window.getComputedStyle( root ).direction === 'rtl' ? 1 : -1;
+			state.distance = Math.max(
+				0,
+				shell.scrollWidth - shell.clientWidth
+			);
+			// Card emphasis follows the window's own sideways scroll; measured as if it were at rest.
+			measureFocus( state, -state.sign * Math.abs( shell.scrollLeft ) );
 		};
 		if ( ! pinnable ) {
 			unpin();
@@ -286,9 +295,16 @@
 			card.dir = pageDirection;
 		} );
 		state.sign = right ? 1 : -1;
+		// The pinned window never scrolls by itself: back to its start if it was swiped unpinned.
+		shell.scrollLeft = 0;
 
 		const viewport = scrollportHeight();
-		Object.assign( state, { travel: 0, endHold: 0, pinTop: headerOffset } );
+		state.viewport = viewport;
+		// First pass in the pinned layout, keeping the last travel so the section does not shrink
+		// for a moment (which could move a page scrolled near its end).
+		state.travel = state.travel || 0;
+		state.endHold = state.endHold || 0;
+		state.pinTop = headerOffset;
 		state.stageHeight = adapter.stageHeight( state, viewport );
 		adapter.pin( state, true );
 		root.classList.add( 'is-h-pinned' );
@@ -318,12 +334,11 @@
 				)
 			);
 		adapter.pin( state, true );
-		measureFocus( state );
+		measureFocus( state, 0 );
 
 		// The travel starts when the stage pins: that many px into the section's cover range,
 		// which begins when the section's top meets the bottom of the screen.
 		state.start = viewport + adapter.staticTop( state ) - state.pinTop;
-		state.pinScroll = pageTop( root ) + state.start - viewport;
 		root.style.setProperty( '--nelyqo-h-start', `${ state.start }px` );
 		root.style.setProperty(
 			'--nelyqo-h-end',
@@ -337,15 +352,22 @@
 	};
 
 	// Progress through the travel (0 to 1), from the page position alone: no layout is read.
+	// Unpinned, from the window's own sideways scroll.
 	const progressOf = ( state ) =>
-		clamp( ( window.scrollY - state.pinScroll ) / state.travel, 0, 1 );
+		state.pinned
+			? clamp( ( window.scrollY - state.pinScroll ) / state.travel, 0, 1 )
+			: clamp(
+					Math.abs( state.shell.scrollLeft ) / state.distance,
+					0,
+					1
+			  );
 
 	const update = ( state ) => {
-		if ( ! state.pinned ) {
+		if ( ! state.pinned && ! state.emphasis ) {
 			return;
 		}
 		const progress = progressOf( state );
-		if ( ! hasTimeline ) {
+		if ( state.pinned && ! hasTimeline ) {
 			state.track.style.translate = `${
 				progress * state.sign * state.distance
 			}px 0`;
@@ -380,29 +402,53 @@
 		}
 	};
 
-	// When scrolling stops inside the travel, finish the move to the nearest whole card (never in
-	// the end hold or outside the travel), as a snapping carousel does.
+	/*
+	 * Settle on a card: when scrolling stops inside the travel, the track finishes its move to a
+	 * whole card. A short move from the card it rested on (less than half the way to the next one,
+	 * as one wheel notch or arrow key is) carries on to that next card, so small steps still go
+	 * forward; a longer move settles on the nearest card. Never in the end hold or outside the
+	 * travel.
+	 */
 	const settle = ( state ) => {
-		if (
-			! state.pinned ||
-			! state.root.classList.contains( 'has-h-settle' ) ||
-			state.settling
-		) {
-			return;
-		}
 		const progress = progressOf( state );
-		if ( progress <= 0 || progress >= 1 ) {
+		// Our own settling move: done once it has arrived; until then, stops in between are ignored.
+		if ( state.settling ) {
+			if ( Math.abs( progress - state.restStop ) * state.travel < 2 ) {
+				state.settling = false;
+			}
 			return;
 		}
-		const target = state.focus.reduce( ( near, stop ) =>
+		if (
+			progress <= 0 ||
+			progress >= 1 ||
+			Math.abs( progress - state.restStop ) * state.travel < 2
+		) {
+			state.restStop = progress;
+			return;
+		}
+		const stops = [ ...new Set( state.focus ) ].sort( ( a, b ) => a - b );
+		const ahead = progress > state.restStop;
+		const next = ahead
+			? stops.find( ( stop ) => stop > state.restStop + 0.001 )
+			: [ ...stops ]
+					.reverse()
+					.find( ( stop ) => stop < state.restStop - 0.001 );
+		const nearest = stops.reduce( ( near, stop ) =>
 			Math.abs( stop - progress ) < Math.abs( near - progress )
 				? stop
 				: near
 		);
+		const short =
+			next !== undefined &&
+			Math.abs( progress - state.restStop ) <
+				Math.abs( next - state.restStop ) / 2;
+		const target = short ? next : nearest;
 		if ( Math.abs( target - progress ) * state.travel < 2 ) {
+			state.restStop = progress;
 			return;
 		}
 		state.settling = true;
+		state.restStop = target;
 		window.scrollTo( {
 			top: state.pinScroll + target * state.travel,
 			behavior: 'smooth',
@@ -421,12 +467,26 @@
 
 	const remeasure = () => {
 		headerOffset = measureHeader();
+		instances.forEach( measure );
+		// Second pass, once every section has its final height: where each travel starts on the page.
 		instances.forEach( ( state ) => {
-			measure( state );
+			if ( state.pinned ) {
+				state.pinScroll =
+					pageTop( state.root ) + state.start - state.viewport;
+			}
+			state.restStop = state.distance > 1 ? progressOf( state ) : 0;
 			state.active = -1;
 			state.emphasis =
-				state.pinned && state.adapter.emphasis( state.root );
+				state.distance > 1 &&
+				( state.pinned || state.adapter.shellScrolls ) &&
+				! reducedMotion.matches &&
+				state.adapter.emphasis( state.root );
 			state.root.classList.toggle( 'is-h-emphasis', state.emphasis );
+			if ( ! state.emphasis ) {
+				state.cards.forEach( ( card ) =>
+					card.style.removeProperty( '--nelyqo-h-e' )
+				);
+			}
 			update( state );
 		} );
 	};
@@ -471,12 +531,12 @@
 		const onScrollEnd = () => {
 			window.clearTimeout( idle );
 			instances.forEach( ( state ) => {
-				// The end of our own settling move ends the settling, it does not start another.
-				if ( state.settling ) {
-					state.settling = false;
-					return;
+				if (
+					state.pinned &&
+					state.root.classList.contains( 'has-h-settle' )
+				) {
+					settle( state );
 				}
-				settle( state );
 			} );
 		};
 		window.addEventListener(
@@ -489,6 +549,13 @@
 			{ passive: true }
 		);
 		window.addEventListener( 'scrollend', onScrollEnd );
+		instances.forEach( ( state ) => {
+			if ( state.adapter.shellScrolls ) {
+				state.shell.addEventListener( 'scroll', requestUpdate, {
+					passive: true,
+				} );
+			}
+		} );
 		// Any new input cancels a settling move in progress, so the page never fights the user.
 		[ 'wheel', 'touchstart', 'keydown' ].forEach( ( type ) =>
 			window.addEventListener(

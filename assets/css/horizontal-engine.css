@@ -9,11 +9,14 @@
 /* Options without the script, or with reduced motion: the still layouts. */
 
 /* Phones, "stack": the cards one under the other, full width, instead of a sideways scroller.
+   Written for the saved markup as well as the script's runtime track, so the first paint is
+   already stacked (no jump when the script runs) and pages without the script stack too.
    Selectors one step stronger than each block's own phone rules. */
 @media (max-width: 781px) {
 
-	.wp-block-nelyqo-horizontal-scroll.is-h-mobile-stack .nelyqo-h-track,
-	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-h-mobile-stack .nelyqo-h-track {
+	.wp-block-nelyqo-horizontal-scroll.is-h-mobile-stack .nelyqo-horizontal-scroll__layout,
+	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-h-mobile-stack > .nelyqo-scroll-section__layout,
+	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-h-mobile-stack .nelyqo-scroll-section__horizontal-track {
 		align-items: stretch;
 		flex-direction: column;
 		inline-size: auto;
@@ -21,8 +24,9 @@
 		overflow: visible;
 	}
 
-	.wp-block-nelyqo-horizontal-scroll.is-h-mobile-stack .nelyqo-h-track > .nelyqo-h-card,
-	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-h-mobile-stack .nelyqo-h-track > .nelyqo-h-card {
+	.wp-block-nelyqo-horizontal-scroll.is-h-mobile-stack .nelyqo-horizontal-scroll__layout > .wp-block-nelyqo-scroll-card,
+	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-h-mobile-stack > .nelyqo-scroll-section__layout > :is(.wp-block-nelyqo-scroll-card, .nelyqo-scroll-section__intro),
+	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-h-mobile-stack .nelyqo-scroll-section__horizontal-track > .wp-block-nelyqo-scroll-card {
 		align-self: stretch;
 		flex: none;
 		inline-size: auto;
