@@ -12,8 +12,8 @@ const HORIZONTAL_SCROLL_RANGE_FACTOR = 1;
 const HORIZONTAL_SCROLL_RANGE_FACTOR_FLOOR = 0.8;
 const HORIZONTAL_SCROLL_RANGE_DECAY = 0.08;
 const HORIZONTAL_SCROLL_RANGE_MIN_VIEWPORT_FACTOR = 0.14;
-const HORIZONTAL_PROGRESS_LEAD_FACTOR = 0.14;
-const HORIZONTAL_PROGRESS_LEAD_MAX = 120;
+// After the last card arrives the stage stays a moment longer (share of the screen height).
+const HORIZONTAL_END_HOLD_RATIO = 0.15;
 
 const MOTION_PRESETS = {
 	subtle: {
@@ -235,10 +235,16 @@ const setHorizontalPinnedState = ( sectionState, shouldPin ) => {
 		'--nelyqo-scroll-horizontal-stage-height',
 		`${ sectionState.stageHeight }px`
 	);
+	// The section's padding comes on top, so the stage holds still for the whole scroll range.
+	const sectionStyle = window.getComputedStyle( element );
 	element.style.setProperty(
 		'--nelyqo-scroll-horizontal-section-height',
 		`${ Math.ceil(
-			sectionState.stageHeight + sectionState.scrollRange
+			sectionState.stageHeight +
+				sectionState.scrollRange +
+				sectionState.endHold +
+				parseFloat( sectionStyle.paddingTop ) +
+				parseFloat( sectionStyle.paddingBottom )
 		) }px`
 	);
 
@@ -290,6 +296,9 @@ const updateHorizontalSectionState = ( sectionState, reducedMotionQuery ) => {
 				: 0
 		)
 	);
+	sectionState.endHold = Math.round(
+		viewportHeight * HORIZONTAL_END_HOLD_RATIO
+	);
 	sectionState.stageHeight = Math.ceil(
 		Math.max(
 			HORIZONTAL_STAGE_MIN_HEIGHT,
@@ -323,16 +332,21 @@ const updateHorizontalSectionState = ( sectionState, reducedMotionQuery ) => {
 	let trackOffset = 0;
 
 	if ( shouldPin && maxDistance > 0 ) {
-		const rect = element.getBoundingClientRect();
-		const scrollRange = Math.max( sectionState.scrollRange, 1 );
-		const progressLead = Math.min(
-			sectionState.stageHeight * HORIZONTAL_PROGRESS_LEAD_FACTOR,
-			shell.clientWidth * HORIZONTAL_PROGRESS_LEAD_FACTOR,
-			HORIZONTAL_PROGRESS_LEAD_MAX
-		);
+		// The track moves exactly while the stage holds still: from the moment the layout reaches
+		// its pinned place until the last card arrives, a moment before the section lets it go.
+		const sectionStyle = window.getComputedStyle( element );
+		const paddingTop = parseFloat( sectionStyle.paddingTop ) || 0;
+		const hold =
+			element.clientHeight -
+			paddingTop -
+			( parseFloat( sectionStyle.paddingBottom ) || 0 ) -
+			sectionState.layout.offsetHeight -
+			sectionState.endHold;
 		const progress = clamp(
-			( sectionState.stickyOffset + progressLead - rect.top ) /
-				scrollRange,
+			( sectionState.stickyOffset -
+				element.getBoundingClientRect().top -
+				paddingTop ) /
+				Math.max( hold, 1 ),
 			0,
 			1
 		);
@@ -443,6 +457,7 @@ const initHorizontalSections = ( reducedMotionQuery ) => {
 			stageHeight: 0,
 			maxDistance: 0,
 			scrollRange: 0,
+			endHold: 0,
 			stickyOffset: getStickyOffset( element ),
 		} ) )
 		.filter( ( sectionState ) => sectionState.layout );
