@@ -283,6 +283,8 @@ const getDockDirection = ( state ) => {
 	const offset = getDockOffset( state );
 
 	if ( Math.abs( offset ) <= DOCK_TOLERANCE_PX ) {
+		// Once docked, the way in no longer matters: moving off is leaving, not arriving.
+		state.approachFrom = 0;
 		return 0;
 	}
 
@@ -305,17 +307,25 @@ const dock = ( state, direction ) => {
 };
 
 // Slides only page while they fill the screen. Moving towards them (wheel, swipe or key) docks
-// them once they cover half the screen; moving away from them is ordinary page scrolling. A long
-// step can carry the page past the docking point on the way in (first slide going down, last going
-// up): that still counts as arriving, so the slides dock back instead of being skipped.
-const shouldDock = ( state, direction ) => {
+// them once they are within reach (half the screen by default; a page key moves almost a whole
+// screen, so it reaches a whole one); moving away from them is ordinary page scrolling. A long step
+// can carry the page past the docking point on the way in: that still counts as arriving, so the
+// slides dock back instead of being skipped. The way in is the side the slides were last seen
+// entirely off screen (approachFrom); before that is known, the active slide stands in for it
+// (the first one going down, the last going up).
+const shouldDock = (
+	state,
+	direction,
+	reach = state.viewportHeight * DOCK_REACH_RATIO
+) => {
 	const dockDirection = getDockDirection( state );
-	const isNear =
-		Math.abs( getDockOffset( state ) ) <
-		state.viewportHeight * DOCK_REACH_RATIO;
-	const isArrivingPast =
-		dockDirection === -direction &&
-		state.activeIndex === ( direction > 0 ? 0 : state.panels.length - 1 );
+	const isNear = Math.abs( getDockOffset( state ) ) < reach;
+	const cameFrom =
+		state.approachFrom === null
+			? state.activeIndex ===
+			  ( direction > 0 ? 0 : state.panels.length - 1 )
+			: state.approachFrom === direction;
+	const isArrivingPast = dockDirection === -direction && cameFrom;
 
 	return (
 		dockDirection !== 0 &&
@@ -611,13 +621,27 @@ const handleKeyDown = ( state, event ) => {
 		' ': event.shiftKey ? -1 : 1,
 	};
 	const step = steps[ event.key ];
+	const isPageKey = event.key !== 'ArrowDown' && event.key !== 'ArrowUp';
 	let nextIndex = null;
 
 	if ( step && getDockDirection( state ) !== 0 ) {
-		if ( shouldDock( state, step ) ) {
+		// A page key scrolls up to a whole window: reaching that far, it can never jump past.
+		if (
+			shouldDock(
+				state,
+				step,
+				isPageKey ? window.innerHeight : undefined
+			)
+		) {
 			event.preventDefault();
 			dock( state, step );
 		}
+		return;
+	}
+
+	// Keys pressed or repeated while a slide is still moving wait for it: one slide per press.
+	if ( step && state.isAnimating ) {
+		event.preventDefault();
 		return;
 	}
 
@@ -731,6 +755,7 @@ const initSequence = ( panels ) => {
 
 	const state = {
 		activeIndex: 0,
+		approachFrom: null,
 		isAnimating: false,
 		panels: runtime.panels,
 		reducedMotionQuery: window.matchMedia(
@@ -766,10 +791,13 @@ const initSequence = ( panels ) => {
 	const onWheel = ( event ) => handleWheel( state, event );
 	new window.IntersectionObserver( ( entries ) => {
 		// A fast fling can queue an entry and an exit together: the last one is current.
-		if ( entries[ entries.length - 1 ].isIntersecting ) {
+		const entry = entries[ entries.length - 1 ];
+		if ( entry.isIntersecting ) {
 			window.addEventListener( 'wheel', onWheel, { passive: false } );
 		} else {
 			window.removeEventListener( 'wheel', onWheel );
+			// Off screen: the next way in is from this side (1: they are below, -1: above).
+			state.approachFrom = entry.boundingClientRect.top > 0 ? 1 : -1;
 		}
 	} ).observe( runtime.sequence );
 	// A swipe that brings the slides in may start above them, so start and end are read page-wide;
