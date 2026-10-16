@@ -23,12 +23,13 @@ await page.mouse.move( 300, 150 );
 
 const read = () => page.evaluate( () => {
 	const hz = document.querySelector( '.is-mode-horizontal-track' );
+	// Share of a stretch not yet poured (0-100): its window slides down from 100% above its section.
 	const clip = ( s ) => {
-		const m = getComputedStyle( s ).clipPath.match( /inset\(\S+ \S+ ([\d.]+)%/ );
-		return m ? +m[ 1 ] : 0;
+		const y = s.getBoundingClientRect().top - s.parentElement.getBoundingClientRect().top;
+		return s.offsetHeight ? ( -y / s.offsetHeight ) * 100 : 0;
 	};
 	const sands = [ ...document.querySelectorAll( '.nelyqo-sand' ) ];
-	const gap = sands.some( ( s, i ) => i > 0 && clip( sands[ i - 1 ] ) > 0.5 && clip( s ) < 99.5 && s.getBoundingClientRect().top < innerHeight );
+	const gap = sands.some( ( s, i ) => i > 0 && clip( sands[ i - 1 ] ) > 0.5 && clip( s ) < 99.5 && s.parentElement.getBoundingClientRect().top < innerHeight );
 	// Sticky elements in the stream: held at their top while their parent's content box allows it.
 	const loose = [];
 	document.querySelectorAll( '.is-style-sand-stream *' ).forEach( ( el ) => {

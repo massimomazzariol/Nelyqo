@@ -131,7 +131,7 @@ function nelyqo_sand_stream( $content, $block ) {
 	// The line in its gradient (a plain metal where the gradient cannot be found), then the same
 	// grains again in light metal, seen through a band that runs down the line (precious.css).
 	$sand = sprintf(
-		'<span class="nelyqo-sand" style="--nelyqo-sand-paint:url(#%s) var(--nelyqo-m2)" aria-hidden="true">%s<span class="nelyqo-sand__light">%s</span></span>',
+		'<span class="nelyqo-sand" style="--nelyqo-sand-paint:url(#%s) var(--nelyqo-m2)" aria-hidden="true"><span class="nelyqo-sand__pour">%s<span class="nelyqo-sand__light">%s</span></span></span>',
 		$id,
 		sprintf( $line, $gradient . $strands ),
 		sprintf( $line, $strands )

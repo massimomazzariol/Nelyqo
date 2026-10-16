@@ -250,9 +250,15 @@
 
 .nelyqo-sand {
 	inset: 0;
+	overflow: hidden;
 	pointer-events: none;
 	position: absolute;
 	z-index: 1;
+}
+
+.nelyqo-sand__pour {
+	inset: 0;
+	position: absolute;
 }
 
 .nelyqo-sand__line {
@@ -339,25 +345,43 @@
 
 	@media (prefers-reduced-motion: no-preference) {
 
-		/* The sand pours down with the scroll: a clip reveal, so the drawing itself is never repainted.
+		/* The sand pours down with the scroll. The window (.nelyqo-sand, clipping) slides down from
+		   above the section while the drawing inside slides up by the same amount, so the drawing
+		   stays put and only its visible part grows: transforms the browser runs on its own, nothing
+		   is redrawn while scrolling (a clip-path reveal repainted the sand and its light every frame).
 		   The poured tip stays on one line of the screen (35vh above its bottom edge): entry-crossing
 		   spans exactly the section's height, so a stretch is complete when its bottom reaches that
-		   line, the moment the next stretch starts there. One unbroken line, never two loose ends. */
-		body:not(.editor-styles-wrapper) .nelyqo-sand {
+		   line, the moment the next stretch starts there. One unbroken line, never two loose ends.
+		   Both layers follow the section's own timeline, so they always move together. */
+		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream > [class*="is-style-gem-"] {
+			view-timeline: --nelyqo-sand;
+		}
+
+		body:not(.editor-styles-wrapper) .nelyqo-sand,
+		body:not(.editor-styles-wrapper) .nelyqo-sand__pour {
 			animation: nelyqo-sand-pour linear both;
 			animation-range: entry-crossing 35vh entry-crossing calc(100% + 35vh);
-			animation-timeline: view();
+			animation-timeline: --nelyqo-sand;
+		}
+
+		body:not(.editor-styles-wrapper) .nelyqo-sand__pour {
+			animation-name: nelyqo-sand-pour-hold;
 		}
 
 		/* The page may end with the last section: its stretch completes as its bottom reaches the
 		   bottom of the screen, which the page can always scroll to. */
-		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream > :last-child > .nelyqo-sand {
+		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream > :last-child > .nelyqo-sand,
+		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream > :last-child > .nelyqo-sand > .nelyqo-sand__pour {
 			animation-range-end: entry-crossing 100%;
 		}
 
 		/* The first stretch is on screen at load: it pours by itself instead of waiting for a scroll. */
 		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream > :first-child > .nelyqo-sand {
 			animation: nelyqo-sand-pour 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+		}
+
+		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream > :first-child > .nelyqo-sand > .nelyqo-sand__pour {
+			animation: nelyqo-sand-pour-hold 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 		}
 
 		/* Dust drifts down at two depths as the page scrolls (transform), and the coarse layer keeps
@@ -400,35 +424,40 @@
 }
 
 /*
- * Light runs down the line: the grains drawn again in the lightest metal, seen through soft bands
- * of light one --nelyqo-sand-gap apart. The masked layer slides down by one gap and loops, while
- * the drawing inside it slides up by the same amount, so the grains stay put and only the light
- * moves, at the same pace in every section. Transforms only: the browser moves layers and never
- * redraws the sand (animating the dashes themselves cost a third of a slow phone's main thread
- * at rest). Only with motion allowed and masks supported; the still line is the fallback.
+ * Light runs down the line: the grains drawn again in the lightest metal, seen through a small
+ * soft window (--nelyqo-sand-band tall) that slides from the top of the section to its bottom,
+ * while the drawing inside it slides up by the same amount, so the grains stay put and only the
+ * light moves. Transforms only, on a small masked layer: the browser moves layers and never redraws
+ * the sand (animating the dashes cost a third of a slow phone's main thread at rest, and a mask as
+ * tall as the section slowed scrolling). Only with motion allowed, masks and container units; the
+ * still line is the fallback.
  */
 @media (prefers-reduced-motion: no-preference) {
 
-	@supports (mask-image: none) or (-webkit-mask-image: none) {
+	@supports ((mask-image: none) or (-webkit-mask-image: none)) and (height: 1cqh) {
+
+		/* The section's height, as 100cqh, for the light's travel. */
+		body:not(.editor-styles-wrapper) .nelyqo-sand__pour {
+			container-type: size;
+		}
 
 		body:not(.editor-styles-wrapper) .nelyqo-sand__light {
-			--nelyqo-sand-gap: 22rem;
-			--nelyqo-sand-band: repeating-linear-gradient(transparent 0, #000 5rem, transparent 10rem, transparent var(--nelyqo-sand-gap));
-			animation: nelyqo-sand-band 2.4s linear infinite;
+			--nelyqo-sand-band: 12rem;
+			animation: nelyqo-sand-band 3.2s linear infinite;
 			display: block;
-			height: calc(100% + var(--nelyqo-sand-gap));
-			inset: calc(-1 * var(--nelyqo-sand-gap)) 0 auto;
-			-webkit-mask-image: var(--nelyqo-sand-band);
-			mask-image: var(--nelyqo-sand-band);
+			height: var(--nelyqo-sand-band);
+			inset: calc(-1 * var(--nelyqo-sand-band)) 0 auto;
+			-webkit-mask-image: linear-gradient(transparent, #000 50%, transparent);
+			mask-image: linear-gradient(transparent, #000 50%, transparent);
 			overflow: hidden;
 			position: absolute;
 		}
 
 		/* As tall as the section, starting at its top. */
 		body:not(.editor-styles-wrapper) .nelyqo-sand__light .nelyqo-sand__line {
-			animation: nelyqo-sand-band-hold 2.4s linear infinite;
-			height: calc(100% - var(--nelyqo-sand-gap));
-			inset: var(--nelyqo-sand-gap) 0 auto;
+			animation: nelyqo-sand-band-hold 3.2s linear infinite;
+			height: 100cqh;
+			inset: var(--nelyqo-sand-band) 0 auto;
 		}
 
 		/* Lit grains turn whiter and swell a little, like sand catching the light. */
@@ -443,25 +472,36 @@
 @keyframes nelyqo-sand-band {
 
 	to {
-		transform: translateY(var(--nelyqo-sand-gap));
+		transform: translateY(calc(100cqh + var(--nelyqo-sand-band)));
 	}
 }
 
 @keyframes nelyqo-sand-band-hold {
 
 	to {
-		transform: translateY(calc(-1 * var(--nelyqo-sand-gap)));
+		transform: translateY(calc(-100cqh - var(--nelyqo-sand-band)));
 	}
 }
 
 @keyframes nelyqo-sand-pour {
 
 	from {
-		clip-path: inset(0 0 100% 0);
+		translate: 0 -100%;
 	}
 
 	to {
-		clip-path: inset(0 0 0 0);
+		translate: 0 0;
+	}
+}
+
+@keyframes nelyqo-sand-pour-hold {
+
+	from {
+		translate: 0 100%;
+	}
+
+	to {
+		translate: 0 0;
 	}
 }
 
