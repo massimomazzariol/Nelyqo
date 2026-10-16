@@ -265,7 +265,12 @@
 	vector-effect: non-scaling-stroke;
 }
 
-/* The line's gradient runs through the section's metals (nelyqo_sand_stream()). */
+/* The line's gradient runs through the section's metals (nelyqo_sand_stream()), from the colour
+   the stretch above ends in, so grains change colour gradually, never at a section edge. */
+.nelyqo-sand__from {
+	stop-color: var(--nelyqo-sand-from, var(--nelyqo-m2));
+}
+
 .nelyqo-sand__m1 {
 	stop-color: var(--nelyqo-m1);
 }

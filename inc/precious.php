@@ -96,7 +96,8 @@ function nelyqo_sand_stream_mark( $block ) {
 
 /**
  * Draws a gem section's stretch of the sand stream, right after its opening tag, with a gradient
- * through the gem's metals.
+ * through the gem's metals. It starts in the metal the stretch above ends in (--nelyqo-sand-from,
+ * set by the gem above) and ends in its own m2, so the colour runs on across sections.
  *
  * @param string $content Rendered block.
  * @param array  $block   Parsed block.
@@ -125,7 +126,7 @@ function nelyqo_sand_stream( $content, $block ) {
 	foreach ( array( 'fine', 'mid', 'coarse', 'glint' ) as $strand ) {
 		$strands .= sprintf( '<path class="nelyqo-sand__%s" d="%s"/>', $strand, $path );
 	}
-	$gradient = sprintf( '<defs><linearGradient id="%s" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000"><stop offset="0" class="nelyqo-sand__m1"/><stop offset=".35" class="nelyqo-sand__m2"/><stop offset=".65" class="nelyqo-sand__m4"/><stop offset="1" class="nelyqo-sand__m1"/></linearGradient></defs>', $id );
+	$gradient = sprintf( '<defs><linearGradient id="%s" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000"><stop offset="0" class="nelyqo-sand__from"/><stop offset=".3" class="nelyqo-sand__m1"/><stop offset=".65" class="nelyqo-sand__m4"/><stop offset="1" class="nelyqo-sand__m2"/></linearGradient></defs>', $id );
 	$svg      = sprintf( '<svg class="nelyqo-sand" style="--nelyqo-sand-paint:url(#%s)" aria-hidden="true" focusable="false" viewBox="0 0 1000 1000" preserveAspectRatio="none">%s%s</svg>', $id, $gradient, $strands );
 	return false === $open ? $content : substr_replace( $content, $svg, $open + 1, 0 );
 }

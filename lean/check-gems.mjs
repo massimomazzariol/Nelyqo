@@ -30,6 +30,11 @@ for ( const file of readdirSync( dir ).filter( ( f ) => f.startsWith( 'gem-' ) &
 		...( vars.button ? [ [ 'button', vars.button, 4.5 ] ] : [ 'm1', 'm2', 'm3' ].map( ( k ) => [ `button ${ k }`, vars[ k ], 4.5 ] ) ),
 	];
 	const bad = checks.filter( ( [ , color, min ] ) => ! color || contrast( color, ground ) < min );
+	// The next stretch of sand starts in the colour this one ends in (m2), or the grains jump colour.
+	if ( vars[ 'sand-from' ] !== vars.m2 ) {
+		bad.push( [ 'sand-from', vars[ 'sand-from' ] ] );
+		console.log( `FAIL ${ gem.title }: --nelyqo-sand-from ${ vars[ 'sand-from' ] } is not m2 ${ vars.m2 }` );
+	}
 	failures += bad.length;
 	console.log( `${ bad.length ? 'FAIL' : 'ok  ' } ${ gem.title.padEnd( 16 ) } ${ checks.map( ( [ k, c ] ) => `${ k } ${ c ? contrast( c, ground ).toFixed( 1 ) : 'missing' }` ).join( ', ' ) }` );
 }
