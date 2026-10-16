@@ -17,7 +17,8 @@ const sign = process.env.DIRECTION === 'right' ? 1 : -1;
 const ratio = { slow: 1 / 1.5, fast: 1 / 0.6 }[ process.env.SPEED ] ?? 1;
 const browserType = createRequire( join( playwrightDir, 'package.json' ) )( 'playwright' )[ engine ];
 const browser = await browserType.launch();
-const ROOT = '.wp-block-nelyqo-horizontal-scroll, .is-mode-horizontal-track';
+// ROOT=<selector> picks which horizontal block to check (default: the first on the page).
+const ROOT = process.env.ROOT || '.wp-block-nelyqo-horizontal-scroll, .is-mode-horizontal-track';
 let failures = 0;
 const check = ( ok, text ) => {
 	failures += ok ? 0 : 1;

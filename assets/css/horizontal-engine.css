@@ -31,6 +31,12 @@
 	}
 }
 
+/* The window onto the track takes its width from the page, never from the cards: a wide track
+   would otherwise widen the section, and its neighbours, in flex layouts. */
+.nelyqo-h-shell {
+	contain: inline-size;
+}
+
 .is-h-pinned {
 	view-timeline: --nelyqo-h;
 }
@@ -41,7 +47,7 @@
 }
 
 .is-h-pinned.has-h-progress .nelyqo-h-progress {
-	background: currentcolor;
+	background: var(--nelyqo-m2, currentcolor);
 	block-size: 2px;
 	border-radius: 2px;
 	display: block;

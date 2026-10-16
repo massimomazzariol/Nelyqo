@@ -436,6 +436,7 @@
 					return;
 				}
 				root.dataset.nelyqoHorizontal = 'ready';
+				parts.shell.classList.add( 'nelyqo-h-shell' );
 				parts.track.classList.add( 'nelyqo-h-track' );
 				parts.cards.forEach( ( card ) =>
 					card.classList.add( 'nelyqo-h-card' )

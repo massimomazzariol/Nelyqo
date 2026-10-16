@@ -120,7 +120,8 @@
 /* Theme blocks take the gem's colours instead of painting their own surface.
    Specific enough to beat the blocks' own tone rules (two classes), as a gem is a deliberate choice. */
 .wp-block-group[class*="is-style-gem-"] .wp-block-nelyqo-scroll-section,
-.wp-block-group[class*="is-style-gem-"] .wp-block-nelyqo-fullpage-section {
+.wp-block-group[class*="is-style-gem-"] .wp-block-nelyqo-fullpage-section,
+.wp-block-group[class*="is-style-gem-"] .wp-block-nelyqo-horizontal-scroll {
 	--nelyqo-scroll-surface: transparent;
 	--nelyqo-scroll-surface-highlight: transparent;
 	--nelyqo-scroll-text: currentcolor;
@@ -131,6 +132,11 @@
 	--nelyqo-fullpage-section-text: currentcolor;
 	--nelyqo-fullpage-section-muted: var(--nelyqo-muted);
 	--nelyqo-fullpage-section-accent: var(--nelyqo-m2);
+	--nelyqo-horizontal-scroll-surface: transparent;
+	--nelyqo-horizontal-scroll-surface-highlight: transparent;
+	--nelyqo-horizontal-scroll-text: currentcolor;
+	--nelyqo-horizontal-scroll-muted: var(--nelyqo-muted);
+	--nelyqo-horizontal-scroll-accent: var(--nelyqo-m2);
 	background: none;
 	color: inherit;
 }

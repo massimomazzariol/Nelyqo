@@ -214,7 +214,7 @@
 			"gem": "amethyst",
 			"eyebrow": "02 · Horizontal tracks",
 			"heading": "A <em>sideways</em> journey, scrolled the usual way.",
-			"text": "The horizontal mode turns vertical scrolling into a track of cards, and the track can be reached with the keyboard.",
+			"text": "One engine moves two blocks. Scroll down: the first track slides left; the second travels right, with a progress bar and its cards lighting up as they reach the middle. Speed, direction and settling on a card are options; on phones the cards swipe sideways or stack.",
 			"blocks": [
 				[
 					"nelyqo/scroll-section",
@@ -326,6 +326,133 @@
 									{
 										"content": "Where the gold is kept."
 									}
+								]
+							]
+						]
+					]
+				],
+				[
+					"nelyqo/horizontal-scroll",
+					{
+						"align": "wide",
+						"sectionTone": "dark",
+						"trackDirection": "right",
+						"showProgress": true,
+						"cardEmphasis": true
+					},
+					[
+						[
+							"nelyqo/horizontal-scroll-content",
+							{},
+							[
+								[
+									"nelyqo/horizontal-scroll-intro-card",
+									{},
+									[
+										[
+											"core/heading",
+											{
+												"level": 3,
+												"content": "Four seasons"
+											}
+										],
+										[
+											"core/paragraph",
+											{
+												"content": "The same engine, travelling right."
+											}
+										]
+									]
+								]
+							]
+						],
+						[
+							"nelyqo/horizontal-scroll-track",
+							{},
+							[
+								[
+									"nelyqo/scroll-card",
+									{
+										"tone": "dark"
+									},
+									[
+										[
+											"core/heading",
+											{
+												"level": 3,
+												"content": "Spring"
+											}
+										],
+										[
+											"core/paragraph",
+											{
+												"content": "Windows open on the garden."
+											}
+										]
+									]
+								],
+								[
+									"nelyqo/scroll-card",
+									{
+										"tone": "dark"
+									},
+									[
+										[
+											"core/heading",
+											{
+												"level": 3,
+												"content": "Summer"
+											}
+										],
+										[
+											"core/paragraph",
+											{
+												"content": "Long light on the terrace."
+											}
+										]
+									]
+								],
+								[
+									"nelyqo/scroll-card",
+									{
+										"tone": "dark"
+									},
+									[
+										[
+											"core/heading",
+											{
+												"level": 3,
+												"content": "Autumn"
+											}
+										],
+										[
+											"core/paragraph",
+											{
+												"content": "Fires lit in the library."
+											}
+										]
+									]
+								],
+								[
+									"nelyqo/scroll-card",
+									{
+										"tone": "dark"
+									},
+									[
+										[
+											"core/heading",
+											{
+												"level": 3,
+												"content": "Winter"
+											}
+										],
+										[
+											"core/paragraph",
+											{
+												"content": "The house turns inward."
+											}
+										]
+									]
 								]
 							]
 						]
