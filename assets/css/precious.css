@@ -64,10 +64,57 @@
 /* Buttons in a gem: polished light metal with dark letters on night grounds, solid deep metal
    (--nelyqo-button) on light ones. */
 .wp-block-group[class*="is-style-gem-"] .wp-element-button {
-	background: var(--nelyqo-button, linear-gradient(115deg, var(--nelyqo-m3), var(--nelyqo-m1) 45%, var(--nelyqo-m2) 70%, var(--nelyqo-m3)));
+	background: var(--nelyqo-button, linear-gradient(115deg, var(--nelyqo-m3), var(--nelyqo-m1) 25%, var(--nelyqo-m2) 40%, var(--nelyqo-m3) 50%, var(--nelyqo-m1) 75%, var(--nelyqo-m2) 90%, var(--nelyqo-m3)));
+	background-size: 200% 100%;
 	border-radius: 999px;
 	color: var(--nelyqo-ground);
 	letter-spacing: 0.08em;
+}
+
+/* Hover and keyboard focus: the light runs across the metal, the button lifts and glows. */
+.wp-block-group[class*="is-style-gem-"] .wp-element-button:is(:hover, :focus-visible) {
+	background-position: 100% 0;
+	box-shadow: 0 0.6rem 1.8rem color-mix(in oklab, var(--nelyqo-m1) 35%, transparent);
+	translate: 0 -2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+	.wp-block-group[class*="is-style-gem-"] .wp-element-button {
+		transition: background-position 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, translate 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+}
+
+/* Pills in a gem wear its metal; a pill's own border colour marks it with a dot (the presentation
+   gives each gem pill its gem's metal). */
+[class*="is-style-gem-"] .wp-block-nelyqo-pill {
+	--nelyqo-pill-hover-bg: color-mix(in oklab, var(--nelyqo-pill-border-color, var(--nelyqo-m2)) 30%, var(--nelyqo-ground));
+	--nelyqo-pill-hover-color: var(--nelyqo-label, var(--nelyqo-m2));
+	font-size: 0.95rem;
+	gap: 0.6em;
+	letter-spacing: 0.04em;
+	padding: 0.75em 1.3em;
+}
+
+/* Two classes and a pseudo-class: beats the block's own colours, leaves its hover rule alone. */
+[class*="is-style-gem-"] .wp-block-nelyqo-pill:not(:hover) {
+	background: color-mix(in oklab, var(--nelyqo-pill-border-color, var(--nelyqo-m2)) 12%, var(--nelyqo-ground));
+	border-color: color-mix(in oklab, var(--nelyqo-pill-border-color, var(--nelyqo-m2)) 70%, transparent);
+	color: var(--nelyqo-label, var(--nelyqo-m2));
+}
+
+[class*="is-style-gem-"] .wp-block-nelyqo-pill::before {
+	background: var(--nelyqo-pill-border-color, var(--nelyqo-m2));
+	block-size: 0.6em;
+	border-radius: 50%;
+	box-shadow: 0 0 0.7em var(--nelyqo-pill-border-color, var(--nelyqo-m2));
+	content: "";
+	inline-size: 0.6em;
+}
+
+/* A gem inside a gem (a swatch, a card) keeps its own plain ground: fades are for neighbouring sections. */
+:where([class*="is-style-gem-"]) [class*="is-style-gem-"] {
+	background-image: none;
 }
 
 /* Theme blocks take the gem's colours instead of painting their own surface.
@@ -213,9 +260,28 @@
 
 .nelyqo-sand path {
 	fill: none;
-	stroke: var(--nelyqo-m2);
+	stroke: var(--nelyqo-sand-paint, var(--nelyqo-m2));
 	stroke-linecap: round;
 	vector-effect: non-scaling-stroke;
+}
+
+/* The line's gradient runs through the section's metals (nelyqo_sand_stream()). */
+.nelyqo-sand__m1 {
+	stop-color: var(--nelyqo-m1);
+}
+
+.nelyqo-sand__m2 {
+	stop-color: var(--nelyqo-m2);
+}
+
+.nelyqo-sand__m4 {
+	stop-color: var(--nelyqo-m4);
+}
+
+/* A section continuing the one before (same gem) follows it without a gap. */
+.wp-block-group.is-style-sand-stream > .is-sand-straight[class*="is-style-gem-"] {
+	background-image: none;
+	padding-top: 0;
 }
 
 /* Grains: round dots from a dash pattern of zero-length dashes, three strands with co-prime spacings. */
@@ -261,6 +327,11 @@
 			animation-timeline: view();
 		}
 
+		/* The first stretch is on screen at load: it pours by itself instead of waiting for a scroll. */
+		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream > :first-child > .nelyqo-sand {
+			animation: nelyqo-sand-pour 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+		}
+
 		/* Dust drifts down at two depths as the page scrolls (transform), and the coarse layer keeps
 		   falling very slowly at rest (the separate translate property, one tile per loop). */
 		body:not(.editor-styles-wrapper) .wp-block-group.is-style-sand-stream::before,
@@ -297,6 +368,42 @@
 
 	to {
 		translate: 0 0;
+	}
+}
+
+/* The grains keep flowing down the line: each strand's dash pattern slides along the path at its
+   own pace. Only with motion allowed; the still line is the fallback. */
+@media (prefers-reduced-motion: no-preference) {
+
+	body:not(.editor-styles-wrapper) .nelyqo-sand path {
+		animation: nelyqo-sand-flow 6s linear infinite;
+	}
+
+	body:not(.editor-styles-wrapper) .nelyqo-sand__fine {
+		--nelyqo-sand-cycle: -17px;
+		animation-duration: 1.6s;
+	}
+
+	body:not(.editor-styles-wrapper) .nelyqo-sand__mid {
+		--nelyqo-sand-cycle: -32px;
+		animation-duration: 2.6s;
+	}
+
+	body:not(.editor-styles-wrapper) .nelyqo-sand__coarse {
+		--nelyqo-sand-cycle: -54px;
+		animation-duration: 4.2s;
+	}
+
+	body:not(.editor-styles-wrapper) .nelyqo-sand__glint {
+		--nelyqo-sand-cycle: -328px;
+		animation-duration: 14s;
+	}
+}
+
+@keyframes nelyqo-sand-flow {
+
+	to {
+		stroke-dashoffset: var(--nelyqo-sand-cycle);
 	}
 }
 

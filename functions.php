@@ -17,6 +17,7 @@ add_action( 'init', 'nelyqo_register_custom_blocks' );
 add_action( 'init', 'nelyqo_register_block_styles' );
 add_filter( 'render_block_core/image', 'nelyqo_backport_lightbox', 20 );
 add_filter( 'render_block_nelyqo/scroll-section', 'nelyqo_scroll_section_script', 10, 2 );
+add_filter( 'render_block_nelyqo/scroll-section', 'nelyqo_scroll_section_card_count', 10, 2 );
 
 /**
  * Backports Gutenberg PR #79058 to the core Image lightbox: enlarged images keep their own
@@ -147,6 +148,26 @@ function nelyqo_scroll_section_script( $content, $block ) {
 		wp_style_add_data( 'nelyqo-scroll-section-horizontal', 'path', get_template_directory() . $build . 'view.css' );
 	}
 	return $content;
+}
+
+/**
+ * Tells the Scroll Section CSS how many cards it holds (--nelyqo-scroll-card-count), so the sticky
+ * introduction can span every card row and hold still in the middle of the screen. Added at render
+ * time: the saved markup does not change.
+ *
+ * @param string $content Rendered block.
+ * @param array  $block   Parsed block.
+ * @return string
+ */
+function nelyqo_scroll_section_card_count( $content, $block ) {
+	$count = count( array_filter( $block['innerBlocks'] ?? array(), static fn( $inner ) => 'nelyqo/scroll-card' === $inner['blockName'] ) );
+	$tags  = new WP_HTML_Tag_Processor( $content );
+	if ( 0 === $count || ! $tags->next_tag() ) {
+		return $content;
+	}
+	$style = rtrim( trim( (string) $tags->get_attribute( 'style' ) ), ';' );
+	$tags->set_attribute( 'style', ( '' === $style ? '' : $style . ';' ) . '--nelyqo-scroll-card-count:' . $count );
+	return $tags->get_updated_html();
 }
 
 /**

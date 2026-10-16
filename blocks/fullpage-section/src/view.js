@@ -13,6 +13,8 @@ const PROPERTY_PANEL_COUNT = '--nelyqo-fullpage-panel-count';
 const EDGE_TOLERANCE_PX = 1;
 // How far (px) the slides may sit from the top of the screen and still count as filling it.
 const DOCK_TOLERANCE_PX = 2;
+// Scrolling towards the slides docks them once they are this close (share of the screen height).
+const DOCK_REACH_RATIO = 0.5;
 const TRANSITION_SETTLE_BUFFER_MS = 50;
 const WHEEL_DELTA_THRESHOLD_RATIO = 0.1;
 // A wheel gesture ends after this pause; trackpad inertia sends events every ~16 ms.
@@ -24,6 +26,8 @@ const WHEEL_DELTA_MODE_PAGE = 2;
 const SWIPE_DISTANCE_RATIO = 0.14;
 const SWIPE_AXIS_DOMINANCE = 1.18;
 const HEADER_SELECTOR = [
+	// The theme's sticky overlay header: the bar inside it is not a direct child of the page.
+	'.nelyqo-overlay-header',
 	'.wp-site-blocks > header',
 	'body > header',
 	'header.wp-block-template-part',
@@ -269,10 +273,14 @@ const requestMeasurements = () => {
 	} );
 };
 
+// Distance (px) between the top of the slides and the place where they fill the screen.
+const getDockOffset = ( state ) =>
+	state.sequence.getBoundingClientRect().top - headerOffsetPx;
+
 // 0 when the slides fill the screen; 1 when they sit lower (reached scrolling down);
 // -1 when they sit higher (reached scrolling back up).
 const getDockDirection = ( state ) => {
-	const offset = state.sequence.getBoundingClientRect().top - headerOffsetPx;
+	const offset = getDockOffset( state );
 
 	if ( Math.abs( offset ) <= DOCK_TOLERANCE_PX ) {
 		return 0;
@@ -442,11 +450,22 @@ const handleWheel = ( state, event ) => {
 		return;
 	}
 
-	// Slides only page while they fill the screen. Scrolling towards them docks them first;
-	// scrolling away from them is ordinary page scrolling.
+	// Slides only page while they fill the screen. Scrolling towards them docks them once they
+	// cover half the screen; scrolling away from them is ordinary page scrolling. A long scroll
+	// step can carry the page past the docking point on the way in (first slide going down, last
+	// going up): that still counts as arriving, so the slides dock back instead of being skipped.
 	const dockDirection = getDockDirection( state );
+	const dockOffset = getDockOffset( state );
+	const isNear =
+		Math.abs( dockOffset ) < state.viewportHeight * DOCK_REACH_RATIO;
+	const isArrivingPast =
+		dockDirection === -direction &&
+		state.activeIndex === ( direction > 0 ? 0 : state.panels.length - 1 );
 
-	if ( dockDirection !== 0 && dockDirection !== direction ) {
+	if (
+		dockDirection !== 0 &&
+		! ( isNear && ( dockDirection === direction || isArrivingPast ) )
+	) {
 		return;
 	}
 
@@ -721,13 +740,19 @@ const initSequence = ( panels ) => {
 		runtime.sequence.setAttribute( 'tabindex', '0' );
 	}
 
-	runtime.sequence.addEventListener(
-		'wheel',
-		( event ) => handleWheel( state, event ),
-		{
-			passive: false,
+	// Wheel and keys are read on the whole page: the pointer may rest outside the slides (on the
+	// header, or above them while they arrive), and arrow keys should page them without first
+	// focusing them. Both handlers act only while the slides fill the screen or are arriving.
+	// A page-wide non-passive wheel listener makes every scroll wait for the script, so it is
+	// attached only while the slides are on screen.
+	const onWheel = ( event ) => handleWheel( state, event );
+	new window.IntersectionObserver( ( [ entry ] ) => {
+		if ( entry.isIntersecting ) {
+			window.addEventListener( 'wheel', onWheel, { passive: false } );
+		} else {
+			window.removeEventListener( 'wheel', onWheel );
 		}
-	);
+	} ).observe( runtime.sequence );
 	runtime.sequence.addEventListener(
 		'touchstart',
 		( event ) => handleTouchStart( state, event ),
@@ -743,7 +768,7 @@ const initSequence = ( panels ) => {
 		( event ) => handleTouchEnd( state, event ),
 		{ passive: false }
 	);
-	runtime.sequence.addEventListener( 'keydown', ( event ) =>
+	window.addEventListener( 'keydown', ( event ) =>
 		handleKeyDown( state, event )
 	);
 

@@ -270,10 +270,23 @@
 		grid-column: 1;
 	}
 
+	// The introduction spans every card row (count set by the theme at render time) and holds
+	// still in the middle of the screen: a screen-tall box with its content centred, so a sticky
+	// header never covers it. Without the count it keeps to the first row, as before.
 	.wp-block-nelyqo-scroll-section.is-mode-vertical-sticky.has-sticky > .nelyqo-scroll-section__layout > .nelyqo-scroll-section__intro {
 		align-self: start;
 		position: sticky;
 		top: var(--nelyqo-scroll-sticky-offset);
+	}
+
+	.wp-block-nelyqo-scroll-section.is-mode-vertical-sticky.has-sticky[style*="--nelyqo-scroll-card-count"] > .nelyqo-scroll-section__layout > .nelyqo-scroll-section__intro {
+		display: flex;
+		flex-direction: column;
+		grid-row: 1 / span var(--nelyqo-scroll-card-count);
+		justify-content: center;
+		min-height: 100vh;
+		min-height: 100svh;
+		top: 0;
 	}
 
 	.wp-block-nelyqo-scroll-section.is-mode-vertical-sticky > .nelyqo-scroll-section__layout > .wp-block-nelyqo-scroll-card,

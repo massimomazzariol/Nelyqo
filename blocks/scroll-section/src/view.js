@@ -303,6 +303,15 @@ const updateHorizontalSectionState = ( sectionState, reducedMotionQuery ) => {
 			)
 		)
 	);
+	// The stage pins in the middle of the screen, never closer to the top than the sticky offset.
+	sectionState.stickyOffset = Math.max(
+		sectionState.stickyOffset,
+		Math.round( ( viewportHeight - sectionState.stageHeight ) / 2 )
+	);
+	element.style.setProperty(
+		'--nelyqo-scroll-horizontal-pin-top',
+		`${ sectionState.stickyOffset }px`
+	);
 
 	const shouldPin =
 		desktop &&

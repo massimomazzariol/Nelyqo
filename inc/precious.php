@@ -67,6 +67,10 @@ function nelyqo_precious_styles( $content ) {
  * so the stretches join into one line. The SVG is added at render time and never saved: the content
  * stays plain Core blocks.
  *
+ * A section in the same gem as the one before continues it: the line runs straight down the middle,
+ * between the blocks, and the left/right order does not advance. Split a long section this way
+ * (heading in the first part, wide blocks in the second) to keep the curve beside the heading.
+ *
  * Only the stream's own gem sections take part: a gem nested deeper (a Cover inside a section)
  * gets no stretch and does not shift the left/right order.
  *
@@ -77,38 +81,51 @@ function nelyqo_sand_stream_mark( $block ) {
 	if ( 'core/group' !== $block['blockName'] || ! str_contains( $block['attrs']['className'] ?? '', 'is-style-sand-stream' ) ) {
 		return $block;
 	}
-	$index = 0;
+	$index    = 0;
+	$previous = null;
 	foreach ( $block['innerBlocks'] as &$inner ) {
-		if ( str_contains( $inner['attrs']['className'] ?? '', 'is-style-gem-' ) ) {
-			$inner['attrs']['nelyqoSand'] = $index++;
+		if ( ! preg_match( '/(?:^|\s)is-style-gem-(\S+)/', $inner['attrs']['className'] ?? '', $gem ) ) {
+			$previous = null;
+			continue;
 		}
+		$inner['attrs']['nelyqoSand'] = $gem[1] === $previous ? 'straight' : $index++;
+		$previous                     = $gem[1];
 	}
 	return $block;
 }
 
 /**
- * Draws a gem section's stretch of the sand stream, right after its opening tag.
+ * Draws a gem section's stretch of the sand stream, right after its opening tag, with a gradient
+ * through the gem's metals.
  *
  * @param string $content Rendered block.
  * @param array  $block   Parsed block.
  * @return string
  */
 function nelyqo_sand_stream( $content, $block ) {
-	$index = $block['attrs']['nelyqoSand'] ?? null;
-	$open  = strpos( $content, '>' );
-	if ( ! is_int( $index ) || false === $open ) {
+	$stretch = $block['attrs']['nelyqoSand'] ?? null;
+	$tags    = new WP_HTML_Tag_Processor( $content );
+	if ( null === $stretch || ! $tags->next_tag() ) {
 		return $content;
 	}
-	if ( 0 === $index ) {
+	if ( 'straight' === $stretch ) {
+		$tags->add_class( 'is-sand-straight' );
+		$path = 'M500 0 L 500 1000';
+	} elseif ( 0 === $stretch ) {
 		// Under the centred opening text, straight down.
 		$path = 'M500 660 C 500 820, 500 880, 500 1000';
 	} else {
-		$side = 1 === $index % 2 ? 170 : 830;
+		$side = 1 === $stretch % 2 ? 170 : 830;
 		$path = sprintf( 'M500 0 C 500 220, %1$d 280, %1$d 500 C %1$d 720, 500 780, 500 1000', $side );
 	}
+	$content = $tags->get_updated_html();
+	$open    = strpos( $content, '>' );
+	$id      = wp_unique_id( 'nelyqo-sand-' );
 	$strands = '';
 	foreach ( array( 'fine', 'mid', 'coarse', 'glint' ) as $strand ) {
 		$strands .= sprintf( '<path class="nelyqo-sand__%s" d="%s"/>', $strand, $path );
 	}
-	return substr_replace( $content, '<svg class="nelyqo-sand" aria-hidden="true" focusable="false" viewBox="0 0 1000 1000" preserveAspectRatio="none">' . $strands . '</svg>', $open + 1, 0 );
+	$gradient = sprintf( '<defs><linearGradient id="%s" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000"><stop offset="0" class="nelyqo-sand__m1"/><stop offset=".35" class="nelyqo-sand__m2"/><stop offset=".65" class="nelyqo-sand__m4"/><stop offset="1" class="nelyqo-sand__m1"/></linearGradient></defs>', $id );
+	$svg      = sprintf( '<svg class="nelyqo-sand" style="--nelyqo-sand-paint:url(#%s)" aria-hidden="true" focusable="false" viewBox="0 0 1000 1000" preserveAspectRatio="none">%s%s</svg>', $id, $gradient, $strands );
+	return false === $open ? $content : substr_replace( $content, $svg, $open + 1, 0 );
 }

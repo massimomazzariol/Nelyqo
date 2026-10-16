@@ -62,9 +62,9 @@ try {
 	await expect( 'fast six-notch spin moves one slide', ( s ) => s.slide === 3 && s.top === 0 );
 	await notch( 120 );
 	await expect( 'after the last slide the page scrolls on', ( s ) => s.slide === 3 && s.top < 0 );
-	// The wheel listener sits on the slides only (a page-wide non-passive listener would slow
-	// every scroll), so docking back happens with the pointer over them.
-	await page.mouse.move( 640, 100 );
+	// The wheel is read page-wide while the slides are on screen: docking back works with the
+	// pointer anywhere, here above the slides.
+	await page.mouse.move( 640, 20 );
 	await notch( -120 );
 	await expect( 'scrolling back docks on the last slide', ( s ) => s.slide === 3 && s.top === 0 );
 	await notch( -120 );

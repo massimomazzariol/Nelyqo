@@ -20,6 +20,11 @@ Nelyqo itself sets no cookies, uses no browser storage, does no tracking and mak
 * "Metal foil" heading style, and emphasis inside gem headings in the gem's metal, with a light that slides across as the heading crosses the screen. Plain text in Windows high contrast mode.
 * "Sand stream" Group style: a line of metal grains pours down through its gem sections as the page scrolls, with gold dust drifting at two depths. Drawn at render time, never saved in the content; CSS only, still with reduced motion.
 * "Eyebrow" paragraph style for the small label above a heading.
+* Sand stream: the line carries a gradient through each gem's metals and its grains keep flowing down (both still with reduced motion). The first stretch pours in on load instead of waiting for a scroll. A gem section that follows one of the same gem continues the line straight down the middle, so the curve stays beside the heading and wide blocks get a clear lane.
+* Buttons in gem sections: on hover and keyboard focus the light runs across the metal and the button lifts. Pills in gem sections wear the gem's metal.
+* Scroll Section, vertical sticky mode: the introduction now spans every card row and holds still in the middle of the screen, out of reach of a sticky header (it used to stop near the top).
+* Scroll Section, horizontal track: the pinned track holds in the middle of the screen instead of near the top.
+* Full-page section: the slides now dock below the theme's sticky header instead of under it. A long scroll step that carries the page past the slides on the way in no longer skips them, the wheel works with the pointer anywhere on the page while they are on screen, and the arrow keys page them without focusing them first.
 * The live demo is now a presentation of the theme: every feature in one scroll from night to ivory.
 
 = 0.4.1 =

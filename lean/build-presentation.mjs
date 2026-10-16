@@ -11,6 +11,11 @@ import { fileURLToPath } from 'node:url';
 const [ base, playwrightDir, user = 'admin', password = 'password' ] = process.argv.slice( 2 );
 const root = join( dirname( fileURLToPath( import.meta.url ) ), '..' );
 const data = JSON.parse( readFileSync( join( root, 'demo/presentation.json' ), 'utf8' ) );
+// "gemPills" sections list the presentation's gems, each pill marked with its gem's metal (styles/sections).
+data.gems = data.sections.map( ( { gem } ) => {
+	const style = JSON.parse( readFileSync( join( root, `styles/sections/gem-${ gem }.json` ), 'utf8' ) );
+	return { title: style.title, metal: style.styles.css.match( /--nelyqo-m2:\s*(#[0-9a-f]{6})/i )[ 1 ] };
+} );
 const { chromium } = createRequire( join( playwrightDir, 'package.json' ) )( 'playwright' );
 
 const browser = await chromium.launch();
@@ -23,11 +28,11 @@ try {
 	await page.goto( `${ base }/wp-admin/post-new.php?post_type=page` );
 	await page.waitForFunction( () => window.wp?.blocks?.getBlockType( 'nelyqo/scroll-section' ), null, { timeout: 120000 } );
 
-	const result = await page.evaluate( ( { sections, sizes } ) => {
+	const result = await page.evaluate( ( { sections, sizes, gems } ) => {
 		const { createBlock, serialize, parse } = window.wp.blocks;
 		const tree = ( [ name, attributes = {}, inner = [] ] ) => createBlock( name, attributes, inner.map( tree ) );
 
-		const scenes = sections.map( ( section, index ) => {
+		const scenes = sections.flatMap( ( section, index ) => {
 			// Text sits on the side away from the sand stream, which runs right in even sections and
 			// left in odd ones (nelyqo_sand_stream() in inc/precious.php).
 			const side = section.align || ( index % 2 ? 'right' : 'left' );
@@ -39,7 +44,8 @@ try {
 			if ( section.buttons ) {
 				intro.push( [ 'core/buttons', { layout: { type: 'flex', justifyContent: side } }, section.buttons.map( ( [ text, url ] ) => [ 'core/button', { text, url } ] ) ] );
 			}
-			return tree( [
+			const body = section.gemPills ? [ [ 'nelyqo/pills', {}, gems.map( ( { title, metal } ) => [ 'nelyqo/pill', { text: title, pillBorderColor: metal } ] ) ] ] : section.blocks;
+			const heading = tree( [
 				'core/group',
 				{
 					className: `is-style-gem-${ section.gem }`,
@@ -48,11 +54,11 @@ try {
 					style: { dimensions: { minHeight: '100vh' } },
 					layout: { type: 'flex', orientation: 'vertical', justifyContent: 'center' === side ? 'center' : 'stretch', verticalAlignment: 'center' },
 				},
-				[
-					[ 'core/group', { className: 'is-style-reveal', align: 'wide', layout: { type: 'flex', orientation: 'vertical', justifyContent: side } }, intro ],
-					...( section.blocks || [] ),
-				],
+				[ [ 'core/group', { className: 'is-style-reveal', align: 'wide', layout: { type: 'flex', orientation: 'vertical', justifyContent: side } }, intro ] ],
 			] );
+			// The blocks follow in a second section of the same gem: the sand curves beside the heading,
+			// then runs straight down the middle between the blocks (nelyqo_sand_stream_mark()).
+			return body ? [ heading, tree( [ 'core/group', { className: `is-style-gem-${ section.gem }`, align: 'full', layout: { type: 'flex', orientation: 'vertical', justifyContent: 'stretch' } }, body ] ) ] : [ heading ];
 		} );
 
 		const html = serialize( [ createBlock( 'core/group', { align: 'full', className: 'is-style-sand-stream', layout: { type: 'default' } }, scenes ) ] );

@@ -306,7 +306,7 @@
 
 	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-horizontal-pinned > .nelyqo-scroll-section__layout {
 		position: sticky;
-		top: var(--nelyqo-scroll-sticky-offset);
+		top: var(--nelyqo-scroll-horizontal-pin-top, var(--nelyqo-scroll-sticky-offset));
 	}
 
 	.wp-block-nelyqo-scroll-section.is-mode-horizontal-track.is-horizontal-enhanced.is-horizontal-pinned

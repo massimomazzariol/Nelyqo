@@ -29,7 +29,7 @@
 			"anchor": "story",
 			"eyebrow": "01 · Scroll storytelling",
 			"heading": "Sections that <em>hold still</em> while the story moves.",
-			"text": "Scroll Section keeps its introduction in place while the cards come into focus one by one. The motion is pure CSS: no script loads for it.",
+			"text": "Scroll Section holds its introduction still in the middle of the screen while the cards pass beside it and come into focus one by one. The motion is pure CSS: no script loads for it.",
 			"blocks": [
 				[
 					"nelyqo/scroll-section",
@@ -54,7 +54,7 @@
 								[
 									"core/paragraph",
 									{
-										"content": "Three moments, each with its own card."
+										"content": "Seven moments, each with its own card. Keep scrolling: this column waits for you."
 									}
 								]
 							]
@@ -90,13 +90,97 @@
 									"core/heading",
 									{
 										"level": 3,
-										"content": "Unwind"
+										"content": "Look around"
+									}
+								],
+								[
+									"core/paragraph",
+									{
+										"content": "The first screen says what the place is, in one sentence."
+									}
+								]
+							]
+						],
+						[
+							"nelyqo/scroll-card",
+							{
+								"tone": "dark"
+							},
+							[
+								[
+									"core/heading",
+									{
+										"level": 3,
+										"content": "Slow down"
 									}
 								],
 								[
 									"core/paragraph",
 									{
 										"content": "The page moves at your pace, never ahead of you."
+									}
+								]
+							]
+						],
+						[
+							"nelyqo/scroll-card",
+							{
+								"tone": "dark"
+							},
+							[
+								[
+									"core/heading",
+									{
+										"level": 3,
+										"content": "Discover"
+									}
+								],
+								[
+									"core/paragraph",
+									{
+										"content": "Each section brings one idea into focus, then steps aside."
+									}
+								]
+							]
+						],
+						[
+							"nelyqo/scroll-card",
+							{
+								"tone": "dark"
+							},
+							[
+								[
+									"core/heading",
+									{
+										"level": 3,
+										"content": "Compare"
+									}
+								],
+								[
+									"core/paragraph",
+									{
+										"content": "Cards side by side, the same rhythm, easy to weigh."
+									}
+								]
+							]
+						],
+						[
+							"nelyqo/scroll-card",
+							{
+								"tone": "dark"
+							},
+							[
+								[
+									"core/heading",
+									{
+										"level": 3,
+										"content": "Decide"
+									}
+								],
+								[
+									"core/paragraph",
+									{
+										"content": "Everything needed to choose, nothing that distracts."
 									}
 								]
 							]
@@ -253,7 +337,7 @@
 			"gem": "sapphire",
 			"eyebrow": "03 · Full-page slides",
 			"heading": "One gesture, <em>one scene</em>.",
-			"text": "Full-page sections fill the screen and turn like pages. A trackpad swipe never skips one, and scrolling away is ordinary scrolling.",
+			"text": "Scroll down onto the scenes: they fill the screen and hold it. From there every wheel turn, swipe or arrow key turns exactly one scene. After the last one, the page scrolls on as usual.",
 			"blocks": [
 				[
 					"nelyqo/fullpage-section",
@@ -266,7 +350,7 @@
 							"core/heading",
 							{
 								"level": 3,
-								"content": "First scene",
+								"content": "Scene one of three",
 								"style": {
 									"typography": {
 										"textAlign": "right",
@@ -278,8 +362,12 @@
 						[
 							"core/paragraph",
 							{
-								"content": "Swipe, or press the down arrow.",
-								"style": { "typography": { "textAlign": "right" } }
+								"content": "Turn the wheel once, or swipe up, or press the down arrow.",
+								"style": {
+									"typography": {
+										"textAlign": "right"
+									}
+								}
 							}
 						]
 					]
@@ -295,7 +383,7 @@
 							"core/heading",
 							{
 								"level": 3,
-								"content": "Second scene",
+								"content": "Scene two of three",
 								"style": {
 									"typography": {
 										"textAlign": "right",
@@ -307,8 +395,12 @@
 						[
 							"core/paragraph",
 							{
-								"content": "One gesture moved exactly one scene.",
-								"style": { "typography": { "textAlign": "right" } }
+								"content": "One gesture moved exactly one scene, however hard you pushed.",
+								"style": {
+									"typography": {
+										"textAlign": "right"
+									}
+								}
 							}
 						]
 					]
@@ -324,7 +416,7 @@
 							"core/heading",
 							{
 								"level": 3,
-								"content": "Third scene",
+								"content": "Scene three of three",
 								"style": {
 									"typography": {
 										"textAlign": "right",
@@ -336,8 +428,12 @@
 						[
 							"core/paragraph",
 							{
-								"content": "Keep going and the page simply carries on.",
-								"style": { "typography": { "textAlign": "right" } }
+								"content": "One more gesture and the page simply carries on.",
+								"style": {
+									"typography": {
+										"textAlign": "right"
+									}
+								}
 							}
 						]
 					]
@@ -348,7 +444,7 @@
 			"gem": "blue-gold",
 			"eyebrow": "04 · Sticky and reveal",
 			"heading": "Text that <em>rises</em> into place.",
-			"text": "Two Group styles do it with CSS alone: Reveal on scroll lets headings and text settle in as they arrive, Sticky section holds a group still for a stretch of the page.",
+			"text": "Two Group styles do it with CSS alone. Reveal on scroll lets headings and text settle in as they arrive. Sticky section holds a group still for a stretch of the page: keep scrolling and watch the next panel wait for you.",
 			"blocks": [
 				[
 					"core/group",
@@ -356,22 +452,52 @@
 						"className": "is-style-sticky-section",
 						"align": "wide",
 						"layout": {
-							"type": "constrained"
+							"type": "default"
 						}
 					},
 					[
 						[
-							"core/heading",
+							"core/group",
 							{
-								"level": 3,
-								"content": "Held for a moment"
-							}
-						],
-						[
-							"core/paragraph",
-							{
-								"content": "This group stays in place while the page moves past it, then lets go."
-							}
+								"style": {
+									"dimensions": {
+										"minHeight": "100vh"
+									}
+								},
+								"layout": {
+									"type": "flex",
+									"orientation": "vertical",
+									"justifyContent": "left",
+									"verticalAlignment": "center"
+								}
+							},
+							[
+								[
+									"core/heading",
+									{
+										"level": 3,
+										"className": "is-style-foil",
+										"content": "Held for a moment",
+										"style": {
+											"typography": {
+												"fontSize": "clamp(2.5rem, 5vw, 4.2rem)",
+												"textAlign": "left"
+											}
+										}
+									}
+								],
+								[
+									"core/paragraph",
+									{
+										"content": "This group stays in the middle of the screen<br>while the page moves on, then lets go.",
+										"style": {
+											"typography": {
+												"textAlign": "left"
+											}
+										}
+									}
+								]
+							]
 						]
 					]
 				]
@@ -382,84 +508,32 @@
 			"eyebrow": "05 · Precious metals",
 			"heading": "Nine gems, <em>one</em> stream of sand.",
 			"text": "Gem section styles, Metal foil headings and the Sand stream are native block styles. Their CSS loads only on the pages that use them, and every gem passes WCAG AA contrast.",
-			"blocks": [
-				[
-					"nelyqo/pills",
-					{},
-					[
-						[
-							"nelyqo/pill",
-							{
-								"text": "Gold"
-							}
-						],
-						[
-							"nelyqo/pill",
-							{
-								"text": "Rose gold"
-							}
-						],
-						[
-							"nelyqo/pill",
-							{
-								"text": "Amethyst"
-							}
-						],
-						[
-							"nelyqo/pill",
-							{
-								"text": "Sapphire"
-							}
-						],
-						[
-							"nelyqo/pill",
-							{
-								"text": "Blue gold"
-							}
-						],
-						[
-							"nelyqo/pill",
-							{
-								"text": "Emerald"
-							}
-						],
-						[
-							"nelyqo/pill",
-							{
-								"text": "Imperial topaz"
-							}
-						],
-						[
-							"nelyqo/pill",
-							{
-								"text": "Pearl"
-							}
-						],
-						[
-							"nelyqo/pill",
-							{
-								"text": "Gold on ivory"
-							}
-						]
-					]
-				]
-			]
+			"gemPills": true
 		},
 		{
 			"gem": "topaz",
 			"eyebrow": "06 · Speed",
 			"heading": "Light as <em>air</em>.",
-			"text": "Motion is done by the browser, so there is almost nothing to download. Measured with Lighthouse, five runs per page:",
+			"text": "Motion is done by the browser, so there is almost nothing to download. Measured with Lighthouse (five runs per page) and axe:",
 			"blocks": [
 				[
-					"core/columns",
+					"core/group",
 					{
-						"align": "wide"
+						"align": "wide",
+						"layout": {
+							"type": "grid",
+							"columnCount": 2,
+							"minimumColumnWidth": null
+						}
 					},
 					[
 						[
-							"core/column",
-							{},
+							"core/group",
+							{
+								"layout": {
+									"type": "default"
+								}
+							},
 							[
 								[
 									"core/heading",
@@ -477,14 +551,18 @@
 								[
 									"core/paragraph",
 									{
-										"content": "Performance score, mobile and desktop"
+										"content": "Lighthouse performance on standard pages, mobile and desktop"
 									}
 								]
 							]
 						],
 						[
-							"core/column",
-							{},
+							"core/group",
+							{
+								"layout": {
+									"type": "default"
+								}
+							},
 							[
 								[
 									"core/heading",
@@ -508,8 +586,12 @@
 							]
 						],
 						[
-							"core/column",
-							{},
+							"core/group",
+							{
+								"layout": {
+									"type": "default"
+								}
+							},
 							[
 								[
 									"core/heading",
@@ -528,6 +610,93 @@
 									"core/paragraph",
 									{
 										"content": "Layout shift"
+									}
+								]
+							]
+						],
+						[
+							"core/group",
+							{
+								"layout": {
+									"type": "default"
+								}
+							},
+							[
+								[
+									"core/heading",
+									{
+										"level": 3,
+										"className": "is-style-foil",
+										"style": {
+											"typography": {
+												"fontSize": "clamp(2.8rem, 6vw, 4.8rem)"
+											}
+										},
+										"content": "115 KB"
+									}
+								],
+								[
+									"core/paragraph",
+									{
+										"content": "A standard page, fonts included"
+									}
+								]
+							]
+						],
+						[
+							"core/group",
+							{
+								"layout": {
+									"type": "default"
+								}
+							},
+							[
+								[
+									"core/heading",
+									{
+										"level": 3,
+										"className": "is-style-foil",
+										"style": {
+											"typography": {
+												"fontSize": "clamp(2.8rem, 6vw, 4.8rem)"
+											}
+										},
+										"content": "0"
+									}
+								],
+								[
+									"core/paragraph",
+									{
+										"content": "Cookies and third-party requests"
+									}
+								]
+							]
+						],
+						[
+							"core/group",
+							{
+								"layout": {
+									"type": "default"
+								}
+							},
+							[
+								[
+									"core/heading",
+									{
+										"level": 3,
+										"className": "is-style-foil",
+										"style": {
+											"typography": {
+												"fontSize": "clamp(2.8rem, 6vw, 4.8rem)"
+											}
+										},
+										"content": "0"
+									}
+								],
+								[
+									"core/paragraph",
+									{
+										"content": "Accessibility issues found by axe on this page"
 									}
 								]
 							]
